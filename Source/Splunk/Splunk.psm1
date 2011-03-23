@@ -1,111 +1,6 @@
 ﻿#region functions
 
-#region New-SplunkCredential
-
-# Helper function to Get and Store Credentials to be used against the Splunk API
-function New-SplunkCredential
-{
-    Param(
-        [Parameter()]
-        [STRING]$UserName
-    )
-    
-    if(!$UserName)
-    {
-        # If no UserName is provided we create the PSCredential object using Get-Credential
-        # http://msdn.microsoft.com/en-us/library/system.management.automation.pscredential(VS.85).aspx
-        Get-Credential
-    }
-    else
-    {
-        # Prompt User for Passord and store securely in a SecureString
-        # http://msdn.microsoft.com/en-us/library/system.security.securestring.aspx
-        $SecurePassword = Read-Host "Password" -AsSecureString
-        
-        # Create and Return a PSCredential Object
-        # http://msdn.microsoft.com/en-us/library/system.management.automation.pscredential(VS.85).aspx
-        New-Object System.Management.Automation.PSCredential($UserName,$SecurePassword)
-    }
-}    # New-SplunkCredential
-
-#endregion New-SplunkCredential
-
-#region Connect-Splunk
-
-# Creates a Splunk.Connection object. This can be used to create a default context for cmdlets to use.
-function Connect-Splunk
-{
-    [Cmdletbinding(DefaultParameterSetName="byCredentials")]
-    Param(
-        [Parameter(Mandatory=$true)]
-        [String]$ComputerName,
-        
-        [Parameter()]
-        [int]$Port = 8089, 
-        
-        [Parameter()]
-        [STRING]$Protocol = "https", 
-        
-        [Parameter()]
-        [INT]$Timeout = 5000, 
-        
-        [Parameter(ParameterSetName="byCredentials")]
-        [System.Management.Automation.PSCredential]$Credentials,
-        
-        [Parameter(ParameterSetName="byUserName")]
-        [STRING]$UserName
-    )
-    
-    Write-Verbose " [Connect-Splunk] :: Checking ParameterSet"
-    Write-Verbose " [Connect-Splunk] :: Using [$($pscmdlet.ParameterSetName)] ParameterSet."
-    switch ($pscmdlet.ParameterSetName)
-    {
-        "byCredentials"     {
-                                $MyCredential = $Credentials
-                                
-                                # Setting $AuthUser to be stored in Splunk.Connection Object (removing preceeding \)
-                                $AuthUser = $MyCredential.UserName -replace "^\\(.*)",'$1'
-                            }
-        "byUserName"        {
-                                Write-Verbose " [Connect-Splunk] :: Creating a PSCredential object using [$UserName]"
-                                $MyCredential = New-SplunkCredential -UserName $UserName
-                                
-                                # Setting $AuthUser to be stored in Splunk.Connection Object
-                                $AuthUser = $UserName
-                            }
-    }
-
-    Write-Verbose " [Connect-Splunk] :: Creating a hash table for the Parameters to pass to Get-SplunkAuthToken"
-    $GetSplunkAuthTokenParams = @{
-        ComputerName = $ComputerName
-        Port         = $Port
-        Timeout      = $Timeout
-        Credential   = $MyCredential
-        Protocol     = $Protocol
-    }
-	
-	$AuthTokenObject = Get-SplunkAuthToken @GetSplunkAuthTokenParams
-    
-    # Creating Hash Table to be used to create Splunk.Connection
-    $MyObj = @{
-        ComputerName = $ComputerName
-        Port         = $Port
-        Timeout      = $Timeout
-        Protocol     = $Protocol
-        UserName     = $AuthTokenObject.UserName
-        AuthToken    = $AuthTokenObject.AuthToken
-        Credential   = $MyCredential
-    }
-    
-    # Creating Splunk.Connection
-    $obj = New-Object PSObject -Property $myobj
-    $obj.PSTypeNames.Clear()
-    $obj.PSTypeNames.Add('Splunk.SDK.Connection')
-    $obj
-    
-} # Connect-Splunk
-
-#endregion Connect-Splunk
+#region Base_Cmdlets
 
 #region Invoke-SplunkAPIRequest
 
@@ -155,6 +50,8 @@ function Invoke-SplunkAPIRequest
         
     )
     
+	Write-Verbose " [Invoke-SplunkAPIRequest] :: Starting"
+	
     #region Internal Functions
     
     function Invoke-HTTPGet
@@ -400,10 +297,139 @@ function Invoke-SplunkAPIRequest
     }
     
 
-
+	Write-Verbose " [Invoke-SplunkAPIRequest] :: =========    End   ========="
+	
 } # Invoke-SplunkAPIRequest
 
 #endregion Invoke-SplunkAPIRequest
+
+#endregion Base_Cmdlets
+
+################################################################################
+
+#region Authentication
+
+#region New-SplunkCredential
+
+# Helper function to Get and Store Credentials to be used against the Splunk API
+function New-SplunkCredential
+{
+    Param(
+        [Parameter()]
+        [STRING]$UserName
+    )
+    
+    if(!$UserName)
+    {
+        # If no UserName is provided we create the PSCredential object using Get-Credential
+        # http://msdn.microsoft.com/en-us/library/system.management.automation.pscredential(VS.85).aspx
+        Get-Credential
+    }
+    else
+    {
+        # Prompt User for Passord and store securely in a SecureString
+        # http://msdn.microsoft.com/en-us/library/system.security.securestring.aspx
+        $SecurePassword = Read-Host "Password" -AsSecureString
+        
+        # Create and Return a PSCredential Object
+        # http://msdn.microsoft.com/en-us/library/system.management.automation.pscredential(VS.85).aspx
+        New-Object System.Management.Automation.PSCredential($UserName,$SecurePassword)
+    }
+}    # New-SplunkCredential
+
+#endregion New-SplunkCredential
+
+#region Connect-Splunk
+
+# Creates a Splunk.Connection object. This can be used to create a default context for cmdlets to use.
+function Connect-Splunk
+{
+    [Cmdletbinding(DefaultParameterSetName="byCredentials")]
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]$ComputerName,
+        
+        [Parameter()]
+        [int]$Port = 8089, 
+        
+        [Parameter()]
+        [STRING]$Protocol = "https", 
+        
+        [Parameter()]
+        [INT]$Timeout = 5000, 
+        
+        [Parameter(ParameterSetName="byCredentials")]
+        [System.Management.Automation.PSCredential]$Credentials,
+        
+        [Parameter(ParameterSetName="byUserName")]
+        [STRING]$UserName
+    )
+	
+    Write-Verbose " [Connect-Splunk] :: Starting..."
+    Write-Verbose " [Connect-Splunk] :: Checking ParameterSet"
+    Write-Verbose " [Connect-Splunk] :: Using [$($pscmdlet.ParameterSetName)] ParameterSet."
+    switch ($pscmdlet.ParameterSetName)
+    {
+        "byCredentials"     {
+								Write-Verbose " [Connect-Splunk] :: Parameters"
+								Write-Verbose " [Connect-Splunk] ::  - ComputerName = $ComputerName"
+								Write-Verbose " [Connect-Splunk] ::  - Port         = $Port"
+								Write-Verbose " [Connect-Splunk] ::  - Protocol     = $Protocol"
+								Write-Verbose " [Connect-Splunk] ::  - Timeout      = $Timeout"
+								Write-Verbose " [Connect-Splunk] ::  - Credential   = $Credential"
+                                $MyCredential = $Credentials
+                                
+                                # Setting $AuthUser to be stored in Splunk.Connection Object (removing preceeding \)
+                                $AuthUser = $MyCredential.UserName -replace "^\\(.*)",'$1'
+                            }
+        "byUserName"        {
+								Write-Verbose " [Connect-Splunk] :: Parameters"
+								Write-Verbose " [Connect-Splunk] ::  - ComputerName = $ComputerName"
+								Write-Verbose " [Connect-Splunk] ::  - Port         = $Port"
+								Write-Verbose " [Connect-Splunk] ::  - Protocol     = $Protocol"
+								Write-Verbose " [Connect-Splunk] ::  - Timeout      = $Timeout"
+								Write-Verbose " [Connect-Splunk] ::  - UserName     = $UserName"
+                                Write-Verbose " [Connect-Splunk] :: Creating a PSCredential object using [$UserName]"
+                                $MyCredential = New-SplunkCredential -UserName $UserName
+                                
+                                # Setting $AuthUser to be stored in Splunk.Connection Object
+                                $AuthUser = $UserName
+                            }
+    }
+
+    Write-Verbose " [Connect-Splunk] :: Creating a hash table for the Parameters to pass to Get-SplunkAuthToken"
+    $GetSplunkAuthTokenParams = @{
+        ComputerName = $ComputerName
+        Port         = $Port
+        Timeout      = $Timeout
+        Credential   = $MyCredential
+        Protocol     = $Protocol
+		Verbose      = $VerbosePreference -eq "Continue"
+    }
+	
+	$AuthTokenObject = Get-SplunkAuthToken @GetSplunkAuthTokenParams
+    
+    # Creating Hash Table to be used to create Splunk.Connection
+    $MyObj = @{
+        ComputerName = $ComputerName
+        Port         = $Port
+        Timeout      = $Timeout
+        Protocol     = $Protocol
+        UserName     = $AuthTokenObject.UserName
+        AuthToken    = $AuthTokenObject.AuthToken
+        Credential   = $MyCredential
+    }
+    
+    # Creating Splunk.Connection
+    $obj = New-Object PSObject -Property $myobj
+    $obj.PSTypeNames.Clear()
+    $obj.PSTypeNames.Add('Splunk.SDK.Connection')
+    $obj
+    
+	Write-Verbose " [Connect-Splunk] :: =========    End   ========="
+} # Connect-Splunk
+
+#endregion Connect-Splunk
 
 #region Get-SplunkLogin
 
@@ -431,33 +457,62 @@ function Get-SplunkLogin
         [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
         
     )
+	Write-Verbose " [Get-SplunkLogin] :: Starting"
 	
+	Write-Verbose " [Get-SplunkLogin] :: Parameters"
+	Write-Verbose " [Get-SplunkLogin] ::  - Name         = $Name"
+	Write-Verbose " [Get-SplunkLogin] ::  - ComputerName = $ComputerName"
+	Write-Verbose " [Get-SplunkLogin] ::  - Port         = $Port"
+	Write-Verbose " [Get-SplunkLogin] ::  - Protocol     = $Protocol"
+	Write-Verbose " [Get-SplunkLogin] ::  - Timeout      = $Timeout"
+	Write-Verbose " [Get-SplunkLogin] ::  - Credential   = $Credential"
+	
+	# Setting DateTime format to convert the TimeAccessed to System.DateTime
 	$DateTimeFormat = "ddd MMM dd HH:mm:ss yyyy"
 	
+	Write-Verbose " [Get-SplunkLogin] ::  Setting up Invoke-APIRequest parameters"
 	$InvokeAPIParams = @{
 		ComputerName = $ComputerName
 		Port         = $Port
 		Protocol     = $Protocol
 		Timeout      = $Timeout
 		Credential   = $Credential
+		URL          = '/services/authentication/httpauth-tokens'
+		Verbose      = $VerbosePreference -eq "Continue"
 	}
 	
-	[XML]$UserToken = Invoke-SplunkAPIRequest @InvokeAPIParams -URL '/services/authentication/httpauth-tokens'
-	foreach($entry in $UserToken.feed.entry)
+	Write-Verbose " [Get-SplunkLogin] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+	[XML]$UserToken = Invoke-SplunkAPIRequest @InvokeAPIParams 
+	
+	if($UserToken)
 	{
-		$Myobj = @{}
-		foreach($Key in $entry.content.dict.key)
+		foreach($entry in $UserToken.feed.entry)
 		{
-			switch -exact ($Key.name)
+			$Myobj = @{}
+			foreach($Key in $entry.content.dict.key)
 			{
-				"username"  	{$Myobj.Add('UserName',$Key.'#text')}
-				"authString"	{$Myobj.Add('AuthToken',$Key.'#text')}
-				"timeAccessed"	{$Myobj.Add('TimeAccessed',[DateTime]::ParseExact($Key.'#text',$DateTimeFormat,$Null))}
+				switch -exact ($Key.name)
+				{
+					"username"  	{$Myobj.Add('UserName',$Key.'#text')}
+					"authString"	{$Myobj.Add('AuthToken',$Key.'#text')}
+					"timeAccessed"	{$Myobj.Add('TimeAccessed',[DateTime]::ParseExact($Key.'#text',$DateTimeFormat,$Null))}
+				}
 			}
+			
+			Write-Verbose " [Get-SplunkLogin] :: Returning Object"
+			$obj = New-Object PSObject -Property $Myobj -ea 0 | where{$_.UserName -match $Name}
+			$obj.PSTypeNames.Clear()
+		    $obj.PSTypeNames.Add('Splunk.SDK.AuthToken')
+		    $obj
 		}
-		New-Object PSObject -Property $Myobj -ea 0 | where{$_.UserName -match $Name}
+	}
+	else
+	{
+		Write-Error " [Get-SplunkLogin] :: No value returned from Server [$ComputerName]"
 	}
 
+	Write-Verbose " [Get-SplunkLogin] :: =========    End   ========="
+	
 }	# Get-SplunkLogin
 
 #endregion Get-SplunkAuthToken
@@ -489,14 +544,27 @@ function Get-SplunkAuthToken
         
     )
 	
+	Write-Verbose " [Get-SplunkAuthToken] :: Starting..."
 	Write-Verbose " [Get-SplunkAuthToken] :: Checking ParameterSet"
     Write-Verbose " [Get-SplunkAuthToken] :: Using [$($pscmdlet.ParameterSetName)] ParameterSet."
     switch ($pscmdlet.ParameterSetName)
     {
-        "byCredential"     {
+        "byCredential"      {
+								Write-Verbose " [Get-SplunkAuthToken] :: Parameters"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - ComputerName = $ComputerName"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - Port         = $Port"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - Protocol     = $Protocol"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - Timeout      = $Timeout"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - Credential   = $Credential"
                                 $MyCredential = $Credential
                             }
         "byUserName"        {
+								Write-Verbose " [Get-SplunkAuthToken] :: Parameters"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - UserName     = $UserName"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - ComputerName = $ComputerName"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - Port         = $Port"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - Protocol     = $Protocol"
+								Write-Verbose " [Get-SplunkAuthToken] ::  - Timeout      = $Timeout"
                                 Write-Verbose " [Get-SplunkAuthToken] :: Creating a PSCredential object using [$UserName]"
                                 $MyCredential = New-SplunkCredential -UserName $UserName
                             }
@@ -509,6 +577,7 @@ function Get-SplunkAuthToken
 	
 	$MyParameters = @{ 'username'= $MyUserName ; 'password'= $MyPassword }
 	
+	Write-Verbose "  [Get-SplunkAuthToken] :: Setting up Invoke-APIRequest parameters"
 	$InvokeAPIArgs = @{
 		ComputerName = $ComputerName
 		Port         = $Port
@@ -516,23 +585,315 @@ function Get-SplunkAuthToken
 		Timeout      = $Timeout
 		RequestType  = "POST"
 		URL          = '/services/auth/login'
+		Verbose      = $VerbosePreference -eq "Continue"
 	}
 	
 	Write-Verbose "  [Get-SplunkAuthToken] :: Getting Auth Token via Invoke-SplunkAPIRequest"
 	[XML]$Response = Invoke-SplunkAPIRequest @InvokeAPIArgs -Arguments $MyParameters -NoAuth
 	
-	$Myobj = @{
-		UserName  = $MyUserName
-		AuthToken = $Response.Response.sessionKey
+	if($response)
+	{
+		Write-Verbose "  [Get-SplunkAuthToken] :: Creating object to return"
+		$Myobj = @{
+			UserName  = $MyUserName
+			AuthToken = $Response.Response.sessionKey
+		}
+		$obj = New-Object PSObject -Property $myobj
+	    $obj.PSTypeNames.Clear()
+	    $obj.PSTypeNames.Add('Splunk.SDK.AuthToken')
+	    $obj
 	}
-	$obj = New-Object PSObject -Property $myobj
-    $obj.PSTypeNames.Clear()
-    $obj.PSTypeNames.Add('Splunk.SDK.AuthToken')
-    $obj
+	else
+	{
+		Write-Error " [Get-SplunkAuthToken] :: No value returned from Server [$ComputerName]"
+	}
 
+	Write-Verbose " [Get-SplunkAuthToken] :: =========    End   ========="
+	
 }	# Get-SplunkAuthToken
 
 #endregion Get-SplunkAuthToken
+
+#endregion Authentication
+
+################################################################################
+
+#region SplunkD
+
+#region Get-Splunkd
+
+function Get-Splunkd
+{
+	[Cmdletbinding()]
+    Param(
+	
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+	
+	Write-Verbose " [Get-Splunkd] :: Starting..."
+	Write-Verbose " [Get-Splunkd] :: Parameters"
+	Write-Verbose " [Get-Splunkd] ::  - ComputerName = $ComputerName"
+	Write-Verbose " [Get-Splunkd] ::  - Port         = $Port"
+	Write-Verbose " [Get-Splunkd] ::  - Protocol     = $Protocol"
+	Write-Verbose " [Get-Splunkd] ::  - Timeout      = $Timeout"
+	Write-Verbose " [Get-Splunkd] ::  - Credential   = $Credential"
+
+	Write-Verbose " [Get-Splunkd] :: Setting up Invoke-APIRequest parameters"
+	$InvokeAPIParams = @{
+		ComputerName = $ComputerName
+		Port         = $Port
+		Protocol     = $Protocol
+		Timeout      = $Timeout
+		Credential   = $Credential
+		URL          = '/services/server/settings' 
+		Verbose      = $VerbosePreference -eq "Continue"
+	}
+		
+	Write-Verbose " [Get-Splunkd] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+	[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+	if($Results)
+	{
+		$MyObj = @{}
+		Write-Verbose " [Get-Splunkd] :: Creating Hash Table to be used to create Splunk.SDK.ServiceStatus"
+		switch ($results.feed.entry.content.dict.key)
+		{
+        	{$_.name -eq "SPLUNK_DB"}		    {$Myobj.Add("Splunk_DB",$_.'#text');continue}
+        	{$_.name -eq "SPLUNK_HOME"}		    {$Myobj.Add("Splunk_Home",$_.'#text');continue}
+			{$_.name -eq "enableSplunkWebSSL"}	{$Myobj.Add("EnableWebSSL",[bool]($_.'#text'));continue}
+	        {$_.name -eq "host"}				{$Myobj.Add("ComputerName",$_.'#text');continue}
+	        {$_.name -eq "httpport"}			{$Myobj.Add("HTTPPort",$_.'#text');continue}
+	        {$_.name -eq "mgmtHostPort"}		{$Myobj.Add("MgmtPort",$_.'#text');continue}
+	        {$_.name -eq "minFreeSpace"}		{$Myobj.Add("MinFreeSpace",$_.'#text');continue}
+	        {$_.name -eq "sessionTimeout"}		{$Myobj.Add("SessionTimeout",$_.'#text');continue}
+	        {$_.name -eq "startwebserver"}		{$Myobj.Add("EnableWeb",[bool]($_.'#text'));continue}
+	        {$_.name -eq "trustedIP"}			{$Myobj.Add("TrustedIP",$_.'#text');continue}
+		}
+		
+		# Creating Splunk.SDK.ServiceStatus
+	    $obj = New-Object PSObject -Property $MyObj
+	    $obj.PSTypeNames.Clear()
+	    $obj.PSTypeNames.Add('Splunk.SDK.Splunkd.Setting')
+	    $obj
+	}
+	else
+	{
+		Write-Verbose " [Get-Splunkd] :: Creating Hash Table to be used to create Splunk.SDK.ServiceStatus"
+	}
+
+	Write-Verbose " [Get-Splunkd] :: =========    End   ========="
+} # Get-Splunkd
+
+#endregion Get-Splunkd
+
+#region Test-Splunkd
+
+function Test-Splunkd
+{
+	[Cmdletbinding()]
+    Param(
+	
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+		
+		[Parameter()]
+		[SWITCH]$Native
+        
+    )
+	
+	Write-Verbose " [Test-Splunkd] :: Starting..."
+	Write-Verbose " [Test-Splunkd] :: Parameters"
+	Write-Verbose " [Test-Splunkd] ::  - ComputerName = $ComputerName"
+	Write-Verbose " [Test-Splunkd] ::  - Port         = $Port"
+	Write-Verbose " [Test-Splunkd] ::  - Protocol     = $Protocol"
+	Write-Verbose " [Test-Splunkd] ::  - Timeout      = $Timeout"
+	Write-Verbose " [Test-Splunkd] ::  - Credential   = $Credential"
+	Write-Verbose " [Test-Splunkd] ::  - Native       = $Native"
+	
+	$Results = Get-Splunkd @PSBoundParameters
+	
+	if($Results)
+	{
+		$True
+	}
+	else
+	{
+		$False
+	}
+
+	Write-Verbose " [Test-Splunkd] :: =========    End   ========="
+} # Test-Splunkd
+
+#endregion Test-Splunkd
+
+#region Set-Splunkd
+
+function Set-Splunkd
+{
+	[Cmdletbinding()]
+    Param(
+	
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+	
+	Write-Error "Not Implemented Yet" -ErrorAction Stop
+	
+	Write-Verbose " [Set-Splunkd] :: Starting..."
+	Write-Verbose " [Set-Splunkd] :: Parameters"
+	Write-Verbose " [Set-Splunkd] ::  - ComputerName = $ComputerName"
+	Write-Verbose " [Set-Splunkd] ::  - Port         = $Port"
+	Write-Verbose " [Set-Splunkd] ::  - Protocol     = $Protocol"
+	Write-Verbose " [Set-Splunkd] ::  - Timeout      = $Timeout"
+	Write-Verbose " [Set-Splunkd] ::  - Credential   = $Credential"
+
+	Write-Verbose " [Set-Splunkd] :: Setting up Invoke-APIRequest parameters"
+	$InvokeAPIParams = @{
+		ComputerName = $ComputerName
+		Port         = $Port
+		Protocol     = $Protocol
+		Timeout      = $Timeout
+		Credential   = $Credential
+		URL          = '/services/server/settings' 
+		Verbose      = $VerbosePreference -eq "Continue"
+	}
+		
+	Write-Verbose " [Set-Splunkd] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+	[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+	if($Results)
+	{
+
+	}
+	else
+	{
+		Write-Verbose " [Set-Splunkd] :: Creating Hash Table to be used to create Splunk.SDK.ServiceStatus"
+	}
+
+	Write-Verbose " [Set-Splunkd] :: =========    End   ========="
+} # Set-Splunkd
+
+#endregion Set-Splunkd
+
+#region Restart-Splunkd
+
+function Restart-Splunkd
+{
+	[Cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
+    Param(
+	
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+		
+		[Parameter()]
+		[SWITCH]$Force,
+		
+		[Parameter()]
+		[SWITCH]$Native
+        
+    )
+	
+	Write-Verbose " [Restart-Splunkd] :: Starting..."
+	Write-Verbose " [Restart-Splunkd] :: Parameters"
+	Write-Verbose " [Restart-Splunkd] ::  - ComputerName = $ComputerName"
+	Write-Verbose " [Restart-Splunkd] ::  - Port         = $Port"
+	Write-Verbose " [Restart-Splunkd] ::  - Protocol     = $Protocol"
+	Write-Verbose " [Restart-Splunkd] ::  - Timeout      = $Timeout"
+	Write-Verbose " [Restart-Splunkd] ::  - Credential   = $Credential"
+
+	Write-Verbose " [Restart-Splunkd] :: Setting up Invoke-APIRequest parameters"
+	$InvokeAPIParams = @{
+		ComputerName = $ComputerName
+		Port         = $Port
+		Protocol     = $Protocol
+		Timeout      = $Timeout
+		Credential   = $Credential
+		URL          = '/services/server/control/restart' 
+		Verbose      = $VerbosePreference -eq "Continue"
+	}
+
+	if($Force -or $PSCmdlet.ShouldProcess($ComputerName,"Restarting Splunkd Service"))
+    {
+		if($Native)
+		{
+			Write-Error "Not Implemented Yet" -ErrorAction Stop
+		}
+		else
+		{
+	        Write-Verbose " [Restart-Splunkd] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+			$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+			Write-Host "Please wait..."
+			if($Results)
+			{
+				while($true)
+				{
+					sleep 3
+					$SplunkD = Get-Splunkd -ComputerName $ComputerName -Port $Port -Protocol $Protocol -Credential $Credential
+					if($SplunkD)
+					{
+						return $SplunkD
+					}
+				}
+			}
+		}
+    }
+	
+	Write-Verbose " [Restart-Splunkd] :: =========    End   ========="
+	
+} # Get-Splunkd
+
+#endregion Restart-Splunkd
+
+#endregion SplunkD
 
 #endregion functions
 
@@ -541,33 +902,33 @@ function Get-SplunkAuthToken
 function Get-Splunk
 {
     <#
-    .Synopsis
-        Get all the command contained in the BSonPosh Module
-        
-    .Description
-        Get all the command contained in the BSonPosh Module
-        
-    .Parameter Verb
-    
-    .Parameter Noun
-    
-    .Example
-        Get-Splunk
-        
-    .Example
-        Get-Splunk -verb Get
-        
-    .Example
-        Get-Splunk -noun Host
-        
-    .ReturnValue
-        function
-        
-    .Notes
-        NAME:      Get-Splunk
-        AUTHOR:    Splunk\bshell
-        Website:   www.Splunk.com
-        #Requires -Version 2.0
+	    .Synopsis
+	        Get all the command contained in the BSonPosh Module
+	        
+	    .Description
+	        Get all the command contained in the BSonPosh Module
+	        
+	    .Parameter Verb
+	    
+	    .Parameter Noun
+	    
+	    .Example
+	        Get-Splunk
+	        
+	    .Example
+	        Get-Splunk -verb Get
+	        
+	    .Example
+	        Get-Splunk -noun Host
+	        
+	    .ReturnValue
+	        function
+	        
+	    .Notes
+	        NAME:      Get-Splunk
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.Splunk.com
+	        #Requires -Version 2.0
     #>
 
     [CmdletBinding()]
