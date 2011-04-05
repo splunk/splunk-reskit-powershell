@@ -357,7 +357,7 @@ function Connect-Splunk
         [STRING]$Protocol = "https", 
         
         [Parameter()]
-        [INT]$Timeout = 5000, 
+        [INT]$Timeout = 10000, 
         
         [Parameter(ParameterSetName="byCredentials")]
         [System.Management.Automation.PSCredential]$Credentials,
@@ -615,6 +615,362 @@ function Get-SplunkAuthToken
 
 #endregion Get-SplunkAuthToken
 
+#region Set-SplunkdPassword
+
+function Set-SplunkdPassword
+{
+
+	<#
+        .Synopsis 
+            Sets the password for the user provided.
+            
+        .Description
+            Sets the password for the user provided. This is the password found in the Splunk web interface: Manager » Access controls » Users » <UserName>
+        
+		.Parameter UserName
+			User to set the password for. This is required.
+			
+		.Parameter NewPassword
+			Password for the user. If not provide you will be prompted for a password.
+			
+        .Parameter ComputerName
+            Name of the Splunk instance to set the user password on (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+			
+		.Example
+            Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd!
+            Description
+            -----------
+            Sets the password for user 'admin' to 'P@ssw0rd!' on targeted Splunk instance using the $SplunkDefaultObject settings.
+    
+		.Example
+            Set-SplunkdPassword -UserName admin
+            Description
+            -----------
+            Sets the password for user 'admin' to provided password on targeted Splunk instance using the $SplunkDefaultObject settings.
+			
+        .Example
+            Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd! -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Sets the password for user 'admin' to 'P@ssw0rd!' on MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd!
+            Description
+            -----------
+            Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd! -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Set-SplunkdPassword 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
+	[Cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
+    Param(
+
+		[Parameter(Mandatory=$True)]
+		[STRING]$UserName,
+		
+		[Parameter()]
+		[STRING]$NewPassword,
+		
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+		
+		[Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+		
+		[Parameter()]
+		[SWITCH]$Force
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [Set-SplunkdPassword] :: Starting..."
+		if(!$NewPassword)
+		{
+			$SecureString = Read-Host -AsSecureString -Prompt "Please type new Password"
+			$TempCreds = New-Object System.Management.Automation.PSCredential($UserName,$SecureString)
+			$Password = $TempCreds.GetNetworkCredential().Password
+		}
+		else
+		{
+			$Password = $NewPassword 
+		}
+	}
+	Process
+	{
+		Write-Verbose " [Set-SplunkdPassword] :: Parameters"
+		Write-Verbose " [Set-SplunkdPassword] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Set-SplunkdPassword] ::  - Port         = $Port"
+		Write-Verbose " [Set-SplunkdPassword] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Set-SplunkdPassword] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Set-SplunkdPassword] ::  - Credential   = $Credential"
+		Write-Verbose " [Set-SplunkdPassword] ::  - UserName     = $UserName"
+		Write-Verbose " [Set-SplunkdPassword] ::  - NewPassword  = $Password"
+
+		Write-Verbose " [Set-SplunkdPassword] :: Verify the User exist on the Target instance [$ComputerName]"
+		$GetSplunkdUser = @{
+			UserName	 = $UserName
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+		}
+		
+		$User = Get-SplunkdUser @GetSplunkdUser
+		if(!$User)
+		{
+			Write-Host "User [$UserName] not found on [$ComputerName]" -ForegroundColor Red -BackgroundColor White
+		}
+		else
+		{
+			Write-Verbose " [Set-SplunkdPassword] :: Setting up Invoke-APIRequest parameters"
+			$InvokeAPIParams = @{
+				ComputerName = $ComputerName
+				Port         = $Port
+				Protocol     = $Protocol
+				Timeout      = $Timeout
+				Credential   = $Credential
+				URL          = "/services/authentication/users/$UserName" 
+				Verbose      = $VerbosePreference -eq "Continue"
+			}
+				
+			Write-Verbose " [Set-SplunkdPassword] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+			if($Force -or $PSCmdlet.ShouldProcess($ComputerName,"Setting Password for $UserName"))
+			{
+				[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -Arguments @{'password'=$Password} -RequestType POST
+				if($Results)
+				{
+					Write-Host "Password for [$UserName] changed on [$ComputerName]"
+				}
+				else
+				{
+					Write-Verbose " [Set-SplunkdPassword] :: Bad response please see Invoke-SplunkAPIRequest"
+				}
+			}
+		}
+	}
+	End
+	{
+		Write-Verbose " [Set-SplunkdPassword] :: =========    End   ========="
+	}
+} # Set-SplunkdPassword
+
+#endregion Set-SplunkdPassword
+
+#region Get-SplunkdUser
+
+function Get-SplunkdUser
+{
+
+	<#
+        .Synopsis 
+            Returns users for the targeted Splunk instance.
+            
+        .Description
+            Returns users for the targeted Splunk instance. These are found in the Splunk web interface Manager » Access controls » Users 
+        
+		.Parameter UserName
+			User to return. Returns nothing if user is not found.
+			
+        .Parameter ComputerName
+            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+			
+		.Example
+            Get-SplunkdUser
+            Description
+            -----------
+            Gets the users for the targeted Splunk instance using the $SplunkDefaultObject settings.
+    
+		.Example
+            Get-SplunkdUser -UserName admin
+            Description
+            -----------
+            Returns the admin user for the targeted Splunk instance using the $SplunkDefaultObject settings.
+			
+        .Example
+            Get-SplunkdUser -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the users for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Get-SplunkdUser
+            Description
+            -----------
+            Gets the users for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Get-SplunkdUser -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the users for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkdUser 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+	
+	[Cmdletbinding()]
+    Param(
+	
+		[Parameter()]
+		[STRING]$UserName,
+		
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [Get-SplunkdUser] :: Starting..."
+	}
+	Process
+	{
+		Write-Verbose " [Get-SplunkdUser] :: Parameters"
+		Write-Verbose " [Get-SplunkdUser] ::  - UserName     = $UserName"
+		Write-Verbose " [Get-SplunkdUser] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Get-SplunkdUser] ::  - Port         = $Port"
+		Write-Verbose " [Get-SplunkdUser] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Get-SplunkdUser] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Get-SplunkdUser] ::  - Credential   = $Credential"
+		
+		if($UserName)
+		{
+			$ServiceURL = "/services/authentication/users/$UserName"
+		}
+		else
+		{
+			$ServiceURL = "/services/authentication/users"
+		}	
+
+		Write-Verbose " [Get-SplunkdUser] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			URL          = $ServiceURL
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Get-SplunkdUser] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+		}
+		catch
+		{
+			$ErrMessage = $_.Exception.InnerException.Message
+			Write-Verbose " [Get-SplunkdUser] :: Invoke-SPlunkAPIRequest threw exception"
+			Write-Verbose " [Get-SplunkdUser] ::  -> $errMessage"
+		}
+		if($Results)
+		{
+			foreach($Entry in $Results.feed.entry)
+			{
+				$MyObj = @{}
+				$MyObj.Add("UserName",$Entry.Title)
+				Write-Verbose " [Get-SplunkdUser] :: Creating Hash Table to be used to create 'Splunk.SDK.Splunkd.User'"
+				switch ($Entry.content.dict.key)
+				{
+		        	{$_.name -eq "email"}						{$Myobj.Add("Email",$_.'#text');continue}
+					{$_.name -eq "password"}					{$Myobj.Add("password",$_.'#text');continue}
+			        {$_.name -eq "realname"}					{$Myobj.Add("FullName",$_.'#text');continue}
+			        {$_.name -eq "roles"}						{$Myobj.Add("roles",$_.list.item);continue}
+			        {$_.name -eq "type"}						{$Myobj.Add("Type",$_.'#text');continue}
+					{$_.name -eq "defaultApp"}		    		{$Myobj.Add("DefaultApp",$_.'#text');continue}
+		        	{$_.name -eq "defaultAppIsUserOverride"}	{$Myobj.Add("Splunk_Home",$_.'#text');continue}
+					{$_.name -eq "defaultAppSourceRole"}		{$Myobj.Add("defaultAppSourceRole",$_.'#text');continue}
+				}
+				
+				# Creating Splunk.SDK.Splunkd.User
+			    $obj = New-Object PSObject -Property $MyObj
+			    $obj.PSTypeNames.Clear()
+			    $obj.PSTypeNames.Add('Splunk.SDK.Splunkd.User')
+			    $obj
+			}
+		}
+		else
+		{
+			Write-Verbose " [Get-SplunkdUser] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+		}
+	}
+	End
+	{
+		Write-Verbose " [Get-SplunkdUser] :: =========    End   ========="
+	}
+} # Get-Splunkd
+
+#endregion Get-SplunkdUser
+
 #endregion Authentication
 
 ################################################################################
@@ -631,8 +987,7 @@ function Get-Splunkd
             Gets the values set for the targeted Splunk instance.
             
         .Description
-            Gets the values set for the targeted Splunk instance. These are the 
-			settings found in the Splunk web interface Manage > System settings > General Settings
+            Gets the values set for the targeted Splunk instance. These are the settings found in the Splunk web interface Manager » System settings » General settings
             
         .Parameter ComputerName
             Name of the Splunk instance to get the settings for (Default is $SplunkDefaultObject.ComputerName.)
@@ -956,8 +1311,7 @@ function Restart-SplunkService
             Restarts Splunkd and SplunkWeb on targeted Splunk instance.
             
         .Description
-            Restarts Splunkd and SplunkWeb on targeted Splunk instance. 
-			Splunk Web will only be restarted if the services is started.
+            Restarts Splunkd and SplunkWeb on targeted Splunk instance. Splunk Web will only be restarted if the services is started.
             
         .Parameter ComputerName
             Name of the Splunk instance to restart services on (Default is $SplunkDefaultObject.ComputerName.)
