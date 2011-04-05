@@ -31,6 +31,7 @@ function Invoke-SplunkAPIRequest
         [int]$Port,
         
         [Parameter()]
+		[ValidateSet("http", "https")]
         [STRING]$Protocol,
         
         [Parameter()]
@@ -624,6 +625,64 @@ function Get-SplunkAuthToken
 
 function Get-Splunkd
 {
+
+	<#
+        .Synopsis 
+            Gets the values set for the targeted Splunk instance.
+            
+        .Description
+            Gets the values set for the targeted Splunk instance. These are the 
+			settings found in the Splunk web interface Manage > System settings > General Settings
+            
+        .Parameter ComputerName
+            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+			
+		.Example
+            Get-Splunkd
+            Description
+            -----------
+            Gets the values set for the targeted Splunk instance using the $SplunkDefaultObject settings.
+    
+        .Example
+            Get-Splunkd -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the values set for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Get-Splunkd
+            Description
+            -----------
+            Gets the values set for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Get-Splunkd -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the values set for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-Splunkd 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+	
 	[Cmdletbinding()]
     Param(
 	
@@ -634,6 +693,7 @@ function Get-Splunkd
         [int]$Port            = $SplunkDefaultObject.Port,
         
         [Parameter()]
+		[ValidateSet("http", "https")]
         [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
         
         [Parameter()]
@@ -644,57 +704,66 @@ function Get-Splunkd
         
     )
 	
-	Write-Verbose " [Get-Splunkd] :: Starting..."
-	Write-Verbose " [Get-Splunkd] :: Parameters"
-	Write-Verbose " [Get-Splunkd] ::  - ComputerName = $ComputerName"
-	Write-Verbose " [Get-Splunkd] ::  - Port         = $Port"
-	Write-Verbose " [Get-Splunkd] ::  - Protocol     = $Protocol"
-	Write-Verbose " [Get-Splunkd] ::  - Timeout      = $Timeout"
-	Write-Verbose " [Get-Splunkd] ::  - Credential   = $Credential"
-
-	Write-Verbose " [Get-Splunkd] :: Setting up Invoke-APIRequest parameters"
-	$InvokeAPIParams = @{
-		ComputerName = $ComputerName
-		Port         = $Port
-		Protocol     = $Protocol
-		Timeout      = $Timeout
-		Credential   = $Credential
-		URL          = '/services/server/settings' 
-		Verbose      = $VerbosePreference -eq "Continue"
-	}
-		
-	Write-Verbose " [Get-Splunkd] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
-	[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
-	if($Results)
+	Begin
 	{
-		$MyObj = @{}
-		Write-Verbose " [Get-Splunkd] :: Creating Hash Table to be used to create Splunk.SDK.ServiceStatus"
-		switch ($results.feed.entry.content.dict.key)
-		{
-        	{$_.name -eq "SPLUNK_DB"}		    {$Myobj.Add("Splunk_DB",$_.'#text');continue}
-        	{$_.name -eq "SPLUNK_HOME"}		    {$Myobj.Add("Splunk_Home",$_.'#text');continue}
-			{$_.name -eq "enableSplunkWebSSL"}	{$Myobj.Add("EnableWebSSL",[bool]($_.'#text'));continue}
-	        {$_.name -eq "host"}				{$Myobj.Add("ComputerName",$_.'#text');continue}
-	        {$_.name -eq "httpport"}			{$Myobj.Add("HTTPPort",$_.'#text');continue}
-	        {$_.name -eq "mgmtHostPort"}		{$Myobj.Add("MgmtPort",$_.'#text');continue}
-	        {$_.name -eq "minFreeSpace"}		{$Myobj.Add("MinFreeSpace",$_.'#text');continue}
-	        {$_.name -eq "sessionTimeout"}		{$Myobj.Add("SessionTimeout",$_.'#text');continue}
-	        {$_.name -eq "startwebserver"}		{$Myobj.Add("EnableWeb",[bool]($_.'#text'));continue}
-	        {$_.name -eq "trustedIP"}			{$Myobj.Add("TrustedIP",$_.'#text');continue}
+		Write-Verbose " [Get-Splunkd] :: Starting..."
+	}
+	Process
+	{
+		Write-Verbose " [Get-Splunkd] :: Parameters"
+		Write-Verbose " [Get-Splunkd] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Get-Splunkd] ::  - Port         = $Port"
+		Write-Verbose " [Get-Splunkd] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Get-Splunkd] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Get-Splunkd] ::  - Credential   = $Credential"
+
+		Write-Verbose " [Get-Splunkd] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			URL          = '/services/server/settings' 
+			Verbose      = $VerbosePreference -eq "Continue"
 		}
-		
-		# Creating Splunk.SDK.ServiceStatus
-	    $obj = New-Object PSObject -Property $MyObj
-	    $obj.PSTypeNames.Clear()
-	    $obj.PSTypeNames.Add('Splunk.SDK.Splunkd.Setting')
-	    $obj
+			
+		Write-Verbose " [Get-Splunkd] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+		if($Results)
+		{
+			$MyObj = @{}
+			Write-Verbose " [Get-Splunkd] :: Creating Hash Table to be used to create Splunk.SDK.ServiceStatus"
+			switch ($results.feed.entry.content.dict.key)
+			{
+	        	{$_.name -eq "SPLUNK_DB"}		    {$Myobj.Add("Splunk_DB",$_.'#text');continue}
+	        	{$_.name -eq "SPLUNK_HOME"}		    {$Myobj.Add("Splunk_Home",$_.'#text');continue}
+				{$_.name -eq "enableSplunkWebSSL"}	{$Myobj.Add("EnableWebSSL",[bool]($_.'#text'));continue}
+		        {$_.name -eq "serverName"}			{$Myobj.Add("ComputerName",$_.'#text');continue}
+				{$_.name -eq "host"}				{$Myobj.Add("DefaultHostName",$_.'#text');continue}
+		        {$_.name -eq "httpport"}			{$Myobj.Add("HTTPPort",$_.'#text');continue}
+		        {$_.name -eq "mgmtHostPort"}		{$Myobj.Add("MgmtPort",$_.'#text');continue}
+		        {$_.name -eq "minFreeSpace"}		{$Myobj.Add("MinFreeSpace",$_.'#text');continue}
+		        {$_.name -eq "sessionTimeout"}		{$Myobj.Add("SessionTimeout",$_.'#text');continue}
+		        {$_.name -eq "startwebserver"}		{$Myobj.Add("EnableWeb",[bool]($_.'#text'));continue}
+		        {$_.name -eq "trustedIP"}			{$Myobj.Add("TrustedIP",$_.'#text');continue}
+			}
+			
+			# Creating Splunk.SDK.ServiceStatus
+		    $obj = New-Object PSObject -Property $MyObj
+		    $obj.PSTypeNames.Clear()
+		    $obj.PSTypeNames.Add('Splunk.SDK.Splunkd.Setting')
+		    $obj
+		}
+		else
+		{
+			Write-Verbose " [Get-Splunkd] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+		}
 	}
-	else
+	End
 	{
-		Write-Verbose " [Get-Splunkd] :: Creating Hash Table to be used to create Splunk.SDK.ServiceStatus"
+		Write-Verbose " [Get-Splunkd] :: =========    End   ========="
 	}
-
-	Write-Verbose " [Get-Splunkd] :: =========    End   ========="
 } # Get-Splunkd
 
 #endregion Get-Splunkd
@@ -703,6 +772,63 @@ function Get-Splunkd
 
 function Test-Splunkd
 {
+
+	<#
+        .Synopsis 
+            Tests the targeted Splunk instance for a response.
+            
+        .Description
+            Tests the targeted Splunk instance for a response. Returns $True if the Splunk Instance responds or $False if it encounters a problem.
+            
+        .Parameter ComputerName
+            Name of the Splunk instance to test (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+			
+		.Example
+            Test-Splunkd
+            Description
+            -----------
+            Test the targeted Splunk instance using the $SplunkDefaultObject settings.
+    
+        .Example
+            Test-Splunkd -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Test MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Test-Splunkd
+            Description
+            -----------
+            Test each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Test-Splunkd -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Test each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Test-Splunkd 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+	
 	[Cmdletbinding()]
     Param(
 	
@@ -725,28 +851,36 @@ function Test-Splunkd
 		[SWITCH]$Native
         
     )
-	
-	Write-Verbose " [Test-Splunkd] :: Starting..."
-	Write-Verbose " [Test-Splunkd] :: Parameters"
-	Write-Verbose " [Test-Splunkd] ::  - ComputerName = $ComputerName"
-	Write-Verbose " [Test-Splunkd] ::  - Port         = $Port"
-	Write-Verbose " [Test-Splunkd] ::  - Protocol     = $Protocol"
-	Write-Verbose " [Test-Splunkd] ::  - Timeout      = $Timeout"
-	Write-Verbose " [Test-Splunkd] ::  - Credential   = $Credential"
-	Write-Verbose " [Test-Splunkd] ::  - Native       = $Native"
-	
-	$Results = Get-Splunkd @PSBoundParameters
-	
-	if($Results)
+	Begin
 	{
-		$True
+		Write-Verbose " [Test-Splunkd] :: Starting..."
 	}
-	else
+	Process
 	{
-		$False
+	
+		Write-Verbose " [Test-Splunkd] :: Parameters"
+		Write-Verbose " [Test-Splunkd] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Test-Splunkd] ::  - Port         = $Port"
+		Write-Verbose " [Test-Splunkd] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Test-Splunkd] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Test-Splunkd] ::  - Credential   = $Credential"
+		Write-Verbose " [Test-Splunkd] ::  - Native       = $Native"
+		
+		$Results = Get-Splunkd @PSBoundParameters
+		
+		if($Results)
+		{
+			$True
+		}
+		else
+		{
+			$False
+		}
 	}
-
-	Write-Verbose " [Test-Splunkd] :: =========    End   ========="
+	End
+	{
+		Write-Verbose " [Test-Splunkd] :: =========    End   ========="
+	}
 } # Test-Splunkd
 
 #endregion Test-Splunkd
@@ -812,10 +946,77 @@ function Set-Splunkd
 
 #endregion Set-Splunkd
 
-#region Restart-Splunkd
+#region Restart-SplunkService
 
-function Restart-Splunkd
+function Restart-SplunkService
 {
+
+	<#
+        .Synopsis 
+            Restarts Splunkd and SplunkWeb on targeted Splunk instance.
+            
+        .Description
+            Restarts Splunkd and SplunkWeb on targeted Splunk instance. 
+			Splunk Web will only be restarted if the services is started.
+            
+        .Parameter ComputerName
+            Name of the Splunk instance to restart services on (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+		
+		.Parameter Force
+			Suppresses the confirm prompt.
+		
+		.Parameter Wait
+			Waits for the Splunk instance to respond before proceeding.
+		
+		.Parameter Native
+			Restarts the services using native methods (Windows Only.)
+			
+		.Example
+            Restart-SplunkService
+            Description
+            -----------
+            Restarts the Splunk services using the $SplunkDefaultObject settings.
+    
+        .Example
+            Restart-SplunkService -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Restarts the Splunk services on MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Restart-SplunkService
+            Description
+            -----------
+            Restarts the Splunk services on each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Restart-SplunkService -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Restarts the Splunk services on each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Restart-SplunkService 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+	
 	[Cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
     Param(
 	
@@ -838,60 +1039,69 @@ function Restart-Splunkd
 		[SWITCH]$Force,
 		
 		[Parameter()]
+		[SWITCH]$Wait,
+		
+		[Parameter()]
 		[SWITCH]$Native
         
     )
-	
-	Write-Verbose " [Restart-Splunkd] :: Starting..."
-	Write-Verbose " [Restart-Splunkd] :: Parameters"
-	Write-Verbose " [Restart-Splunkd] ::  - ComputerName = $ComputerName"
-	Write-Verbose " [Restart-Splunkd] ::  - Port         = $Port"
-	Write-Verbose " [Restart-Splunkd] ::  - Protocol     = $Protocol"
-	Write-Verbose " [Restart-Splunkd] ::  - Timeout      = $Timeout"
-	Write-Verbose " [Restart-Splunkd] ::  - Credential   = $Credential"
-
-	Write-Verbose " [Restart-Splunkd] :: Setting up Invoke-APIRequest parameters"
-	$InvokeAPIParams = @{
-		ComputerName = $ComputerName
-		Port         = $Port
-		Protocol     = $Protocol
-		Timeout      = $Timeout
-		Credential   = $Credential
-		URL          = '/services/server/control/restart' 
-		Verbose      = $VerbosePreference -eq "Continue"
+	Begin
+	{
+		Write-Verbose " [Restart-SplunkService] :: Starting..."
 	}
+	Process
+	{
+		Write-Verbose " [Restart-SplunkService] :: Parameters"
+		Write-Verbose " [Restart-SplunkService] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Restart-SplunkService] ::  - Port         = $Port"
+		Write-Verbose " [Restart-SplunkService] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Restart-SplunkService] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Restart-SplunkService] ::  - Credential   = $Credential"
 
-	if($Force -or $PSCmdlet.ShouldProcess($ComputerName,"Restarting Splunkd Service"))
-    {
-		if($Native)
-		{
-			Write-Error "Not Implemented Yet" -ErrorAction Stop
+		Write-Verbose " [Restart-SplunkService] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			URL          = '/services/server/control/restart' 
+			Verbose      = $VerbosePreference -eq "Continue"
 		}
-		else
-		{
-	        Write-Verbose " [Restart-Splunkd] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
-			$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
-			Write-Host "Please wait..."
-			if($Results)
+
+		if($Force -or $PSCmdlet.ShouldProcess($ComputerName,"Restarting Splunk Services"))
+	    {
+			if($Native)
 			{
-				while($true)
+				Write-Error "Not Implemented Yet" -ErrorAction Stop
+			}
+			else
+			{
+		        Write-Verbose " [Restart-SplunkService] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+				$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+				Write-Host "Restarting Splunk services on $ComputerName, Please wait..."
+				if($Results -and $Wait)
 				{
-					sleep 3
-					$SplunkD = Get-Splunkd -ComputerName $ComputerName -Port $Port -Protocol $Protocol -Credential $Credential
-					if($SplunkD)
+					while($true)
 					{
-						return $SplunkD
+						sleep 3
+						$SplunkD = Get-Splunkd -ComputerName $ComputerName -Port $Port -Protocol $Protocol -Credential $Credential
+						if($SplunkD)
+						{
+							return $SplunkD
+						}
 					}
 				}
 			}
-		}
-    }
-	
-	Write-Verbose " [Restart-Splunkd] :: =========    End   ========="
-	
-} # Get-Splunkd
+	    }
+	}
+	End
+	{
+		Write-Verbose " [Restart-SplunkService] :: =========    End   ========="
+	}
+} # Restart-SplunkService
 
-#endregion Restart-Splunkd
+#endregion Restart-SplunkService
 
 #endregion SplunkD
 
