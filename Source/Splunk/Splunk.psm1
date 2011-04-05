@@ -1242,9 +1242,12 @@ function Test-Splunkd
 
 #region Set-Splunkd
 
+#region Set-Splunkd
+
 function Set-Splunkd
 {
-	[Cmdletbinding()]
+
+	[Cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
     Param(
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
@@ -1258,46 +1261,112 @@ function Set-Splunkd
         
         [Parameter()]
         [int]$Timeout         = $SplunkDefaultObject.Timeout,
-
+		
+		[Parameter()]
+		[STRING]$ServerName,
+		
+		[Parameter()]
+		[STRING]$DefaultHostName,
+		
+		[Parameter()]
+		[INT]$MangementPort,
+		
+		[Parameter()]
+		[STRING]$SSOTrustedIP,
+		
+		[Parameter()]
+		[INT]$WebPort,
+		
+		[Parameter()]
+		[STRING]$SessionTimeout,
+		
+		[Parameter()]
+		[STRING]$IndexPath,
+		
+		[Parameter()]
+		[INT]$MinFreeSpace,
+		
+#		[Parameter()]
+#		[SWITCH]$EnableWeb,
+#		
+#		[Parameter()]
+#		[SWITCH]$EnableSSL,
+		
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+		
+		[Parameter()]
+		[Switch]$Force
         
     )
 	
-	Write-Error "Not Implemented Yet" -ErrorAction Stop
-	
-	Write-Verbose " [Set-Splunkd] :: Starting..."
-	Write-Verbose " [Set-Splunkd] :: Parameters"
-	Write-Verbose " [Set-Splunkd] ::  - ComputerName = $ComputerName"
-	Write-Verbose " [Set-Splunkd] ::  - Port         = $Port"
-	Write-Verbose " [Set-Splunkd] ::  - Protocol     = $Protocol"
-	Write-Verbose " [Set-Splunkd] ::  - Timeout      = $Timeout"
-	Write-Verbose " [Set-Splunkd] ::  - Credential   = $Credential"
-
-	Write-Verbose " [Set-Splunkd] :: Setting up Invoke-APIRequest parameters"
-	$InvokeAPIParams = @{
-		ComputerName = $ComputerName
-		Port         = $Port
-		Protocol     = $Protocol
-		Timeout      = $Timeout
-		Credential   = $Credential
-		URL          = '/services/server/settings' 
-		Verbose      = $VerbosePreference -eq "Continue"
+	Begin
+	{	
+		$SetSplunkDParams = @{}
+		Write-Verbose " [Set-Splunkd] :: Starting..."
+		switch -exact ($PSBoundParameters.Keys)
+		{
+			"ServerName"		{$SetSplunkDParams.Add('serverName',$ServerName)}
+			"DefaultHostName"	{$SetSplunkDParams.Add('host',$DefaultHostName)}
+			"MangementPort"		{$SetSplunkDParams.Add('mgmtHostPort',$MangementPort)}
+			"SSOTrustedIP"		{$SetSplunkDParams.Add('trustedIP',$SSOTrustedIP)}
+			"WebPort"			{$SetSplunkDParams.Add('httpport',$WebPort)}
+			"SessionTimeout"	{$SetSplunkDParams.Add('sessionTimeout',$SessionTimeout)}
+			"IndexPath"			{$SetSplunkDParams.Add('SPLUNK_DB',$IndexPath)}
+			"MinFreeSpace"		{$SetSplunkDParams.Add('minFreeSpace',$MinFreeSpace)}
+			#"EnableWeb"			{$SetSplunkDParams.Add('startwebserver',$EnableWeb)}
+			#"EnableSSL"			{$SetSplunkDParams.Add('enableSplunkWebSSL',$EnableSSL)}
+		}
 	}
-		
-	Write-Verbose " [Set-Splunkd] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
-	[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
-	if($Results)
+	Process
 	{
+		Write-Verbose " [Set-Splunkd] :: Parameters"
+		Write-Verbose " [Set-Splunkd] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Set-Splunkd] ::  - Port         = $Port"
+		Write-Verbose " [Set-Splunkd] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Set-Splunkd] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Set-Splunkd] ::  - Credential   = $Credential"
 
+		Write-Verbose " [Set-Splunkd] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			URL          = '/services/server/settings/settings' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Set-Splunkd] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		if($Force -or $PSCmdlet.ShouldProcess($ComputerName,"Setting Splunkd Settings"))
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -Arguments $SetSplunkDParams -RequestType POST
+			if($Results)
+			{
+				$GetSplunkd = @{
+					ComputerName = $ComputerName
+					Port         = $Port
+					Protocol     = $Protocol
+					Timeout      = $Timeout
+					Credential   = $Credential
+					Verbose      = $VerbosePreference -eq "Continue"
+				}
+				Get-Splunkd @GetSplunkd
+			}
+			else
+			{
+				Write-Verbose " [Set-Splunkd] ::  No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
 	}
-	else
+	End
 	{
-		Write-Verbose " [Set-Splunkd] :: Creating Hash Table to be used to create Splunk.SDK.ServiceStatus"
+		Write-Verbose " [Set-Splunkd] :: =========    End   ========="
 	}
-
-	Write-Verbose " [Set-Splunkd] :: =========    End   ========="
 } # Set-Splunkd
+
+#endregion Set-Splunkd
 
 #endregion Set-Splunkd
 
