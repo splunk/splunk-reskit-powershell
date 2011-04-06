@@ -1247,6 +1247,86 @@ function Test-Splunkd
 function Set-Splunkd
 {
 
+	<#
+        .Synopsis 
+            Sets the values for the targeted Splunk instance.
+            
+        .Description
+            Sets the values for the targeted Splunk instance. These are the settings found in the Splunk web interface Manager » System settings » General settings
+            
+        .Parameter ComputerName
+            Name of the Splunk instance to set the settings for (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+		
+		.Parameter ServerName
+			Value to use for the Splunk server name.
+			
+		.Parameter DefaultHostName
+			Sets the host field value for all events coming from this server.
+
+		.Parameter MangementPort
+			Port that Splunk Web uses to communicate with the splunkd process. This port is also used for distributed search.
+		
+		.Parameter SSOTrustedIP
+			The IP address to accept trusted logins from. Only set this if you are using single sign-on (SSO) with a proxy server for authentication.
+		
+		.Parameter WebPort,
+			Port to use for Splunk Web.
+			
+		.Parameter SessionTimeout
+			Set the Splunk Web session timeout. Use the same notation as relative time modifiers, for example 3h, 100s, 6d.
+
+		.Parameter IndexPath
+			Path to Idexese
+		
+		.Parameter MinFreeSpace
+			Pause indexing if free disk space (in MB) falls below 
+		
+		.Example
+            Get-Splunkd
+            Description
+            -----------
+            Gets the values set for the targeted Splunk instance using the $SplunkDefaultObject settings.
+    
+        .Example
+            Get-Splunkd -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the values set for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Get-Splunkd
+            Description
+            -----------
+            Gets the values set for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Get-Splunkd -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the values set for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-Splunkd 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
 	[Cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
     Param(
 	
@@ -1318,6 +1398,7 @@ function Set-Splunkd
 			#"EnableSSL"			{$SetSplunkDParams.Add('enableSplunkWebSSL',$EnableSSL)}
 		}
 	}
+	
 	Process
 	{
 		Write-Verbose " [Set-Splunkd] :: Parameters"
@@ -1344,6 +1425,7 @@ function Set-Splunkd
 			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -Arguments $SetSplunkDParams -RequestType POST
 			if($Results)
 			{
+				Write-Verbose " [Set-Splunkd] :: Creating HASH table to be used for parameters for Get-Splunkd"
 				$GetSplunkd = @{
 					ComputerName = $ComputerName
 					Port         = $Port
