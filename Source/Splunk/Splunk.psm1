@@ -1748,6 +1748,159 @@ function Restart-SplunkService
 
 #endregion Restart-SplunkService
 
+#region Get-SplunkdVersion
+
+function Get-SplunkdVersion
+{
+
+	<#
+        .Synopsis 
+            Gets the OS and Splunk version info for the targeted Splunk instance.
+            
+        .Description
+            Gets the OS and Splunk version info for the targeted Splunk instance. 
+			
+        .Parameter ComputerName
+            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+			
+		.Example
+            Get-SplunkdVersion
+            Description
+            -----------
+            Gets the OS and Splunk version info for the targeted Splunk instance using the $SplunkDefaultObject settings.
+    
+        .Example
+            Get-SplunkdVersion -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the OS and Splunk version info for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Get-SplunkdVersion
+            Description
+            -----------
+            Gets the OS and Splunk version info for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Get-SplunkdVersion -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the OS and Splunk version info for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkdVersion 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+	
+	[Cmdletbinding()]
+    Param(
+	
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [Get-SplunkdVersion] :: Starting..."
+	}
+	Process
+	{
+		Write-Verbose " [Get-SplunkdVersion] :: Parameters"
+		Write-Verbose " [Get-SplunkdVersion] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Get-SplunkdVersion] ::  - Port         = $Port"
+		Write-Verbose " [Get-SplunkdVersion] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Get-SplunkdVersion] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Get-SplunkdVersion] ::  - Credential   = $Credential"
+
+		Write-Verbose " [Get-SplunkdVersion] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = '/services/server/info/server-info' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Get-SplunkdVersion] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+				$MyObj = @{}
+				$MyObj.Add("ComputerName",$ComputerName)
+				Write-Verbose " [Get-SplunkdVersion] :: Creating Hash Table to be used to create Splunk.SDK.ServiceStatus"
+				switch ($results.feed.entry.content.dict.key)
+				{
+		        	{$_.name -eq "build"}		    	{$Myobj.Add("Build",$_.'#text');continue}
+		        	{$_.name -eq "cpu_arch"}		    {$Myobj.Add("CPU_Arch",$_.'#text');continue}
+					{$_.name -eq "GUID"}				{$Myobj.Add("GUID",$_.'#text');continue}
+			        {$_.name -eq "isFree"}				{$Myobj.Add("IsFree",[bool]($_.'#text'));continue}
+					{$_.name -eq "isTrial"}				{$Myobj.Add("IsTrial",[bool]($_.'#text'));continue}
+			        {$_.name -eq "mode"}				{$Myobj.Add("Mode",$_.'#text');continue}
+			        {$_.name -eq "os_build"}			{$Myobj.Add("OSBuild",$_.'#text');continue}
+			        {$_.name -eq "os_name"}				{$Myobj.Add("OSName",$_.'#text');continue}
+			        {$_.name -eq "os_version"}			{$Myobj.Add("OSVersion",$_.'#text');continue}
+			        {$_.name -eq "version"}				{$Myobj.Add("Version",[bool]($_.'#text'));continue}
+				}
+				
+				# Creating Splunk.SDK.ServiceStatus
+			    $obj = New-Object PSObject -Property $MyObj
+			    $obj.PSTypeNames.Clear()
+			    $obj.PSTypeNames.Add('Splunk.SDK.Splunkd.VersionInfo')
+			    $obj
+			}
+			else
+			{
+				Write-Verbose " [Get-SplunkdVersion] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [Get-SplunkdVersion] :: Invoke-SplunkAPIRequest threw an exception: $_"
+		}
+	}
+	End
+	{
+		Write-Verbose " [Get-SplunkdVersion] :: =========    End   ========="
+	}
+} # Get-SplunkdVersion
+
+#endregion Get-SplunkdVersion
+
 #endregion SplunkD
 
 #endregion functions
