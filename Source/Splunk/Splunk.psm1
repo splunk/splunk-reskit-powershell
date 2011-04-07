@@ -1874,7 +1874,7 @@ function Get-SplunkdVersion
 			        {$_.name -eq "os_build"}			{$Myobj.Add("OSBuild",$_.'#text');continue}
 			        {$_.name -eq "os_name"}				{$Myobj.Add("OSName",$_.'#text');continue}
 			        {$_.name -eq "os_version"}			{$Myobj.Add("OSVersion",$_.'#text');continue}
-			        {$_.name -eq "version"}				{$Myobj.Add("Version",[bool]($_.'#text'));continue}
+			        {$_.name -eq "version"}				{$Myobj.Add("Version",$_.'#text');continue}
 				}
 				
 				# Creating Splunk.SDK.ServiceStatus
