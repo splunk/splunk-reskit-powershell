@@ -1903,8 +1903,200 @@ function Get-SplunkdVersion
 
 #endregion SplunkD
 
-#endregion functions
+################################################################################
 
+#region Splunk License
+
+#region Get-SplunkLicense
+
+function Get-SplunkLicense
+{
+
+	<#
+        .Synopsis 
+            Returns the licenses registered for the targeted Splunk instance.
+            
+        .Description
+            Returns the licenses registered for the targeted Splunk instance. These are found in the Splunk web interface Manager » Licensing
+            
+        .Parameter ComputerName
+            Name of the Splunk instance to get the licenses for (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+			
+		.Example
+            Get-SplunkLicense
+            Description
+            -----------
+            Gets the licenses for the targeted Splunk instance using the $SplunkDefaultObject settings.
+    
+        .Example
+            Get-SplunkLicense -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the licenses for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Get-SplunkLicense
+            Description
+            -----------
+            Gets the licenses for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Get-SplunkLicense -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets the licenses for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkLicense 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+	
+	[Cmdletbinding()]
+    Param(
+	
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [Get-SplunkLicense] :: Starting..."
+	}
+	Process
+	{
+		Write-Verbose " [Get-SplunkLicense] :: Parameters"
+		Write-Verbose " [Get-SplunkLicense] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Get-SplunkLicense] ::  - Port         = $Port"
+		Write-Verbose " [Get-SplunkLicense] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Get-SplunkLicense] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Get-SplunkLicense] ::  - Credential   = $Credential"
+
+		Write-Verbose " [Get-SplunkLicense] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = '/services/licenser/licenses' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Get-SplunkLicense] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+				foreach($Entry in $Results.feed.Entry)
+				{
+					$MyObj = @{}
+					Write-Verbose " [Get-SplunkLicense] :: Creating Hash Table to be used to create Splunk.SDK.Splunk.Licenser.License"
+					switch ($Entry.content.dict.key)
+					{
+						{$_.name -eq "creation_time"} 	{$Myobj.Add("CreationTime", (ConvertFrom-UnixTime $_.'#text'));continue}
+			        	{$_.name -eq "expiration_time"} {$Myobj.Add("Expiration", (ConvertFrom-UnixTime $_.'#text'));continue}
+			        	{$_.name -eq "features"}	    {$Myobj.Add("Features",$_.list.item);continue}
+						{$_.name -eq "group_id"}		{$Myobj.Add("GroupID",$_.'#text');continue}
+				        {$_.name -eq "label"}			{$Myobj.Add("Label",$_.'#text');continue}
+						{$_.name -eq "license_hash"}	{$Myobj.Add("Hash",$_.'#text');continue}
+				        {$_.name -eq "max_violations"}	{$Myobj.Add("MaxViolations",$_.'#text');continue}
+				        {$_.name -eq "quota"}			{$Myobj.Add("Quota",$_.'#text');continue}
+				        {$_.name -eq "sourcetypes"}		{$Myobj.Add("SourceTypes",$_.'#text');continue}
+				        {$_.name -eq "stack_id"}		{$Myobj.Add("StackID",$_.'#text');continue}
+				        {$_.name -eq "status"}			{$Myobj.Add("Status",$_.'#text');continue}
+				        {$_.name -eq "type"}			{$Myobj.Add("Type",$_.'#text');continue}
+						{$_.name -eq "window_period"}	{$Myobj.Add("WindowPeriod",$_.'#text');continue}
+					}
+					
+					# Creating Splunk.SDK.ServiceStatus
+				    $obj = New-Object PSObject -Property $MyObj
+				    $obj.PSTypeNames.Clear()
+				    $obj.PSTypeNames.Add('Splunk.SDK.Splunk.Licenser.License')
+				    $obj
+				}
+			}
+			else
+			{
+				Write-Verbose " [Get-SplunkLicense] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [Get-SplunkLicense] :: Invoke-SplunkAPIRequest threw an exception: $_"
+		}
+	}
+	End
+	{
+		Write-Verbose " [Get-SplunkLicense] :: =========    End   ========="
+	}
+} # Get-SplunkLicense
+
+#endregion Get-SplunkLicense
+
+#endregion SPlunk License
+
+################################################################################
+
+#region Helper cmdlets
+
+#region ConvertFrom-UnixTime
+
+function ConvertFrom-UnixTime
+{
+	[Cmdletbinding()]
+	Param($UnixTime)
+	
+	$Jan11970 = New-Object DateTime(1970, 1, 1, 0, 0, 0, 0)
+	
+	try
+	{
+		Write-Verbose " [ConvertFrom-UnixTime] :: Converting $UnixTime to DateTime"
+		$Jan11970.AddSeconds($UnixTime)
+	}
+	catch
+	{
+		Write-Verbose " [ConvertFrom-UnixTime] :: Unable to convert $UnixTime to DateTime format"
+		return $UnixTime
+	}
+}
+
+#endregion ConvertFrom-UnixTime
+
+#endregion Helper cmdlets
+
+#endregion functions
 
 ################################################################################
 function Get-Splunk
