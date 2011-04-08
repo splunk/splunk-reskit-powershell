@@ -311,7 +311,7 @@ function Invoke-SplunkAPIRequest
 		{
 	    	$Response = $Request.GetResponse()
 			$Reader = new-object System.IO.StreamReader($Response.GetResponseStream())
-			[XML]$Results = $Reader.ReadToEnd()
+			$Results = $Reader.ReadToEnd()
 	    	Write-Verbose " [Invoke-HTTPPost] :: Returning Results"
 			$Results
 		}
@@ -2066,6 +2066,232 @@ function Get-SplunkLicense
 #endregion Get-SplunkLicense
 
 #endregion SPlunk License
+
+################################################################################
+
+#region Search
+
+#region Search-Splunk
+
+function Search-Splunk
+{
+
+	<#
+        .Synopsis 
+            Performs a simple search against targeted Splunk instance.
+            
+        .Description
+            Performs a simple search against targeted Splunk instance. 
+			
+		.Parameter Search
+			String you want to search for. 
+            
+        .Parameter ComputerName
+            Name of the Splunk instance to search (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+			
+		.Parameter StartTime
+			The earliest (inclusive), respectively, time bounds for the search. The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. 
+        
+        .Parameter EndTime
+        	The latest (exclusive), respectively, time bounds for the search. The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string.
+			
+        .Parameter MaxReturnCount
+			The maximum number of events to return.
+        
+        .Parameter MaxTime
+			The number of seconds to run this search before finalizing.
+		
+		.Parameter RequiredFields	
+			This is the list (csv) of required fields that, even if not referenced or used directly by the search, will still be included by the events and summary endpoints. 
+			
+		.Example
+            Search-Splunk -Search 'source="WinEventLog:System"
+            Description
+            -----------
+            Searches for events with source of "WinEventLog:System" on the targeted Splunk instance using the $SplunkDefaultObject settings.
+    
+        .Example
+            Search-Splunk -Search 'source="WinEventLog:System" -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Searches for events with source of "WinEventLog:System" on MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Search-Splunk -Search 'source="WinEventLog:System"
+            Description
+            -----------
+            Searches for events with source of "WinEventLog:System" on each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Search-Splunk -Search 'source="WinEventLog:System" -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Searches for events with source of "WinEventLog:System" on each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Search-Splunk 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+	
+	[Cmdletbinding()]
+    Param(
+	
+		[Parameter(Mandatory=$True)]
+		[STRING]$Search,
+	
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+		
+		[Parameter()]           # earliest_time
+        [String]$StartTime,
+        
+        [Parameter()]           # latest_time
+        [String]$EndTime,
+        
+        [Parameter()]           # auto_finalize_ec = int
+        [int]$MaxReturnCount,
+        
+        [Parameter()]           # max_time = int
+        [int]$MaxTime,
+		
+		[Parameter()]
+		[STRING[]]$RequiredFields
+        
+    )
+	
+	Begin
+	{
+		function ConvertFrom-SplunkSearchResultTime
+		{
+			[cmdletbinding()]
+			Param($ResultTime)
+			$Format = "yyyy-MM-ddTHH:mm:ss"
+			try
+			{
+				[DateTime]::ParseExact($ResultTime.Split(".")[0],$Format,$null)
+			}
+			catch
+			{
+				Write-Verbose " [ConvertFrom-SplunkSearchResultTime] :: Unable to convert date."
+				$ResultTime
+			}
+		}
+		Write-Verbose " [Search-Splunk] :: Starting..."
+		
+		Write-Verbose " [Search-Splunk] :: Building Search Arguments"
+		$SearchParams = @{}
+		$SearchParams.Add("search","search $Search")
+		$SearchParams.Add("exec_mode","oneshot")
+		switch -exact ($PSBoundParameters.Keys)
+		{
+			"StartTime"			{ $SearchParams.Add('earliest_time',$DefaultHostName) 		; continue }
+			"EndTime"			{ $SearchParams.Add('latest_time',$MangementPort)     		; continue }
+			"MaxReturnCount"	{ 
+									$SearchParams.Add('auto_finalize_ec',$MaxReturnCount)
+									$SearchParams.Add('max_count',$MaxReturnCount)
+									continue
+								}
+			"MaxTime"			{ $SearchParams.Add('max_time',$WebPort)              		; continue }
+			"RequiredFields"	{ $SearchParams.Add('required_field_list',$RequiredFields)	; continue }
+		}
+	}
+	Process
+	{
+		Write-Verbose " [Search-Splunk] :: Parameters"
+		Write-Verbose " [Search-Splunk] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Search-Splunk] ::  - Port         = $Port"
+		Write-Verbose " [Search-Splunk] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Search-Splunk] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Search-Splunk] ::  - Credential   = $Credential"
+
+		Write-Verbose " [Search-Splunk] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = "/services/search/jobs" 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Search-Splunk] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -RequestType POST -Arguments $SearchParams
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+				foreach($Entry in $Results.results.result)
+				{
+					$MyObj = @{}
+					switch ($Entry.field)
+					{
+			        	{$_.k -eq "host"}		    { $Myobj.Add("Host",$_.value.text);continue }
+			        	{$_.k -eq "source"}		    { $Myobj.Add("Source",$_.value.text);continue }
+						{$_.k -eq "sourcetype"}		{ $Myobj.Add("SourceType",$_.value.text);continue }
+				        {$_.k -eq "splunk_server"}	{ $Myobj.Add("SplunkServer",$_.value.text);continue }
+						{$_.k -eq "_raw"}			{ $Myobj.Add("raw",$_.v.'#text');continue}
+				        {$_.k -eq "_time"}			{ $Myobj.Add("Date",(ConvertFrom-SplunkSearchResultTime $_.value.text));continue}
+						Default						{ $Myobj.Add($_.k,$_.value.text);continue}
+				    }
+					
+					# Creating Splunk.SDK.ServiceStatus
+				    $obj = New-Object PSObject -Property $MyObj
+				    $obj.PSTypeNames.Clear()
+				    $obj.PSTypeNames.Add('Splunk.SDK.Search.OneshotResult')
+				    $obj
+				}
+			}
+			else
+			{
+				Write-Verbose " [Search-Splunk] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [Search-Splunk] :: Invoke-SplunkAPIRequest threw an exception: $_"
+		}
+	}
+	End
+	{
+		Write-Verbose " [Search-Splunk] :: =========    End   ========="
+	}
+	
+}    # Search-Splunk
+
+#endregion Search-Splunk
+
+#endregion Search
 
 ################################################################################
 
