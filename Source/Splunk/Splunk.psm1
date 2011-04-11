@@ -1901,6 +1901,172 @@ function Get-SplunkdVersion
 
 #endregion Get-SplunkdVersion
 
+#region Get-SplunkdLogging
+
+function Get-SplunkdLogging
+{
+
+	<#
+        .Synopsis 
+            Gets the logging values set for the targeted Splunk instance.
+            
+        .Description
+            Gets the logging values set for the targeted Splunk instance. These are the settings found in the Splunk web interface Manager » System settings » System logging
+        
+		.Parameter Name
+            Name of the Logger to get. This can be a regular expression (Default is ".*")
+			
+        .Parameter ComputerName
+            Name of the Splunk instance to get the log settings for (Default is $SplunkDefaultObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+			
+		.Example
+            Get-SplunkdLogging
+            Description
+            -----------
+            Returns all loggers on the targeted Splunk instance using the $SplunkDefaultObject settings.
+    
+		.Example
+            Get-SplunkdLogging -Name AdminHandler:Monitor
+            Description
+            -----------
+            Returns AdminHandler:Monitor logger on the targeted Splunk instance using the $SplunkDefaultObject settings.
+		
+		.Example
+            Get-SplunkdLogging -Name monitor
+            Description
+            -----------
+            Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultObject settings.
+		
+        .Example
+            Get-SplunkdLogging -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Returns all loggers for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            
+        .Example
+            $SplunkServers | Get-SplunkdLogging
+            Description
+            -----------
+            Returns all loggers on each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+        
+		.Example
+            $SplunkServers | Get-SplunkdLogging -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Returns all loggers on each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkdLogging 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+	
+	[Cmdletbinding()]
+    Param(
+	
+		[Parameter()]
+		[STRING]$Name = ".*",
+	
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [Get-SplunkdLogging] :: Starting..."
+	}
+	Process
+	{
+		Write-Verbose " [Get-SplunkdLogging] :: Parameters"
+		Write-Verbose " [Get-SplunkdLogging] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Get-SplunkdLogging] ::  - Port         = $Port"
+		Write-Verbose " [Get-SplunkdLogging] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Get-SplunkdLogging] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Get-SplunkdLogging] ::  - Credential   = $Credential"
+
+		Write-Verbose " [Get-SplunkdLogging] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = '/services/server/logger?count=-1' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Get-SplunkdLogging] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams 
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+				foreach($Entry in $Results.Feed.Entry)
+				{
+					$MyObj = @{}
+					$MyObj.Add('Name',$Entry.Title)
+					$MyObj.Add('ServiceURL',$Entry.link[0].href)
+					Write-Verbose " [Get-SplunkdLogging] :: Creating Hash Table to be used to create Splunk.SDK.Logger"
+					switch ($Entry.content.dict.key)
+					{
+			        	{$_.name -eq "level"}		    { $Myobj.Add("Level",$_.'#text') ; continue }
+					}
+					
+					# Creating Splunk.SDK.ServiceStatus
+				    $obj = New-Object PSObject -Property $MyObj
+				    $obj.PSTypeNames.Clear()
+				    $obj.PSTypeNames.Add('Splunk.SDK.Splunkd.Logger')
+				    $obj | Where-Object { $_.Name -match $Name }
+				}
+			}
+			else
+			{
+				Write-Verbose " [Get-SplunkdLogging] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [Get-SplunkdLogging] :: Invoke-SplunkAPIRequest threw an exception: $_"
+		}
+	}
+	End
+	{
+		Write-Verbose " [Get-SplunkdLogging] :: =========    End   ========="
+	}
+} # Get-Splunkd
+
+#endregion Get-SplunkdLogging
+
 #endregion SplunkD
 
 ################################################################################
