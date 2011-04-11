@@ -440,10 +440,10 @@ function Connect-Splunk
         [Parameter()]
         [INT]$Timeout = 10000, 
         
-        [Parameter(ParameterSetName="byCredentials")]
+        [Parameter(Mandatory=$true,ParameterSetName="byCredentials")]
         [System.Management.Automation.PSCredential]$Credentials,
         
-        [Parameter(ParameterSetName="byUserName")]
+        [Parameter(Mandatory=$true,ParameterSetName="byUserName")]
         [STRING]$UserName
     )
 	
@@ -644,7 +644,7 @@ function Get-SplunkLogin
 
 function Get-SplunkAuthToken
 {
-	[Cmdletbinding(DefaultParameterSetName="byCredentials")]
+	[Cmdletbinding(DefaultParameterSetName="byUserName")]
     Param(
 	
 		[Parameter(Mandatory=$True,ParameterSetName="byUserName")]
@@ -2319,6 +2319,24 @@ function ConvertFrom-UnixTime
 }
 
 #endregion ConvertFrom-UnixTime
+
+#region Disable-CertificateValidation
+
+function Disable-CertificateValidation
+{
+	[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+}
+
+#endregion Disable-CertificateValidation
+
+#region Enable-CertificateValidation
+
+function Enable-CertificateValidation
+{
+	[System.Net.ServicePointManager]::ServerCertificateValidationCallback = $Null
+}
+
+#endregion Enable-CertificateValidation
 
 #endregion Helper cmdlets
 
