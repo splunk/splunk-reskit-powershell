@@ -178,5 +178,51 @@
       </TableControl>
     </View>
 
+	<View>
+      <Name>Splunk.SDK.Connection</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Connection</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+		  <TableColumnHeader></TableColumnHeader>
+		  <TableColumnHeader></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>UserName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Port</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Protocol</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Timeout</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>AuthToken</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Credential</PropertyName>
+              </TableColumnItem>
+			</TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	
    </ViewDefinitions>
 </Configuration>

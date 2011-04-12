@@ -1355,11 +1355,25 @@ function Test-Splunkd
 		
 		if($Results)
 		{
-			$True
+			if($_)
+			{
+				$_
+			}
+			else
+			{
+				$True
+			}
 		}
 		else
 		{
-			$False
+			if($_)
+			{
+				
+			}
+			else
+			{
+				$True
+			}
 		}
 	}
 	End
