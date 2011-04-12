@@ -2077,7 +2077,7 @@ function Get-SplunkdLogging
 	{
 		Write-Verbose " [Get-SplunkdLogging] :: =========    End   ========="
 	}
-} # Get-Splunkd
+} # Get-SplunkdLogging
 
 #endregion Get-SplunkdLogging
 
