@@ -1,6 +1,14 @@
 ﻿#
 # Splunk Powershell SDK Demo
 #
+# Loading the Module
+#
+ipmo Z:\Projects\Splunk-SDK\splunk-sdk-powershell\Source\Splunk
+#
+# disabling certificate checking
+#
+Disable-CertificateValidation
+#
 # Lets start with what cmdlets we have so far.
 #
 Get-Splunk
@@ -8,6 +16,7 @@ Get-Splunk
 # Lets take a look at Get-Splunkd
 #
 $MyCreds = Get-Credential
+$SplunkServers = "yetiwinsrv1","yetiindex1"
 Get-Splunkd -ComputerName yetiwinsrv1 -port 8089 -Protocol https -timeout 5000 -Credential $MyCreds
 #
 # Having to pass parameters everytime we want to use a cmdlet can be a pain. 
