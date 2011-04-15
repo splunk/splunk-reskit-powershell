@@ -1927,9 +1927,15 @@ function Get-SplunkdLogging
         .Description
             Gets the logging values set for the targeted Splunk instance. These are the settings found in the Splunk web interface Manager » System settings » System logging
         
-		.Parameter Name
-            Name of the Logger to get. This can be a regular expression (Default is ".*")
-			
+		.Parameter Filter
+            A regular expression of the Logger to get. (Default is ".*")
+            
+        .Parameter Name
+            Name of the Logger to get.
+		
+        .Parameter Level
+            If passed will return logger entries with the provided level.
+            
         .Parameter ComputerName
             Name of the Splunk instance to get the log settings for (Default is $SplunkDefaultObject.ComputerName.)
         
@@ -1958,11 +1964,17 @@ function Get-SplunkdLogging
             Returns AdminHandler:Monitor logger on the targeted Splunk instance using the $SplunkDefaultObject settings.
 		
 		.Example
-            Get-SplunkdLogging -Name monitor
+            Get-SplunkdLogging -filter monitor
             Description
             -----------
             Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultObject settings.
 		
+        .Example
+            Get-SplunkdLogging -level debug
+            Description
+            -----------
+            Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultObject settings.
+        
         .Example
             Get-SplunkdLogging -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
             Description
@@ -1991,11 +2003,18 @@ function Get-SplunkdLogging
 	        #Requires -Version 2.0
     #>
 	
-	[Cmdletbinding()]
+	[Cmdletbinding(DefaultParameterSetName="byFilter")]
     Param(
+    
+        [Parameter(Position=0,ParameterSetName="byFilter")]
+        [STRING]$Filter = '.*',
 	
-		[Parameter()]
-		[STRING]$Name = ".*",
+		[Parameter(Position=0,ParameterSetName="byName")]
+		[STRING]$Name,
+        
+        [Parameter()]        
+        [ValidateSet("WARN" , "DEBUG" , "INFO" , "CRIT" , "ERROR" , "FATAL")]
+		[STRING]$Level,
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]$ComputerName = $SplunkDefaultObject.ComputerName,
@@ -2018,15 +2037,29 @@ function Get-SplunkdLogging
 	Begin
 	{
 		Write-Verbose " [Get-SplunkdLogging] :: Starting..."
+        $ParamSetName = $pscmdlet.ParameterSetName
+        
+        Write-Verbose " [Get-SplunkdLogging] :: Creating Level Filter"
+        $LevelFilter = { if($Level){ $_.Level -eq $Level } else { $true } }
+        
+        switch ($ParamSetName)
+        {
+            "byFilter"  { $WhereFilter = { $_.Name -match $Filter } } 
+            "byName"    { $WhereFilter = { $_.Name -eq    $Name } }
+        }
+        
 	}
 	Process
 	{
 		Write-Verbose " [Get-SplunkdLogging] :: Parameters"
+        Write-Verbose " [Get-SplunkdLogging] ::  - ParameterSet = $ParamSetName"
 		Write-Verbose " [Get-SplunkdLogging] ::  - ComputerName = $ComputerName"
 		Write-Verbose " [Get-SplunkdLogging] ::  - Port         = $Port"
 		Write-Verbose " [Get-SplunkdLogging] ::  - Protocol     = $Protocol"
 		Write-Verbose " [Get-SplunkdLogging] ::  - Timeout      = $Timeout"
 		Write-Verbose " [Get-SplunkdLogging] ::  - Credential   = $Credential"
+        Write-Verbose " [Get-SplunkdLogging] ::  - LevelFilter  = $LevelFilter"
+        Write-Verbose " [Get-SplunkdLogging] ::  - WhereFilter  = $WhereFilter"
 
 		Write-Verbose " [Get-SplunkdLogging] :: Setting up Invoke-APIRequest parameters"
 		$InvokeAPIParams = @{
@@ -2047,10 +2080,11 @@ function Get-SplunkdLogging
 			{
 				foreach($Entry in $Results.Feed.Entry)
 				{
+                    Write-Verbose " [Get-SplunkdLogging] :: Creating Hash Table to be used to create Splunk.SDK.Splunkd.Logger"
 					$MyObj = @{}
 					$MyObj.Add('Name',$Entry.Title)
+                    $MyObj.Add('ComputerName',$ComputerName)
 					$MyObj.Add('ServiceURL',$Entry.link[0].href)
-					Write-Verbose " [Get-SplunkdLogging] :: Creating Hash Table to be used to create Splunk.SDK.Logger"
 					switch ($Entry.content.dict.key)
 					{
 			        	{$_.name -eq "level"}		    { $Myobj.Add("Level",$_.'#text') ; continue }
@@ -2060,7 +2094,7 @@ function Get-SplunkdLogging
 				    $obj = New-Object PSObject -Property $MyObj
 				    $obj.PSTypeNames.Clear()
 				    $obj.PSTypeNames.Add('Splunk.SDK.Splunkd.Logger')
-				    $obj | Where-Object { $_.Name -match $Name }
+                    $obj | Where-Object $WhereFilter | Where-Object $LevelFilter
 				}
 			}
 			else
