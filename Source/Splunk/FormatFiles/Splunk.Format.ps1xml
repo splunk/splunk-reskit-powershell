@@ -144,6 +144,7 @@
       <TableControl>
         <AutoSize />
         <TableHeaders>
+            <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
@@ -154,8 +155,14 @@
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
+                <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Label</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Type</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Status</PropertyName>
@@ -168,9 +175,6 @@
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Expiration</PropertyName>
-              </TableColumnItem>
-			  <TableColumnItem>
-                <PropertyName>Features</PropertyName>
               </TableColumnItem>
 			</TableColumnItems>
           </TableRowEntry>
