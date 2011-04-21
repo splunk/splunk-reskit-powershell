@@ -144,6 +144,7 @@
       <TableControl>
         <AutoSize />
         <TableHeaders>
+            <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
@@ -154,8 +155,14 @@
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
+                <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Label</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Type</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Status</PropertyName>
@@ -169,9 +176,6 @@
               <TableColumnItem>
                 <PropertyName>Expiration</PropertyName>
               </TableColumnItem>
-			  <TableColumnItem>
-                <PropertyName>Features</PropertyName>
-              </TableColumnItem>
 			</TableColumnItems>
           </TableRowEntry>
         </TableRowEntries>
@@ -179,6 +183,94 @@
     </View>
 
 	<View>
+      <Name>Splunk.SDK.Splunkd.VersionInfo</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Splunkd.VersionInfo</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+		  <TableColumnHeader></TableColumnHeader>
+		  <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+		  <TableColumnHeader></TableColumnHeader>
+		  <TableColumnHeader></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Version</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Build</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>OSName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>OSBuild</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>OSVersion</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Mode</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>CPU_Arch</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>IsFree</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>IsTrial</PropertyName>
+              </TableColumnItem>
+			</TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+
+    <View>
+      <Name>Splunk.SDK.Splunkd.Logger</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Splunkd.Logger</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Level</PropertyName>
+              </TableColumnItem>
+			</TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    
+    <View>
       <Name>Splunk.SDK.Connection</Name>
       <ViewSelectedBy>
         <TypeName>Splunk.SDK.Connection</TypeName>
@@ -223,6 +315,6 @@
         </TableRowEntries>
       </TableControl>
     </View>
-	
+    
    </ViewDefinitions>
 </Configuration>

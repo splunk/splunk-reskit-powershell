@@ -1927,9 +1927,15 @@ function Get-SplunkdLogging
         .Description
             Gets the logging values set for the targeted Splunk instance. These are the settings found in the Splunk web interface Manager » System settings » System logging
         
-		.Parameter Name
-            Name of the Logger to get. This can be a regular expression (Default is ".*")
-			
+		.Parameter Filter
+            A regular expression of the Logger to get. (Default is ".*")
+            
+        .Parameter Name
+            Name of the Logger to get.
+		
+        .Parameter Level
+            If passed will return logger entries with the provided level.
+            
         .Parameter ComputerName
             Name of the Splunk instance to get the log settings for (Default is $SplunkDefaultObject.ComputerName.)
         
@@ -1958,11 +1964,17 @@ function Get-SplunkdLogging
             Returns AdminHandler:Monitor logger on the targeted Splunk instance using the $SplunkDefaultObject settings.
 		
 		.Example
-            Get-SplunkdLogging -Name monitor
+            Get-SplunkdLogging -filter monitor
             Description
             -----------
             Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultObject settings.
 		
+        .Example
+            Get-SplunkdLogging -level debug
+            Description
+            -----------
+            Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultObject settings.
+        
         .Example
             Get-SplunkdLogging -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
             Description
@@ -1991,11 +2003,18 @@ function Get-SplunkdLogging
 	        #Requires -Version 2.0
     #>
 	
-	[Cmdletbinding()]
+	[Cmdletbinding(DefaultParameterSetName="byFilter")]
     Param(
+    
+        [Parameter(Position=0,ParameterSetName="byFilter")]
+        [STRING]$Filter = '.*',
 	
-		[Parameter()]
-		[STRING]$Name = ".*",
+		[Parameter(Position=0,ParameterSetName="byName")]
+		[STRING]$Name,
+        
+        [Parameter()]        
+        [ValidateSet("WARN" , "DEBUG" , "INFO" , "CRIT" , "ERROR" , "FATAL")]
+		[STRING]$Level,
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]$ComputerName = $SplunkDefaultObject.ComputerName,
@@ -2018,15 +2037,29 @@ function Get-SplunkdLogging
 	Begin
 	{
 		Write-Verbose " [Get-SplunkdLogging] :: Starting..."
+        $ParamSetName = $pscmdlet.ParameterSetName
+        
+        Write-Verbose " [Get-SplunkdLogging] :: Creating Level Filter"
+        $LevelFilter = { if($Level){ $_.Level -eq $Level } else { $true } }
+        
+        switch ($ParamSetName)
+        {
+            "byFilter"  { $WhereFilter = { $_.Name -match $Filter } } 
+            "byName"    { $WhereFilter = { $_.Name -eq    $Name } }
+        }
+        
 	}
 	Process
 	{
 		Write-Verbose " [Get-SplunkdLogging] :: Parameters"
+        Write-Verbose " [Get-SplunkdLogging] ::  - ParameterSet = $ParamSetName"
 		Write-Verbose " [Get-SplunkdLogging] ::  - ComputerName = $ComputerName"
 		Write-Verbose " [Get-SplunkdLogging] ::  - Port         = $Port"
 		Write-Verbose " [Get-SplunkdLogging] ::  - Protocol     = $Protocol"
 		Write-Verbose " [Get-SplunkdLogging] ::  - Timeout      = $Timeout"
 		Write-Verbose " [Get-SplunkdLogging] ::  - Credential   = $Credential"
+        Write-Verbose " [Get-SplunkdLogging] ::  - LevelFilter  = $LevelFilter"
+        Write-Verbose " [Get-SplunkdLogging] ::  - WhereFilter  = $WhereFilter"
 
 		Write-Verbose " [Get-SplunkdLogging] :: Setting up Invoke-APIRequest parameters"
 		$InvokeAPIParams = @{
@@ -2047,10 +2080,11 @@ function Get-SplunkdLogging
 			{
 				foreach($Entry in $Results.Feed.Entry)
 				{
+                    Write-Verbose " [Get-SplunkdLogging] :: Creating Hash Table to be used to create Splunk.SDK.Splunkd.Logger"
 					$MyObj = @{}
 					$MyObj.Add('Name',$Entry.Title)
+                    $MyObj.Add('ComputerName',$ComputerName)
 					$MyObj.Add('ServiceURL',$Entry.link[0].href)
-					Write-Verbose " [Get-SplunkdLogging] :: Creating Hash Table to be used to create Splunk.SDK.Logger"
 					switch ($Entry.content.dict.key)
 					{
 			        	{$_.name -eq "level"}		    { $Myobj.Add("Level",$_.'#text') ; continue }
@@ -2060,7 +2094,7 @@ function Get-SplunkdLogging
 				    $obj = New-Object PSObject -Property $MyObj
 				    $obj.PSTypeNames.Clear()
 				    $obj.PSTypeNames.Add('Splunk.SDK.Splunkd.Logger')
-				    $obj | Where-Object { $_.Name -match $Name }
+                    $obj | Where-Object $WhereFilter | Where-Object $LevelFilter
 				}
 			}
 			else
@@ -2087,17 +2121,17 @@ function Get-SplunkdLogging
 
 #region Splunk License
 
-#region Get-SplunkLicense
+#region Get-SplunkLicenseFile
 
-function Get-SplunkLicense
+function Get-SplunkLicenseFile
 {
 
 	<#
         .Synopsis 
-            Returns the licenses registered for the targeted Splunk instance.
+            Returns the licenses files registered for the targeted Splunk instance.
             
         .Description
-            Returns the licenses registered for the targeted Splunk instance. These are found in the Splunk web interface Manager » Licensing
+            Returns the licenses files registered for the targeted Splunk instance. These are found in the Splunk web interface Manager » Licensing
             
         .Parameter ComputerName
             Name of the Splunk instance to get the licenses for (Default is $SplunkDefaultObject.ComputerName.)
@@ -2115,25 +2149,25 @@ function Get-SplunkLicense
             Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
 			
 		.Example
-            Get-SplunkLicense
+            Get-SplunkLicenseFile
             Description
             -----------
             Gets the licenses for the targeted Splunk instance using the $SplunkDefaultObject settings.
     
         .Example
-            Get-SplunkLicense -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Get-SplunkLicenseFile -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
             Description
             -----------
             Gets the licenses for MySplunkInstance connecting on port 8089 with a 5sec timeout.
             
         .Example
-            $SplunkServers | Get-SplunkLicense
+            $SplunkServers | Get-SplunkLicenseFile
             Description
             -----------
             Gets the licenses for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
         
 		.Example
-            $SplunkServers | Get-SplunkLicense -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            $SplunkServers | Get-SplunkLicenseFile -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
             Description
             -----------
             Gets the licenses for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.
@@ -2142,7 +2176,7 @@ function Get-SplunkLicense
             PSObject
             
         .Notes
-	        NAME:      Get-SplunkLicense 
+	        NAME:      Get-SplunkLicenseFile 
 	        AUTHOR:    Splunk\bshell
 	        Website:   www.splunk.com
 	        #Requires -Version 2.0
@@ -2165,35 +2199,48 @@ function Get-SplunkLicense
         [int]$Timeout         = $SplunkDefaultObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        
+        [Parameter()]
+        [SWITCH]$All
         
     )
 	
 	Begin
 	{
-		Write-Verbose " [Get-SplunkLicense] :: Starting..."
+		Write-Verbose " [Get-SplunkLicenseFile] :: Starting..."
 	}
 	Process
 	{
-		Write-Verbose " [Get-SplunkLicense] :: Parameters"
-		Write-Verbose " [Get-SplunkLicense] ::  - ComputerName = $ComputerName"
-		Write-Verbose " [Get-SplunkLicense] ::  - Port         = $Port"
-		Write-Verbose " [Get-SplunkLicense] ::  - Protocol     = $Protocol"
-		Write-Verbose " [Get-SplunkLicense] ::  - Timeout      = $Timeout"
-		Write-Verbose " [Get-SplunkLicense] ::  - Credential   = $Credential"
+		Write-Verbose " [Get-SplunkLicenseFile] :: Parameters"
+		Write-Verbose " [Get-SplunkLicenseFile] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Get-SplunkLicenseFile] ::  - Port         = $Port"
+		Write-Verbose " [Get-SplunkLicenseFile] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Get-SplunkLicenseFile] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Get-SplunkLicenseFile] ::  - Credential   = $Credential"
 
-		Write-Verbose " [Get-SplunkLicense] :: Setting up Invoke-APIRequest parameters"
+        if($All)
+        {
+            $Endpoint = '/services/licenser/licenses'
+        }
+        else
+        {
+            $Endpoint = "/services/licenser/licenses?search={0}" -f [System.Web.HttpUtility]::UrlEncode('group_id=enterprise')
+        }
+        Write-Verbose " [Get-SplunkLicenseFile] ::  - Endpoint   = $Endpoint"
+        
+		Write-Verbose " [Get-SplunkLicenseFile] :: Setting up Invoke-APIRequest parameters"
 		$InvokeAPIParams = @{
 			ComputerName = $ComputerName
 			Port         = $Port
 			Protocol     = $Protocol
 			Timeout      = $Timeout
 			Credential   = $Credential
-			Endpoint     = '/services/licenser/licenses' 
+			Endpoint     = $Endpoint 
 			Verbose      = $VerbosePreference -eq "Continue"
 		}
 			
-		Write-Verbose " [Get-SplunkLicense] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		Write-Verbose " [Get-SplunkLicenseFile] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
 		try
 		{
 			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
@@ -2202,7 +2249,8 @@ function Get-SplunkLicense
 				foreach($Entry in $Results.feed.Entry)
 				{
 					$MyObj = @{}
-					Write-Verbose " [Get-SplunkLicense] :: Creating Hash Table to be used to create Splunk.SDK.Splunk.Licenser.License"
+                    $MyObj.Add('ComputerName',$ComputerName)
+					Write-Verbose " [Get-SplunkLicenseFile] :: Creating Hash Table to be used to create Splunk.SDK.Splunk.Licenser.License"
 					switch ($Entry.content.dict.key)
 					{
 						{$_.name -eq "creation_time"} 	{$Myobj.Add("CreationTime", (ConvertFrom-UnixTime $_.'#text'));continue}
@@ -2229,21 +2277,21 @@ function Get-SplunkLicense
 			}
 			else
 			{
-				Write-Verbose " [Get-SplunkLicense] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+				Write-Verbose " [Get-SplunkLicenseFile] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
 			}
 		}
 		catch
 		{
-			Write-Verbose " [Get-SplunkLicense] :: Invoke-SplunkAPIRequest threw an exception: $_"
+			Write-Verbose " [Get-SplunkLicenseFile] :: Invoke-SplunkAPIRequest threw an exception: $_"
 		}
 	}
 	End
 	{
-		Write-Verbose " [Get-SplunkLicense] :: =========    End   ========="
+		Write-Verbose " [Get-SplunkLicenseFile] :: =========    End   ========="
 	}
-} # Get-SplunkLicense
+} # Get-SplunkLicenseFile
 
-#endregion Get-SplunkLicense
+#endregion Get-SplunkLicenseFile
 
 #endregion SPlunk License
 
