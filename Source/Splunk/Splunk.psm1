@@ -500,6 +500,7 @@ function Connect-Splunk
         UserName     = $AuthTokenObject.UserName
         AuthToken    = $AuthTokenObject.AuthToken
         Credential   = $MyCredential
+		Password     = ConvertFrom-SecureString $MyCredential.Password
     }
     
     # Creating Splunk.Connection
@@ -2565,6 +2566,45 @@ function Enable-CertificateValidation
 }
 
 #endregion Enable-CertificateValidation
+
+#region Export-SplunkModuleConfiguration
+
+function Export-SplunkModuleConfiguration
+{
+	Param(
+		[Parameter()]
+		$Path = "$psScriptRoot\Splunk.Module.Config.xml"
+	)
+	Write-Verbose " [Export-SplunkModuleConfiguration] :: Exporting Configuration to $Path"
+	$SplunkDefaultObject | Export-Clixml -Path $Path 
+}
+
+#endregion Export-SplunkModuleConfiguration
+
+#region Import-SplunkModuleConfiguration
+
+function Import-SplunkModuleConfiguration
+{
+
+	Param(
+		[Parameter()]
+		$Path = "$psScriptRoot\Splunk.Module.Config.xml"
+	)
+	
+	Write-Verbose " [Import-SplunkModuleConfiguration] :: Importing Configuration from $Path"
+	$OldObject = Import-Clixml -Path $Path
+	
+	Write-Verbose " [Import-SplunkModuleConfiguration] :: Creating Credential Object"
+	$UserName = $OldObject.UserName
+	$Password = ConvertTo-SecureString $OldObject.Password
+	$MyCredential = New-Object System.Management.Automation.PSCredential($UserName,$Password)
+	
+	Write-Verbose " [Import-SplunkModuleConfiguration] :: Calling Connect-Splunk"
+	Connect-Splunk -ComputerName $OldObject.ComputerName -Credentials $MyCredential
+	
+}
+
+#endregion Import-SplunkModuleConfiguration
 
 #endregion Helper cmdlets
 

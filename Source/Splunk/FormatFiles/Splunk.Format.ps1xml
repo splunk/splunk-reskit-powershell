@@ -284,7 +284,6 @@
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
 		  <TableColumnHeader></TableColumnHeader>
-		  <TableColumnHeader></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
@@ -306,9 +305,6 @@
               </TableColumnItem>
 			  <TableColumnItem>
                 <PropertyName>AuthToken</PropertyName>
-              </TableColumnItem>
-			  <TableColumnItem>
-                <PropertyName>Credential</PropertyName>
               </TableColumnItem>
 			</TableColumnItems>
           </TableRowEntry>
