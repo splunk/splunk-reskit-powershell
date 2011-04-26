@@ -924,7 +924,7 @@ Indexer1     admin    8089 https    10000   1fdd5047a34d1a05219193affb2e4f63
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "5" >
 				<maml:name>Credential</maml:name>
 				<maml:description>
-					<maml:para>Credential object with the user name and password used to access the REST API. </maml:para>
+					<maml:para>Credential object with the user name and password used to access the REST API.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >PSCredential</command:parameterValue>
 			</command:parameter>
@@ -982,7 +982,7 @@ Indexer1     admin    8089 https    10000   1fdd5047a34d1a05219193affb2e4f63
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
 			<maml:name>Credential</maml:name>
 			<maml:description>
-				<maml:para>Credential object with the user name and password used to access the REST API. </maml:para>
+				<maml:para>Credential object with the user name and password used to access the REST API.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
 			<dev:type>
@@ -2917,7 +2917,7 @@ Indexer4     8089     443      5h             2000         True      True       
 	<command:details>
 		<command:name>Search-Splunk</command:name>
 		<maml:description>
-			<maml:para></maml:para>
+			<maml:para>Performs a simple search against targeted Splunk instance.</maml:para>
 		</maml:description>
 		<maml:copyright>
            <maml:para />
@@ -2930,84 +2930,84 @@ Indexer4     8089     443      5h             2000         True      True       
 	</command:details>
 	<maml:description>
 	<!--This is the Description section-->
-		<maml:para></maml:para>
+		<maml:para>Performs a simple search against targeted Splunk instance. </maml:para>
 	</maml:description>
 	<command:syntax>		<command:syntaxItem>
 			<maml:name>Search-Splunk</maml:name>
 			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
 				<maml:name>Search</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>String you want to search for. </maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue, ByPropertyName)" position = "2" >
 				<maml:name>ComputerName</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Name of the Splunk instance to search</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
 				<maml:name>Port</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Port of the REST Instance (i.e. 8089)</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "4" >
 				<maml:name>Protocol</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Protocol to use to access the REST API must be 'http' or 'https'</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "5" >
 				<maml:name>Timeout</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>How long to wait for the REST API to respond</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "6" >
 				<maml:name>Credential</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Credential object with the user name and password used to access the REST API</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >PSCredential</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "7" >
 				<maml:name>StartTime</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>The earliest (inclusive), respectively, time bounds for the search. The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. </maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "8" >
 				<maml:name>EndTime</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>The latest (exclusive), respectively, time bounds for the search. The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "9" >
 				<maml:name>MaxReturnCount</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>The maximum number of events to return.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "10" >
 				<maml:name>MaxTime</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>The number of seconds to run this search before finalizing.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "true" globbing = "false" pipelineInput = "false" position = "11" >
 				<maml:name>RequiredFields</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>This is the list (csv) of required fields that, even if not referenced or used directly by the search, will still be included by the events and summary endpoints. </maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "true" >String[]</command:parameterValue>
 			</command:parameter>
@@ -3017,7 +3017,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
 			<maml:name>Search</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>String you want to search for. </maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3029,67 +3029,67 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="2">
 			<maml:name>ComputerName</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Name of the Splunk instance to search</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.ComputerName</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
 			<maml:name>Port</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Port of the REST Instance (i.e. 8089)</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
 				<maml:name>Int32</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Port</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
 			<maml:name>Protocol</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Protocol to use to access the REST API must be 'http' or 'https'</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Protocol</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
 			<maml:name>Timeout</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>How long to wait for the REST API to respond</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
 				<maml:name>Int32</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Timeout</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="6">
 			<maml:name>Credential</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Credential object with the user name and password used to access the REST API</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
 			<dev:type>
 				<maml:name>PSCredential</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Credential</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
 			<maml:name>StartTime</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>The earliest (inclusive), respectively, time bounds for the search. The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. </maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3101,7 +3101,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="8">
 			<maml:name>EndTime</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>The latest (exclusive), respectively, time bounds for the search. The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3113,7 +3113,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="9">
 			<maml:name>MaxReturnCount</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>The maximum number of events to return.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
@@ -3125,7 +3125,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="10">
 			<maml:name>MaxTime</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>The number of seconds to run this search before finalizing.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
@@ -3137,7 +3137,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="false" position="11">
 			<maml:name>RequiredFields</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>This is the list (csv) of required fields that, even if not referenced or used directly by the search, will still be included by the events and summary endpoints. </maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
 			<dev:type>
@@ -3182,6 +3182,124 @@ Indexer4     8089     443      5h             2000         True      True       
 		</maml:alert>
 	</maml:alertSet>
 	<command:examples>
+		<command:example>
+			<maml:title>
+--------------  Example 1 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>Search-Splunk -Search 'source=&quot;WinEventLog:System&quot;'</dev:code>
+  			<dev:remarks>
+				<maml:para>Searches for events with source of &quot;WinEventLog:System&quot; on the targeted Splunk instance using the $SplunkDefaultObject settings.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>Date                  Host        Source             SourceType         Raw
+----                  ----        ------             ----------         ---
+3/17/2011 6:36:23 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:07 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+3/17/2011 6:33:02 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:33:02 PM...
+3/17/2011 6:33:01 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:33:01 PM...
+3/17/2011 6:30:40 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:30:40 PM...
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 2 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>Search-Splunk -Search 'source=&quot;WinEventLog:System&quot; -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds</dev:code>
+  			<dev:remarks>
+				<maml:para>Searches for events with source of &quot;WinEventLog:System&quot; on MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>Date                  Host        Source             SourceType         Raw
+----                  ----        ------             ----------         ---
+3/17/2011 6:36:23 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:07 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+3/17/2011 6:33:02 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:33:02 PM...
+3/17/2011 6:33:01 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:33:01 PM...
+3/17/2011 6:30:40 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:30:40 PM...
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 3 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>$SplunkServers | Search-Splunk -Search 'source=&quot;WinEventLog:System&quot;</dev:code>
+  			<dev:remarks>
+				<maml:para>Searches for events with source of &quot;WinEventLog:System&quot; on each Splunk server in the pipeline using the $SplunkDefaultObject settings.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>Date                  Host        Source             SourceType         Raw
+----                  ----        ------             ----------         ---
+3/17/2011 6:36:23 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:23 PM  indexer2    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:23 PM  indexer3    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:23 PM  indexer4    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:07 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+3/17/2011 6:36:07 PM  indexer2    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+3/17/2011 6:36:07 PM  indexer3    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+3/17/2011 6:36:07 PM  indexer4    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 4 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>$SplunkServers | Search-Splunk -Search 'source=&quot;WinEventLog:System&quot; -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds</dev:code>
+  			<dev:remarks>
+				<maml:para>Searches for events with source of &quot;WinEventLog:System&quot; on each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>Date                  Host        Source             SourceType         Raw
+----                  ----        ------             ----------         ---
+3/17/2011 6:36:23 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:23 PM  indexer2    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:23 PM  indexer3    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:23 PM  indexer4    WinEventLog:System WinEventLog:System 03/17/11 06:36:23 PM...
+3/17/2011 6:36:07 PM  indexer1    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+3/17/2011 6:36:07 PM  indexer2    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+3/17/2011 6:36:07 PM  indexer3    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+3/17/2011 6:36:07 PM  indexer4    WinEventLog:System WinEventLog:System 03/17/11 06:36:07 PM...
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
 	</command:examples>
 	<maml:relatedLinks>
 	</maml:relatedLinks>
@@ -3211,104 +3329,104 @@ Indexer4     8089     443      5h             2000         True      True       
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue, ByPropertyName)" position = "1" >
 				<maml:name>ComputerName</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Name of the Splunk instance to set the settings for.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
 				<maml:name>Port</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Port of the REST Instance (i.e. 8089)</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
 				<maml:name>Protocol</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Protocol to use to access the REST API must be 'http' or 'https'</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "4" >
 				<maml:name>Timeout</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>How long to wait for the REST API to respond</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "5" >
 				<maml:name>ServerName</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Value to use for the Splunk server name.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "6" >
 				<maml:name>DefaultHostName</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Sets the host field value for all events coming from this server.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "7" >
 				<maml:name>MangementPort</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Port that Splunk Web uses to communicate with the splunkd process. This port is also used for distributed search.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "8" >
 				<maml:name>SSOTrustedIP</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>The IP address to accept trusted logins from. Only set this if you are using single sign-on (SSO) with a proxy server for authentication.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "9" >
 				<maml:name>WebPort</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Port to use for Splunk Web.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "10" >
 				<maml:name>SessionTimeout</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Set the Splunk Web session timeout. Use the same notation as relative time modifiers, for example 3h, 100s, 6d.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "11" >
 				<maml:name>IndexPath</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Path to Idexes</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "12" >
 				<maml:name>MinFreeSpace</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Pause indexing if free disk space (in MB) falls below.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "13" >
 				<maml:name>Credential</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Credential object with the user name and password used to access the REST API</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >PSCredential</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
 				<maml:name>Force</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Forces the execution without having to confirm</maml:para>
 				</maml:description>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
 				<maml:name>Restart</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Restarts the Splunkd Services after making changes.</maml:para>
 				</maml:description>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "named" >
@@ -3329,55 +3447,55 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="1">
 			<maml:name>ComputerName</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Name of the Splunk instance to set the settings for.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.ComputerName</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
 			<maml:name>Port</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Port of the REST Instance (i.e. 8089)</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
 				<maml:name>Int32</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Port</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
 			<maml:name>Protocol</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Protocol to use to access the REST API must be 'http' or 'https'</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Protocol</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
 			<maml:name>Timeout</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>How long to wait for the REST API to respond</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
 				<maml:name>Int32</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Timeout</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
 			<maml:name>ServerName</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Value to use for the Splunk server name.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3389,7 +3507,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="6">
 			<maml:name>DefaultHostName</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Sets the host field value for all events coming from this server.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3401,7 +3519,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
 			<maml:name>MangementPort</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Port that Splunk Web uses to communicate with the splunkd process. This port is also used for distributed search.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
@@ -3413,7 +3531,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="8">
 			<maml:name>SSOTrustedIP</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>The IP address to accept trusted logins from. Only set this if you are using single sign-on (SSO) with a proxy server for authentication.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3425,7 +3543,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="9">
 			<maml:name>WebPort</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Port to use for Splunk Web.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
@@ -3437,7 +3555,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="10">
 			<maml:name>SessionTimeout</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Set the Splunk Web session timeout. Use the same notation as relative time modifiers, for example 3h, 100s, 6d.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3449,7 +3567,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="11">
 			<maml:name>IndexPath</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Path to Idexes</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3461,7 +3579,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="12">
 			<maml:name>MinFreeSpace</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Pause indexing if free disk space (in MB) falls below.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
@@ -3473,19 +3591,19 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="13">
 			<maml:name>Credential</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Credential object with the user name and password used to access the REST API</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
 			<dev:type>
 				<maml:name>PSCredential</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Credential</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>Force</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Forces the execution without having to confirm</maml:para>
 			</maml:description>
 			<dev:type>
 				<maml:name>SwitchParameter</maml:name>
@@ -3496,7 +3614,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>Restart</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Restarts the Splunkd Services after making changes.</maml:para>
 			</maml:description>
 			<dev:type>
 				<maml:name>SwitchParameter</maml:name>
@@ -3562,6 +3680,108 @@ Indexer4     8089     443      5h             2000         True      True       
 		</maml:alert>
 	</maml:alertSet>
 	<command:examples>
+		<command:example>
+			<maml:title>
+--------------  Example 1 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>Set-Splunkd -SessionTimeout 2h</dev:code>
+  			<dev:remarks>
+				<maml:para>Sets the 'sessionTimeout' to '2h' on the targeted Splunk instance using the $SplunkDefaultObject settings.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>ComputerName MgmtPort HTTPPort SessionTimeout MinFreeSpace EnableWeb EnableWebSSL Splunk_Home
+------------ -------- -------- -------------- ------------ --------- ------------ -----------
+Indexer1     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 2 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>Set-Splunkd -SessionTimeout 2h -ComputerName Indexer1 -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds</dev:code>
+  			<dev:remarks>
+				<maml:para>Sets the 'sessionTimeout' to '2h' on Indexer1 connecting on port 8089 with a 5sec timeout.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>ComputerName MgmtPort HTTPPort SessionTimeout MinFreeSpace EnableWeb EnableWebSSL Splunk_Home
+------------ -------- -------- -------------- ------------ --------- ------------ -----------
+Indexer1     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 3 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>$SplunkServers | Set-Splunkd -SessionTimeout 2h</dev:code>
+  			<dev:remarks>
+				<maml:para>Sets the 'sessionTimeout' to '2h' on each Splunk server in the pipeline using the $SplunkDefaultObject settings.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>ComputerName MgmtPort HTTPPort SessionTimeout MinFreeSpace EnableWeb EnableWebSSL Splunk_Home
+------------ -------- -------- -------------- ------------ --------- ------------ -----------
+Indexer1     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+Indexer2     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+Indexer3     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+Indexer4     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 4 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>$SplunkServers | Set-Splunkd -SessionTimeout 2h -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds</dev:code>
+  			<dev:remarks>
+				<maml:para>Sets the 'sessionTimeout' to '2h' on each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>ComputerName MgmtPort HTTPPort SessionTimeout MinFreeSpace EnableWeb EnableWebSSL Splunk_Home
+------------ -------- -------- -------------- ------------ --------- ------------ -----------
+Indexer1     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+Indexer2     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+Indexer3     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+Indexer4     8089     443      3h             2000         True      True         C:\Program Files\Splunk
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
 	</command:examples>
 	<maml:relatedLinks>
 	</maml:relatedLinks>
@@ -3571,7 +3791,7 @@ Indexer4     8089     443      5h             2000         True      True       
 	<command:details>
 		<command:name>Set-SplunkdPassword</command:name>
 		<maml:description>
-			<maml:para></maml:para>
+			<maml:para>Sets the password for the user provided.</maml:para>
 		</maml:description>
 		<maml:copyright>
            <maml:para />
@@ -3584,56 +3804,56 @@ Indexer4     8089     443      5h             2000         True      True       
 	</command:details>
 	<maml:description>
 	<!--This is the Description section-->
-		<maml:para></maml:para>
+		<maml:para>Sets the password for the user provided. This is the password found in the Splunk web interface: Manager &#187; Access controls &#187; Users &#187; &lt;UserName&gt;</maml:para>
 	</maml:description>
 	<command:syntax>		<command:syntaxItem>
 			<maml:name>Set-SplunkdPassword</maml:name>
 			<command:parameter required = "true" variableLength = "false" globbing = "false" pipelineInput = "false" position = "1" >
 				<maml:name>UserName</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>User to set the password for. This is required.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "2" >
 				<maml:name>NewPassword</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Password for the user. If not provide you will be prompted for a password.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "true (ByValue, ByPropertyName)" position = "3" >
 				<maml:name>ComputerName</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Name of the Splunk instance to set the user password on.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "4" >
 				<maml:name>Port</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Port of the REST Instance (i.e. 8089)</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "5" >
 				<maml:name>Protocol</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Protocol to use to access the REST API must be 'http' or 'https' </maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "6" >
 				<maml:name>Timeout</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>How long to wait for the REST API to respond.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >Int32</command:parameterValue>
 			</command:parameter>
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "7" >
 				<maml:name>Credential</maml:name>
 				<maml:description>
-					<maml:para></maml:para>
+					<maml:para>Credential object with the user name and password used to access the REST API.</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >PSCredential</command:parameterValue>
 			</command:parameter>
@@ -3661,7 +3881,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
 			<maml:name>UserName</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>User to set the password for. This is required.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3673,7 +3893,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
 			<maml:name>NewPassword</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Password for the user. If not provide you will be prompted for a password.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -3685,62 +3905,62 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="3">
 			<maml:name>ComputerName</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Name of the Splunk instance to set the user password on.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.ComputerName</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
 			<maml:name>Port</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Port of the REST Instance (i.e. 8089)</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
 				<maml:name>Int32</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Port</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
 			<maml:name>Protocol</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Protocol to use to access the REST API must be 'http' or 'https' </maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Protocol</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="6">
 			<maml:name>Timeout</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>How long to wait for the REST API to respond.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			<dev:type>
 				<maml:name>Int32</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Timeout</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
 			<maml:name>Credential</maml:name>
 			<maml:description>
-				<maml:para></maml:para>
+				<maml:para>Credential object with the user name and password used to access the REST API.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
 			<dev:type>
 				<maml:name>PSCredential</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>$SplunkDefaultObject.Credential</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>Force</maml:name>
@@ -3811,6 +4031,122 @@ Indexer4     8089     443      5h             2000         True      True       
 		</maml:alert>
 	</maml:alertSet>
 	<command:examples>
+		<command:example>
+			<maml:title>
+--------------  Example 1 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd!</dev:code>
+  			<dev:remarks>
+				<maml:para>Sets the password for user 'admin' to 'P@ssw0rd!' on targeted Splunk instance using the $SplunkDefaultObject settings.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>Password for [admin] changed on [indexer1]
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 2 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>Set-SplunkdPassword -UserName admin</dev:code>
+  			<dev:remarks>
+				<maml:para>Prompts for a password and sets the password for user 'admin' to the provided password on targeted Splunk instance using the $SplunkDefaultObject settings.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>Password for [admin] changed on [indexer1]
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 3 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd! -ComputerName indexer1 -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds</dev:code>
+  			<dev:remarks>
+				<maml:para>Sets the password for user 'admin' to 'P@ssw0rd!' on indexer1 connecting on port 8089 with a 5sec timeout.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>Password for [admin] changed on [indexer1]
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 4 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>$SplunkServers | Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd!</dev:code>
+  			<dev:remarks>
+				<maml:para>Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the pipeline using the $SplunkDefaultObject settings.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>Password for [admin] changed on [indexer1]
+Password for [admin] changed on [indexer2]
+Password for [admin] changed on [indexer3]
+Password for [admin] changed on [indexer4]
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>
+--------------  Example 5 --------------			</maml:title>
+			<maml:introduction>
+				<maml:para>C:\PS&gt;</maml:para>
+C:\PS&gt;			</maml:introduction>
+  			<dev:code>$SplunkServers | Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd! -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds</dev:code>
+  			<dev:remarks>
+				<maml:para>Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+				<maml:para></maml:para>
+				<maml:para></maml:para>
+				<maml:para>Password for [admin] changed on [indexer1]
+Password for [admin] changed on [indexer2]
+Password for [admin] changed on [indexer3]
+Password for [admin] changed on [indexer4]
+				</maml:para>
+				<maml:para></maml:para>
+  			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
 	</command:examples>
 	<maml:relatedLinks>
 	</maml:relatedLinks>
@@ -3854,7 +4190,7 @@ Indexer4     8089     443      5h             2000         True      True       
 			<command:parameter required = "false" variableLength = "false" globbing = "false" pipelineInput = "false" position = "3" >
 				<maml:name>Protocol</maml:name>
 				<maml:description>
-					<maml:para>Protocol to use to access the REST API must be 'http' or 'https' </maml:para>
+					<maml:para>Protocol to use to access the REST API must be 'http' or 'https'</maml:para>
 				</maml:description>
 			<command:parameterValue required="true" variableLength = "false" >String</command:parameterValue>
 			</command:parameter>
@@ -3908,7 +4244,7 @@ Indexer4     8089     443      5h             2000         True      True       
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
 			<maml:name>Protocol</maml:name>
 			<maml:description>
-				<maml:para>Protocol to use to access the REST API must be 'http' or 'https' </maml:para>
+				<maml:para>Protocol to use to access the REST API must be 'http' or 'https'</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
