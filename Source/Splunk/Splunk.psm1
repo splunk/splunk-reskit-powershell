@@ -1211,6 +1211,14 @@ function Get-Splunkd
 		try
 		{
 			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+        }
+        catch
+		{
+			Write-Verbose " [Get-Splunkd] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            $_
+		}
+        try
+        {
 			if($Results -and ($Results -is [System.Xml.XmlDocument]))
 			{
 				$MyObj = @{}
@@ -1243,7 +1251,8 @@ function Get-Splunkd
 		}
 		catch
 		{
-			Write-Verbose " [Get-Splunkd] :: Invoke-SplunkAPIRequest threw an exception: $_"
+			Write-Verbose " [Get-Splunkd] :: Get-Splunkd threw an exception: $_"
+            $_
 		}
 	}
 	End
@@ -2230,6 +2239,504 @@ function Set-SplunkdLogging # Need to note Change does not persist service resta
 #endregion Set-SplunkdLogging
 
 #endregion SplunkD
+
+################################################################################
+
+#region Deployment
+
+#region Get-SplunkServerClass
+
+function Get-SplunkServerClass
+{
+	[Cmdletbinding(DefaultParameterSetName="byFilter")]
+    Param(
+	    
+        [Parameter(Position=0,ParameterSetName="byFilter")]
+        [STRING]$Filter = '.*',
+	
+		[Parameter(Position=0,ParameterSetName="byName")]
+		[STRING]$Name,
+       
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [Get-SplunkServerClass] :: Starting..."
+        
+        $ParamSetName = $pscmdlet.ParameterSetName
+        switch ($ParamSetName)
+        {
+            "byFilter"  { $WhereFilter = { $_.Name -match $Filter } } 
+            "byName"    { $WhereFilter = { $_.Name -ceq   $Name } }
+        }
+        
+	}
+	Process
+	{
+		Write-Verbose " [Get-SplunkServerClass] :: Parameters"
+        Write-Verbose " [Get-SplunkServerClass] ::  - ParameterSet = $ParamSetName"
+		Write-Verbose " [Get-SplunkServerClass] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Get-SplunkServerClass] ::  - Port         = $Port"
+		Write-Verbose " [Get-SplunkServerClass] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Get-SplunkServerClass] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Get-SplunkServerClass] ::  - Credential   = $Credential"
+        Write-Verbose " [Get-SplunkServerClass] ::  - WhereFilter  = $WhereFilter"
+
+		Write-Verbose " [Get-SplunkServerClass] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = '/services/deployment/serverclass' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Get-SplunkServerClass] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+        }
+		catch
+		{
+			Write-Verbose " [Get-SplunkServerClass] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            $_
+		}
+        try
+        {
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+                foreach($Entry in $Results.feed.entry)
+                {
+				    $MyObj = @{
+                        ComputerName                = $ComputerName
+                        Name                        = $Entry.Title
+                        FilterType                  = $null
+                        Blacklist                   = $null
+                        RestartSplunkd              = $null
+                        ContinueMatching            = $null
+                        MachineTypes                = $null
+                        RepositoryLocation          = $null
+                        RestartSplunkWeb            = $null
+                        Whitelist                   = $null
+                        Disabled                    = $null
+                        TmpFolder                   = $null
+                        StateOnClient               = $null
+                        TargetRepositoryLocation    = $null
+                        Endpoint                    = $null
+                    }
+    				Write-Verbose " [Get-SplunkServerClass] :: Creating Hash Table to be used to create Splunk.SDK.Deployment.ServerClass"
+    				switch ($Entry.content.dict.key)
+    				{
+                        { $_.name -eq "serverClass" }               { $Myobj.ServerClass              = $_.'#text' ; continue }
+                        { $_.name -eq "filterType" }                { $Myobj.FilterType               = $_.'#text' ; continue }
+                        { $_.name -eq "blacklist" }                 { $Myobj.Blacklist                = $_.'#text' ; continue }
+                        { $_.name -eq "restartSplunkd" }            { $Myobj.RestartSplunkd           = [bool]([int]$_.'#text') ; continue }
+                        { $_.name -eq "continueMatching" }          { $Myobj.ContinueMatching         = [bool]([int]$_.'#text') ; continue }
+                        { $_.name -eq "machineTypes" }              { $Myobj.MachineTypes             = $_.'#text' ; continue }
+                        { $_.name -eq "repositoryLocation" }        { $Myobj.RepositoryLocation       = $_.'#text' ; continue }
+                        { $_.name -eq "restartSplunkWeb" }          { $Myobj.RestartSplunkWeb         = [bool]([int]$_.'#text') ; continue }
+                        { $_.name -eq "whitelist" }                 { $Myobj.Whitelist                = $_.'#text' ; continue }
+                        { $_.name -eq "disabled" }                  { $Myobj.Disabled                 = [bool]([int]$_.'#text') ; continue }
+                        { $_.name -eq "tmpFolder" }                 { $Myobj.TmpFolder                = $_.'#text' ; continue }
+                        { $_.name -eq "stateOnClient" }             { $Myobj.StateOnClient            = $_.'#text' ; continue }
+                        { $_.name -eq "targetRepositoryLocation" }  { $Myobj.TargetRepositoryLocation = $_.'#text' ; continue }
+                        { $_.name -eq "endpoint" }                  { $Myobj.Endpoint                 = $_.'#text' ; continue }
+    		        	Default		                                { $Myobj.Add($_.Name,$_.'#text')               ; continue }
+    				}
+    				
+    				# Creating Splunk.SDK.ServiceStatus
+    			    $obj = New-Object PSObject -Property $MyObj
+    			    $obj.PSTypeNames.Clear()
+    			    $obj.PSTypeNames.Add('Splunk.SDK.Deployment.ServerClass')
+    			    $obj | Where $WhereFilter
+                }
+			}
+			else
+			{
+				Write-Verbose " [Get-SplunkServerClass] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [Get-SplunkServerClass] :: Get-SplunkServerClass threw an exception: $_"
+            $_
+		}
+	}
+	End
+	{
+		Write-Verbose " [Get-SplunkServerClass] :: =========    End   ========="
+	}
+} # Get-SplunkServerClass
+
+#endregion Get-SplunkServerClass
+
+#region Invoke-SplunkDeploymentServerReload
+
+function Invoke-SplunkDeploymentServerReload
+{
+	[Cmdletbinding()]
+    Param(
+
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: Starting..."
+	}
+	Process
+	{
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: Parameters"
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] ::  - Port         = $Port"
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] ::  - Credential   = $Credential"
+
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = '/services/deployment/server/_reload' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+        }
+		catch
+		{
+			Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            $_
+		}
+        try
+        {
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+                Write-Host "Reload of [$ComputerName] successful"
+			}
+			else
+			{
+				Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: Get-SplunkServerClass threw an exception: $_"
+            $_
+		}
+	}
+	End
+	{
+		Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: =========    End   ========="
+	}
+} # Invoke-SplunkDeploymentServerReload
+
+#endregion Invoke-SplunkDeploymentServerReload
+
+#region Disable-SplunkServerClass
+
+function Disable-SplunkServerClass
+{
+	[Cmdletbinding(SupportsShouldProcess=$true,DefaultParameterSetName="byPipeline")]
+    Param(
+	    
+        [Parameter(Position=0,ParameterSetName="byFilter")]
+        [STRING]$Filter = '.*',
+	
+		[Parameter(Position=0,ParameterSetName="byName")]
+		[STRING]$Name,
+        
+        [Parameter(ValueFromPipeline=$True,ParameterSetName="byPipeline")]
+        [Object]$ServerClass,
+	
+        [Parameter()]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        
+        [Parameter()]
+        [SWITCH]$Force
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [Disable-SplunkServerClass] :: Starting..."
+        $ParamSetName = $pscmdlet.ParameterSetName
+        $GetSplunkServerClassParams = @{
+            ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+        }
+        
+        switch ($ParamSetName)
+        {
+            "byFilter"  { $ServerClasses = Get-SplunkServerClass @GetSplunkServerClassParams -Filter $Filter } 
+            "byName"    { $ServerClasses = Get-SplunkServerClass @GetSplunkServerClassParams -Name $Name }
+        }
+	}
+	Process
+	{
+		Write-Verbose " [Disable-SplunkServerClass] :: Parameters"
+        Write-Verbose " [Disable-SplunkServerClass] ::  - ParameterSet = $ParamSetName"
+		Write-Verbose " [Disable-SplunkServerClass] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Disable-SplunkServerClass] ::  - Port         = $Port"
+		Write-Verbose " [Disable-SplunkServerClass] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Disable-SplunkServerClass] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Disable-SplunkServerClass] ::  - Credential   = $Credential"
+        
+        if($ServerClass -and $ServerClass.PSTypeNames -contains "Splunk.SDK.Deployment.ServerClass")
+		{
+			$ServerClasses = $ServerClass
+		}
+        
+        foreach($Class in $ServerClasses)
+        {
+            $ClassName = $Class.Name
+    		Write-Verbose " [Disable-SplunkServerClass] :: Setting up Invoke-APIRequest parameters for [$ClassName]"
+    		$InvokeAPIParams = @{
+    			ComputerName = $ComputerName
+    			Port         = $Port
+    			Protocol     = $Protocol
+    			Timeout      = $Timeout
+    			Credential   = $Credential
+    			Endpoint     = '/services/deployment/serverclass/{0}/disable' -f $ClassName
+    			Verbose      = $VerbosePreference -eq "Continue"
+    		}
+    			
+    		Write-Verbose " [Disable-SplunkServerClass] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+    		try
+    		{
+                if($Force -or $PSCmdlet.ShouldProcess($ComputerName,"Disabling $ClassName"))
+    			{
+    			    [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+                    try
+                    {
+            			if($Results)
+            			{
+                            $GetSplunkServerClassParams = @{
+                                ComputerName = $ComputerName
+                    			Port         = $Port
+                    			Protocol     = $Protocol
+                    			Timeout      = $Timeout
+                    			Credential   = $Credential
+                                Verbose      = $VerbosePreference -eq "Continue"
+                            }
+                            Get-SplunkServerClass @GetSplunkServerClassParams -Name $ClassName
+            			}
+            			else
+            			{
+            				Write-Verbose " [Disable-SplunkServerClass] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+            			}
+            		}
+            		catch
+            		{
+            			Write-Verbose " [Disable-SplunkServerClass] :: Get-SplunkServerClass threw an exception: $_"
+                        $_
+            		}
+                }
+            }
+    		catch
+    		{
+    			Write-Verbose " [Disable-SplunkServerClass] :: Invoke-SplunkAPIRequest threw an exception: $_"
+                $_
+    		}
+            
+        }
+	}
+	End
+	{
+		Write-Verbose " [Disable-SplunkServerClass] :: =========    End   ========="
+	}
+} # Disable-SplunkServerClass
+
+#endregion Disable-SplunkServerClass 
+
+#region Enable-SplunkServerClass
+
+function Enable-SplunkServerClass
+{
+	[Cmdletbinding(SupportsShouldProcess=$true,DefaultParameterSetName="byPipeline")]
+    Param(
+	    
+        [Parameter(Position=0,ParameterSetName="byFilter")]
+        [STRING]$Filter = '.*',
+	
+		[Parameter(Position=0,ParameterSetName="byName")]
+		[STRING]$Name,
+        
+        [Parameter(Position=0,ValueFromPipeline=$True,ParameterSetName="byPipeline")]
+        [Object]$ServerClass,
+	
+        [Parameter()]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        
+        [Parameter()]
+        [SWITCH]$Force
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [Enable-SplunkServerClass] :: Starting..."
+        $ParamSetName = $pscmdlet.ParameterSetName
+        $GetSplunkServerClassParams = @{
+            ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+        }
+        
+        switch ($ParamSetName)
+        {
+            "byFilter"  { $ServerClasses = Get-SplunkServerClass @GetSplunkServerClassParams -Filter $Filter } 
+            "byName"    { $ServerClasses = Get-SplunkServerClass @GetSplunkServerClassParams -Name $Name }
+        }
+	}
+	Process
+	{
+		Write-Verbose " [Enable-SplunkServerClass] :: Parameters"
+        Write-Verbose " [Enable-SplunkServerClass] ::  - ParameterSet = $ParamSetName"
+		Write-Verbose " [Enable-SplunkServerClass] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Enable-SplunkServerClass] ::  - Port         = $Port"
+		Write-Verbose " [Enable-SplunkServerClass] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Enable-SplunkServerClass] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Enable-SplunkServerClass] ::  - Credential   = $Credential"
+        
+        if($ServerClass -and $ServerClass.PSTypeNames -contains "Splunk.SDK.Deployment.ServerClass")
+		{
+			$ServerClasses = $ServerClass
+		}
+        
+        foreach($Class in $ServerClasses)
+        {
+            $ClassName = $Class.Name
+    		Write-Verbose " [Enable-SplunkServerClass] :: Setting up Invoke-APIRequest parameters for [$ClassName]"
+    		$InvokeAPIParams = @{
+    			ComputerName = $ComputerName
+    			Port         = $Port
+    			Protocol     = $Protocol
+    			Timeout      = $Timeout
+    			Credential   = $Credential
+    			Endpoint     = '/services/deployment/serverclass/{0}/enable' -f $ClassName
+    			Verbose      = $VerbosePreference -eq "Continue"
+    		}
+    			
+    		Write-Verbose " [Enable-SplunkServerClass] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+    		try
+    		{
+                if($Force -or $PSCmdlet.ShouldProcess($ComputerName,"Enabling $ClassName"))
+    			{
+    			    [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+                    try
+                    {
+            			if($Results)
+            			{
+                            $GetSplunkServerClassParams = @{
+                                ComputerName = $ComputerName
+                    			Port         = $Port
+                    			Protocol     = $Protocol
+                    			Timeout      = $Timeout
+                    			Credential   = $Credential
+                                Verbose      = $VerbosePreference -eq "Continue"
+                            }
+                            Get-SplunkServerClass @GetSplunkServerClassParams -Name $ClassName
+            			}
+            			else
+            			{
+            				Write-Verbose " [Enable-SplunkServerClass] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+            			}
+            		}
+            		catch
+            		{
+            			Write-Verbose " [Enable-SplunkServerClass] :: Get-SplunkServerClass threw an exception: $_"
+                        $_
+            		}
+                }
+            }
+    		catch
+    		{
+    			Write-Verbose " [Enable-SplunkServerClass] :: Invoke-SplunkAPIRequest threw an exception: $_"
+                $_
+    		}
+            
+        }
+	}
+	End
+	{
+		Write-Verbose " [Enable-SplunkServerClass] :: =========    End   ========="
+	}
+} # Enable-SplunkServerClass
+
+#endregion Enable-SplunkServerClass 
+
+#endregion Deployment
 
 ################################################################################
 
