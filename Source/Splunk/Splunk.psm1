@@ -1186,6 +1186,7 @@ function Get-SplunkdUser
 			$ErrMessage = $_.Exception.InnerException.Message
 			Write-Verbose " [Get-SplunkdUser] :: Invoke-SPlunkAPIRequest threw exception"
 			Write-Verbose " [Get-SplunkdUser] ::  -> $errMessage"
+            Write-Error $_
 		}
 		if($Results)
 		{
@@ -1347,7 +1348,7 @@ function Get-Splunkd
         catch
 		{
 			Write-Verbose " [Get-Splunkd] :: Invoke-SplunkAPIRequest threw an exception: $_"
-            $_
+            Write-Error $_
 		}
         try
         {
@@ -1384,7 +1385,7 @@ function Get-Splunkd
 		catch
 		{
 			Write-Verbose " [Get-Splunkd] :: Get-Splunkd threw an exception: $_"
-            $_
+            Write-Error $_
 		}
 	}
 	End
@@ -2047,6 +2048,7 @@ function Get-SplunkdVersion
 		catch
 		{
 			Write-Verbose " [Get-SplunkdVersion] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            Write-Error $_
 		}
 	}
 	End
@@ -2247,6 +2249,7 @@ function Get-SplunkdLogging
 		catch
 		{
 			Write-Verbose " [Get-SplunkdLogging] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            Write-Error $_
 		}
 	}
 	End
@@ -2359,6 +2362,7 @@ function Set-SplunkdLogging # Need to note Change does not persist service resta
 			catch
 			{
 				Write-Verbose " [Set-SplunkdLogging] :: Invoke-SplunkAPIRequest threw an exception: $_"
+                Write-Error $_
 			}
 		}
 	}
@@ -2449,7 +2453,7 @@ function Get-SplunkServerClass
 		catch
 		{
 			Write-Verbose " [Get-SplunkServerClass] :: Invoke-SplunkAPIRequest threw an exception: $_"
-            $_
+            Write-Error $_
 		}
         try
         {
@@ -2509,7 +2513,7 @@ function Get-SplunkServerClass
 		catch
 		{
 			Write-Verbose " [Get-SplunkServerClass] :: Get-SplunkServerClass threw an exception: $_"
-            $_
+            Write-Error $_
 		}
 	}
 	End
@@ -2519,6 +2523,214 @@ function Get-SplunkServerClass
 } # Get-SplunkServerClass
 
 #endregion Get-SplunkServerClass
+
+#region New-SplunkServerClass
+
+function New-SplunkServerClass
+{
+	[Cmdletbinding(SupportsShouldProcess=$true)]
+    Param(
+	    
+		[Parameter(Mandatory=$True)]
+		[STRING]$Name,
+        
+        [Parameter()]
+        [STRING[]]$Blacklist,
+        
+        [Parameter()]
+        [STRING[]]$Whitelist,
+        
+        [Parameter()]
+        [SWITCH]$ContinueMatching,
+        
+        [Parameter()]
+        [STRING]$Endpoint,
+        
+        [Parameter()]
+        [STRING]$FilterType,
+        
+        [Parameter()]
+        [STRING]$RepositoryLocation,
+        
+        [Parameter()]
+        [STRING]$TargetRepositoryLocation,
+        
+        [Parameter()]
+        [STRING]$TmpFolder,
+       
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+	
+	Begin
+	{
+		Write-Verbose " [New-SplunkServerClass] :: Starting..."
+        
+	}
+	Process
+	{
+    
+        
+		Write-Verbose " [New-SplunkServerClass] :: Parameters"
+        Write-Verbose " [New-SplunkServerClass] ::  - ParameterSet = $ParamSetName"
+		Write-Verbose " [New-SplunkServerClass] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [New-SplunkServerClass] ::  - Port         = $Port"
+		Write-Verbose " [New-SplunkServerClass] ::  - Protocol     = $Protocol"
+		Write-Verbose " [New-SplunkServerClass] ::  - Timeout      = $Timeout"
+		Write-Verbose " [New-SplunkServerClass] ::  - Credential   = $Credential"
+        Write-Verbose " [New-SplunkServerClass] ::  - WhereFilter  = $WhereFilter"
+        
+        
+        Write-Verbose " [New-SplunkServerClass] :: checking for existance of server class"
+        $InvokeAPIParams = @{
+        			ComputerName = $ComputerName
+        			Port         = $Port
+        			Protocol     = $Protocol
+        			Timeout      = $Timeout
+        			Credential   = $Credential
+                    Name         = $Name
+                }
+        $ServerClass = Get-SplunkServerClass @InvokeAPIParams
+        
+        if($ServerClass)
+        {
+            Write-Host " [New-SplunkServerClass] :: Server Class [$Name] already exist"
+            Return
+        }
+
+		Write-Verbose " [New-SplunkServerClass] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = '/services/deployment/serverclass' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+        
+        $MyArgs = @{}
+        
+        Write-Verbose " [New-SplunkServerClass] :: Adding Name [$Name] to `$MyArgs"
+        $MyArgs.Add("name",$Name)
+        
+        if($Blacklist)
+        {
+            $i = 0
+            foreach($Entry in $Blacklist)
+            {
+                Write-Verbose " [New-SplunkServerClass] :: Adding blacklist entry [$Entry] to `$MyArgs"
+                $MyArgs.Add("blacklist.${i}",$Entry)
+                $i++
+            }   
+        }
+        
+        if($Whitelist)
+        {
+            $i = 0
+            foreach($Entry in $Whitelist)
+            {
+                Write-Verbose " [New-SplunkServerClass] :: Adding whitelist entry [$Entry] to `$MyArgs"
+                $MyArgs.Add("whitelist.${i}",$Entry)
+                $i++
+            }
+        }
+        
+        if($ContinueMatching)
+        {
+            Write-Verbose " [New-SplunkServerClass] :: Adding ContinueMatching [$ContinueMatching] to `$MyArgs"
+            $MyArgs.Add("continueMatching",$True)
+        }
+        
+        if($Endpoint)
+        {
+            Write-Verbose " [New-SplunkServerClass] :: Adding Endpoint [$Endpoint] to `$MyArgs"
+            $MyArgs.Add("endpoint",$Endpoint)
+        }
+        
+        if($FilterType)
+        {
+            Write-Verbose " [New-SplunkServerClass] :: Adding FilterType [$FilterType] to `$MyArgs"
+            $MyArgs.Add("filterType",$FilterType)
+        }
+        
+        if($RepositoryLocation)
+        {
+            Write-Verbose " [New-SplunkServerClass] :: Adding RepositoryLocation [$RepositoryLocation] to `$MyArgs"
+            $MyArgs.Add("repositoryLocation",$RepositoryLocation)
+        }
+        
+        if($TargetRepositoryLocation)
+        {
+            Write-Verbose " [New-SplunkServerClass] :: Adding TargetRepositoryLocation [$TargetRepositoryLocation] to `$MyArgs"
+            $MyArgs.Add("targetRepositoryLocation",$TargetRepositoryLocation)
+        }
+        
+        if($TmpFolder)
+        {
+            Write-Verbose " [New-SplunkServerClass] :: Adding TmpFolder [$TmpFolder] to `$MyArgs"
+            $MyArgs.Add("tmpFolder",$TmpFolder)
+        }
+			
+		Write-Verbose " [New-SplunkServerClass] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+            if($PSCmdlet.ShouldProcess($ComputerName,"Creating new server class $Name"))
+    		{
+			    [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -Arguments $MyArgs -RequestType POST 
+            }
+        }
+		catch
+		{
+			Write-Verbose " [New-SplunkServerClass] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            Write-Error $_
+		}
+        try
+        {
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+                $InvokeAPIParams = @{
+        			ComputerName = $ComputerName
+        			Port         = $Port
+        			Protocol     = $Protocol
+        			Timeout      = $Timeout
+        			Credential   = $Credential
+                    Name         = $Name
+                }
+                Get-SplunkServerClass @InvokeAPIParams
+			}
+			else
+			{
+				Write-Verbose " [New-SplunkServerClass] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [New-SplunkServerClass] :: Get-SplunkServerClass threw an exception: $_"
+            Write-Error $_
+		}
+	}
+	End
+	{
+		Write-Verbose " [New-SplunkServerClass] :: =========    End   ========="
+	}
+} # New-SplunkServerClass
+
+#endregion New-SplunkServerClass
 
 #region Invoke-SplunkDeploymentServerReload
 
@@ -2577,7 +2789,7 @@ function Invoke-SplunkDeploymentServerReload
 		catch
 		{
 			Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: Invoke-SplunkAPIRequest threw an exception: $_"
-            $_
+            Write-Error $_
 		}
         try
         {
@@ -2593,7 +2805,7 @@ function Invoke-SplunkDeploymentServerReload
 		catch
 		{
 			Write-Verbose " [Invoke-SplunkDeploymentServerReload] :: Get-SplunkServerClass threw an exception: $_"
-            $_
+            Write-Error $_
 		}
 	}
 	End
@@ -2716,14 +2928,14 @@ function Disable-SplunkServerClass
             		catch
             		{
             			Write-Verbose " [Disable-SplunkServerClass] :: Get-SplunkServerClass threw an exception: $_"
-                        $_
+                        Write-Error $_
             		}
                 }
             }
     		catch
     		{
     			Write-Verbose " [Disable-SplunkServerClass] :: Invoke-SplunkAPIRequest threw an exception: $_"
-                $_
+                Write-Error $_
     		}
             
         }
@@ -2848,14 +3060,14 @@ function Enable-SplunkServerClass
             		catch
             		{
             			Write-Verbose " [Enable-SplunkServerClass] :: Get-SplunkServerClass threw an exception: $_"
-                        $_
+                        Write-Error $_
             		}
                 }
             }
     		catch
     		{
     			Write-Verbose " [Enable-SplunkServerClass] :: Invoke-SplunkAPIRequest threw an exception: $_"
-                $_
+                Write-Error $_
     		}
             
         }
@@ -3036,6 +3248,7 @@ function Get-SplunkLicenseFile
 		catch
 		{
 			Write-Verbose " [Get-SplunkLicenseFile] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            Write-Error $_
 		}
 	}
 	End
@@ -3261,6 +3474,7 @@ function Search-Splunk
 		catch
 		{
 			Write-Verbose " [Search-Splunk] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            Write-Error $_
 		}
 	}
 	End
@@ -3361,7 +3575,7 @@ function Write-SplunkMessage
         catch
 		{
 			Write-Verbose " [Write-SplunkMessage] :: Invoke-SplunkAPIRequest threw an exception: $_"
-            $_
+            Write-Error $_
 		}
         try
         {
@@ -3393,7 +3607,7 @@ function Write-SplunkMessage
 		catch
 		{
 			Write-Verbose " [Write-SplunkMessage] :: Get-Splunkd threw an exception: $_"
-            $_
+            Write-Error $_
 		}
 	}
 	End
