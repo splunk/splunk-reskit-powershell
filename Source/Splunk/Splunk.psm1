@@ -96,11 +96,17 @@ function Invoke-SplunkAPIRequest
         [STRING]$Format = 'XML',
         
         [Parameter()]
-        [ValidateSet("GET", "POST", "PUT", "DELETE")]
+        [ValidateSet("GET", "POST", "PUT", "DELETE","SIMPLEPOST")]
         [STRING]$RequestType = 'GET',
         
         [Parameter()]
         [System.Collections.Hashtable]$Arguments,
+        
+        [Parameter()]
+        [STRING]$PostMessage,
+        
+        [Parameter()]
+        [STRING]$URLParam,
 
 		[Parameter(ParameterSetName="byAuthToken")]
         [STRING]$UserName,
@@ -322,6 +328,129 @@ function Invoke-SplunkAPIRequest
 		}
 	}
     
+    function Invoke-HTTPSimplePost
+	{
+	    [CmdletBinding(DefaultParameterSetName="byToken")]
+	    Param(
+        
+	        [Parameter(Mandatory=$True)]
+	        [STRING]$URL,
+			
+			[Parameter(Mandatory=$True)]
+            [INT]$Timeout,
+			
+			[Parameter()]
+			[STRING]$URLParam,
+            
+            [Parameter()]
+			[STRING]$PostMessage,
+	        
+	        [Parameter(ParameterSetName='byToken')]
+	        [STRING]$UName,
+	        
+	        [Parameter(ParameterSetName='byToken')]
+	        [STRING]$Token,
+	        
+	        [Parameter(ParameterSetName='byCreds')]
+	        [System.Management.Automation.PSCredential]$Creds,
+			
+			[Parameter(ParameterSetName='byNoAuth')]
+			[Switch]$NoAuth
+	        
+	    )
+		
+        if($URLParam)
+        {
+            $PostURL = "{0}?{1}" -f $URL,$URLParam
+        }
+        else
+        {
+            $PostURL = $URL
+        }
+                        
+        $ContentLength = $PostMessage.Length
+		
+	    Write-Verbose " [Invoke-HTTPSimplePost] :: Using [$($pscmdlet.ParameterSetName)] ParameterSet"
+	    switch -exact ($pscmdlet.ParameterSetName)
+	    {
+	        "byToken"       {
+	                            if($URLParam)
+                                {
+                                    $PostURL = "{0}&username={1}&authToken={2}" -f $PostURL,$UName,$Token
+                                }
+                                else
+                                {
+                                    $PostURL = "{0}?username={1}&authToken={2}" -f $PostURL,$UName,$Token
+                                }
+	                            Write-Verbose " [Invoke-HTTPPost] :: Connecting to URL: $PostURL"
+	                            $Request = [System.Net.WebRequest]::Create($PostURL)
+	                            $Request.Method ="POST"
+								$request.ContentLength = $ContentLength
+								$Request.ContentType = "text/xml"
+	                            $Request.Timeout = $Timeout
+	                        }
+	        "byCreds"       {
+	                            Write-Verbose " [Invoke-HTTPPost] :: Connecting to URL: $PostURL"
+	                            $Request = [System.Net.WebRequest]::Create($PostURL)
+	                            $Request.Credentials = $Creds
+	                            $Request.Method ="POST"
+								$request.ContentLength = $ContentLength
+								$Request.ContentType = "text/xml"
+	                            $Request.Timeout = $Timeout
+	                        }
+			"byNoAuth"      {
+	                            Write-Verbose " [Invoke-HTTPPost] :: Connecting to URL: $PostURL"
+	                            $Request = [System.Net.WebRequest]::Create($PostURL)
+	                            $Request.Method = "POST"
+								$request.ContentLength = $ContentLength
+								$Request.ContentType = "text/xml"
+								$Request.AuthenticationLevel = [System.Net.Security.AuthenticationLevel]::None
+	                            $Request.Timeout = $Timeout
+	                        }
+	    }
+	    
+	    try
+	    {
+	        $RequestStream = new-object IO.StreamWriter($Request.GetRequestStream(),[System.Text.Encoding]::ASCII)
+	    }
+	    catch
+	    {
+			Write-Error $_
+	        return
+	    }
+
+		try
+		{
+			Write-Verbose " [Invoke-HTTPSimplePost] :: Sending POST message [$PostMessage]"
+	    	$RequestStream.Write($PostMessage)
+	    }
+		catch
+		{
+			Write-Verbose " [Invoke-HTTPSimplePost] :: Error sending POST message"
+			Write-Error $_
+		}
+		finally
+		{
+		    Write-Verbose " [Invoke-HTTPSimplePost] :: Closing POST stream"
+			$RequestStream.Flush()
+		    $RequestStream.Close()
+		}
+		Write-Verbose " [Invoke-HTTPSimplePost] :: Getting Response from POST"
+		try
+		{
+	    	$Response = $Request.GetResponse()
+			$Reader = new-object System.IO.StreamReader($Response.GetResponseStream())
+			$Results = $Reader.ReadToEnd()
+	    	Write-Verbose " [Invoke-HTTPSimplePost] :: Returning Results"
+			$Results
+		}
+		catch
+		{
+			Write-Verbose " [Invoke-HTTPSimplePost] :: Error getting response from POST"
+			Write-Error $_
+		}
+	}
+    
     #endregion Internal Functions
     
     Write-Verbose " [Invoke-SplunkAPIRequest] :: Using [$($pscmdlet.ParameterSetName)] ParameterSet"
@@ -349,20 +478,22 @@ function Invoke-SplunkAPIRequest
                                 Write-Verbose " [Invoke-SplunkAPIRequest] ::  - AuthToken    = $AuthToken"
                                 switch -exact ($RequestType)
                                 {
-                                    "GET"       {Invoke-HTTPGet    @InvokeHTTPParams -UName $UserName -Token $AuthToken}
-                                    "PUT"       {Invoke-HTTPPut    @InvokeHTTPParams -UName $UserName -Token $AuthToken}
-                                    "POST"      {Invoke-HTTPPost   @InvokeHTTPParams -UName $UserName -Token $AuthToken -Arguments $Arguments}
-                                    "DELETE"    {Invoke-HTTPDelete @InvokeHTTPParams -UName $UserName -Token $AuthToken}
+                                    "GET"           { Invoke-HTTPGet        @InvokeHTTPParams -UName $UserName -Token $AuthToken }
+                                    "PUT"           { Invoke-HTTPPut        @InvokeHTTPParams -UName $UserName -Token $AuthToken }
+                                    "POST"          { Invoke-HTTPPost       @InvokeHTTPParams -UName $UserName -Token $AuthToken -Arguments $Arguments }
+                                    "SIMPLEPOST"    { Invoke-HTTPSimplePost @InvokeHTTPParams -UName $UserName -Token $AuthToken -URLParam $URLParam -PostMessage $PostMessage}
+                                    "DELETE"        { Invoke-HTTPDelete     @InvokeHTTPParams -UName $UserName -Token $AuthToken }
                                 }
                             }
         "byCredential"      {
                                 Write-Verbose " [Invoke-SplunkAPIRequest] ::  - Credential   = $Credential"
                                 switch -exact ($RequestType)
                                 {
-                                    "GET"       {Invoke-HTTPGet    @InvokeHTTPParams -Creds $Credential}
-                                    "PUT"       {Invoke-HTTPPut    @InvokeHTTPParams -Creds $Credential}
-                                    "POST"      {Invoke-HTTPPost   @InvokeHTTPParams -Creds $Credential -Arguments $Arguments}
-                                    "DELETE"    {Invoke-HTTPDelete @InvokeHTTPParams -Creds $Credential}
+                                    "GET"           { Invoke-HTTPGet        @InvokeHTTPParams -Creds $Credential }
+                                    "PUT"           { Invoke-HTTPPut        @InvokeHTTPParams -Creds $Credential }
+                                    "POST"          { Invoke-HTTPPost       @InvokeHTTPParams -Creds $Credential -Arguments $Arguments }
+                                    "SIMPLEPOST"    { Invoke-HTTPSimplePost @InvokeHTTPParams -Creds $Credential -URLParam $URLParam -PostMessage $PostMessage }
+                                    "DELETE"        { Invoke-HTTPDelete     @InvokeHTTPParams -Creds $Credential }
                                 }
                             }
 							
@@ -370,10 +501,11 @@ function Invoke-SplunkAPIRequest
                                 Write-Verbose " [Invoke-SplunkAPIRequest] ::  - NoAuth"
                                 switch -exact ($RequestType)
                                 {
-                                    "GET"       {Invoke-HTTPGet    @InvokeHTTPParams -NoAuth}
-                                    "PUT"       {Invoke-HTTPPut    @InvokeHTTPParams -NoAuth}
-                                    "POST"      {Invoke-HTTPPost   @InvokeHTTPParams -NoAuth -Arguments $Arguments}
-                                    "DELETE"    {Invoke-HTTPDelete @InvokeHTTPParams -NoAuth}
+                                    "GET"           { Invoke-HTTPGet        @InvokeHTTPParams -NoAuth }
+                                    "PUT"           { Invoke-HTTPPut        @InvokeHTTPParams -NoAuth }
+                                    "POST"          { Invoke-HTTPPost       @InvokeHTTPParams -NoAuth -Arguments $Arguments }
+                                    "SIMPLEPOST"    { Invoke-HTTPSimplePost @InvokeHTTPParams -NoAuth -URLParam $URLParam -PostMessage $PostMessage}
+                                    "DELETE"        { Invoke-HTTPDelete     @InvokeHTTPParams -NoAuth }
                                 }
                             }
     }
@@ -3141,6 +3273,139 @@ function Search-Splunk
 #endregion Search-Splunk
 
 #endregion Search
+
+################################################################################
+
+#region General functions
+
+#region Write-SplunkMessage
+
+function Write-SplunkMessage
+{
+    [Cmdletbinding()]
+    Param(
+        
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]           
+        [String]$HostName     = $Env:COMPUTERNAME,
+        
+        [Parameter()]           
+        [String]$Source       = "Powershell_Script",
+        
+        [Parameter()]           
+        [String]$SourceType   = "Splunk_SDK_PowerShell",
+        
+        [Parameter()]           
+        [String]$Index        = "main",
+        
+        [Parameter()]           
+        [String]$Message,
+        
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+
+	Begin
+	{
+		Write-Verbose " [Write-SplunkMessage] :: Starting..."
+        $Stack = Get-PSCallStack
+        $CallingScope = $Stack[$Stack.Count-2]
+	}
+	Process
+	{
+		Write-Verbose " [Write-SplunkMessage] :: Parameters"
+		Write-Verbose " [Write-SplunkMessage] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Write-SplunkMessage] ::  - Port         = $Port"
+		Write-Verbose " [Write-SplunkMessage] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Write-SplunkMessage] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Write-SplunkMessage] ::  - Credential   = $Credential"
+
+		Write-Verbose " [Write-SplunkMessage] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = '/services/receivers/simple' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+        
+        
+                    
+		Write-Verbose " [Write-SplunkMessage] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+            Write-Verbose " [Write-SplunkMessage] :: Creating POST message"
+            $LogMessage = "{0} :: Caller={1} Message={2}" -f (Get-Date),$CallingScope.Command,$Message
+            
+            $MyParam = "host=${HostName}&source=${source}&sourcetype=${sourcetype}&index=$Index"
+            Write-Verbose " [Write-SplunkMessage] :: URL Parameters [$MyParam]"
+            
+            Write-Verbose " [Write-SplunkMessage] :: Sending LogMessage - $LogMessage"
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -PostMessage $LogMessage -URLParam $MyParam -RequestType SIMPLEPOST
+        }
+        catch
+		{
+			Write-Verbose " [Write-SplunkMessage] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            $_
+		}
+        try
+        {
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+                $Myobj = @{}
+                foreach($key in $Results.response.results.result.field)
+                {
+                    $data = $key.Value.Text
+                    switch -exact ($Key.k)
+                    {
+                        "_index"       {$Myobj.Add("Index",$data);continue}
+                        "host"         {$Myobj.Add("Host",$data);continue}
+                        "source"       {$Myobj.Add("Source",$data);continue} 
+                        "sourcetype"   {$Myobj.Add("Sourcetype",$data);continue}
+                    }
+                }
+                
+                $obj = New-Object PSObject -Property $myobj
+                $obj.PSTypeNames.Clear()
+                $obj.PSTypeNames.Add('BSonPosh.Splunk.MessageResult')
+                $obj
+			}
+			else
+			{
+				Write-Verbose " [Write-SplunkMessage] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [Write-SplunkMessage] :: Get-Splunkd threw an exception: $_"
+            $_
+		}
+	}
+	End
+	{
+		Write-Verbose " [Write-SplunkMessage] :: =========    End   ========="
+	}
+    
+}    # Write-SplunkMessage
+
+#endregion Write-SplunkMessage
+
+#endregion General functions
 
 ################################################################################
 
