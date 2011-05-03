@@ -317,6 +317,44 @@
     </View>
     
     <View>
+      <Name>Splunk.SDK.Deployment.DeploymentClient</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Deployment.DeploymentClient</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>IP</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>MgmtPort</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>LastUpdate</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    
+    <View>
       <Name>Splunk.SDK.Connection</Name>
       <ViewSelectedBy>
         <TypeName>Splunk.SDK.Connection</TypeName>
