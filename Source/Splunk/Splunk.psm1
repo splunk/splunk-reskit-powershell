@@ -3346,6 +3346,125 @@ function Get-SplunkLicenseFile
 
 #endregion Get-SplunkLicenseFile
 
+#region Get-SplunkLicenseMessage
+
+function Get-SplunkLicenseMessage
+{
+    [Cmdletbinding(DefaultParameterSetName="byFilter")]
+    Param(
+
+        [Parameter(Position=0,ParameterSetName="byFilter")]
+        [STRING]$Filter = '.*',
+	
+		[Parameter(Position=0,ParameterSetName="byName")]
+		[STRING]$Name,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+    Begin
+	{
+		Write-Verbose " [Get-SplunkLicenseMessage] :: Starting..."
+	}
+	Process
+	{
+		Write-Verbose " [Get-SplunkLicenseMessage] :: Parameters"
+		Write-Verbose " [Get-SplunkLicenseMessage] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Get-SplunkLicenseMessage] ::  - Port         = $Port"
+		Write-Verbose " [Get-SplunkLicenseMessage] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Get-SplunkLicenseMessage] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Get-SplunkLicenseMessage] ::  - Credential   = $Credential"
+
+		Write-Verbose " [Get-SplunkLicenseMessage] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = '/services/licenser/messages' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Get-SplunkLicenseMessage] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+        }
+        catch
+		{
+			Write-Verbose " [Get-SplunkLicenseMessage] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            Write-Error $_
+		}
+        try
+        {
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+                if($Results.feed.entry)
+                {
+                    foreach($Entry in $Results.feed.entry)
+                    {
+        				$MyObj = @{
+                            ComputerName = $ComputerName
+                        }
+        				Write-Verbose " [Get-SplunkLicenseMessage] :: Creating Hash Table to be used to create Splunk.SDK.License.Message"
+        				switch ($Entry.content.dict.key)
+        				{
+        		        	{$_.name -eq "category"}	{ $Myobj.Add("Category",$_.'#text')     ; continue }
+        					{$_.name -eq "create_time"}	{ $Myobj.Add("CreateTime",(ConvertFrom-UnixTime $_.'#text'))   ; continue }
+        			        {$_.name -eq "pool_id"}	    { $Myobj.Add("PoolID",$_.'#text')       ; continue }
+                            {$_.name -eq "severity"}    { $Myobj.Add("Severity",$_.'#text')     ; continue }
+                            {$_.name -eq "slave_id"}	{ $Myobj.Add("SlaveID",$_.'#text')      ; continue }
+                            {$_.name -eq "stack_id"}	{ $Myobj.Add("StackID",$_.'#text')      ; continue }
+        				}
+        				
+        				# Creating Splunk.SDK.ServiceStatus
+        			    $obj = New-Object PSObject -Property $MyObj
+        			    $obj.PSTypeNames.Clear()
+        			    $obj.PSTypeNames.Add('Splunk.SDK.License.Message')
+        			    $obj 
+                    }
+                }
+                else
+                {
+                    Write-Verbose " [Get-SplunkLicenseMessage] :: No Messages Found"
+                }
+                
+			}
+			else
+			{
+				Write-Verbose " [Get-SplunkLicenseMessage] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [Get-SplunkLicenseMessage] :: Get-SplunkDeploymentClient threw an exception: $_"
+            Write-Error $_
+		}
+	}
+	End
+	{
+		Write-Verbose " [Get-SplunkLicenseMessage] :: =========    End   ========="
+	}
+
+}    # Get-SplunkLicenseMessage
+
+#endregion Get-SplunkLicenseMessage
+
 #endregion SPlunk License
 
 ################################################################################

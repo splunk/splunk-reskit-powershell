@@ -355,6 +355,40 @@
     </View>
     
     <View>
+      <Name>Splunk.SDK.License.Message</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.License.Message</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>CreateTime</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Severity</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Category</PropertyName>
+              </TableColumnItem>
+			</TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    
+    <View>
       <Name>Splunk.SDK.Connection</Name>
       <ViewSelectedBy>
         <TypeName>Splunk.SDK.Connection</TypeName>
