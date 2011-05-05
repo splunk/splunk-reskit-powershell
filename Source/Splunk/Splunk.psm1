@@ -3350,14 +3350,8 @@ function Get-SplunkLicenseFile
 
 function Get-SplunkLicenseMessage
 {
-    [Cmdletbinding(DefaultParameterSetName="byFilter")]
+    [Cmdletbinding()]
     Param(
-
-        [Parameter(Position=0,ParameterSetName="byFilter")]
-        [STRING]$Filter = '.*',
-	
-		[Parameter(Position=0,ParameterSetName="byName")]
-		[STRING]$Name,
 
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]$ComputerName = $SplunkDefaultObject.ComputerName,
@@ -3464,6 +3458,134 @@ function Get-SplunkLicenseMessage
 }    # Get-SplunkLicenseMessage
 
 #endregion Get-SplunkLicenseMessage
+
+#region Get-SplunkLicenseGroup
+
+function Get-SplunkLicenseGroup
+{
+
+    [Cmdletbinding(DefaultParameterSetName="byFilter")]
+    Param(
+
+        [Parameter(Position=0,ParameterSetName="byFilter")]
+        [STRING]$Filter = '.*',
+	
+		[Parameter(Position=0,ParameterSetName="byName")]
+		[STRING]$Name,
+
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = $SplunkDefaultObject.Port,
+        
+        [Parameter()]
+		[ValidateSet("http", "https")]
+        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        
+    )
+    Begin
+	{
+		Write-Verbose " [Get-SplunkLicenseGroup] :: Starting..."
+        
+        $ParamSetName = $pscmdlet.ParameterSetName
+        switch ($ParamSetName)
+        {
+            "byFilter"  { $WhereFilter = { $_.Name -match $Filter } } 
+            "byName"    { $WhereFilter = { $_.Name -ceq   $Name } }
+        }
+        
+	}
+	Process
+	{
+		Write-Verbose " [Get-SplunkLicenseGroup] :: Parameters"
+        Write-Verbose " [Get-SplunkLicenseGroup] ::  - ParameterSet = $ParamSetName"
+		Write-Verbose " [Get-SplunkLicenseGroup] ::  - ComputerName = $ComputerName"
+		Write-Verbose " [Get-SplunkLicenseGroup] ::  - Port         = $Port"
+		Write-Verbose " [Get-SplunkLicenseGroup] ::  - Protocol     = $Protocol"
+		Write-Verbose " [Get-SplunkLicenseGroup] ::  - Timeout      = $Timeout"
+		Write-Verbose " [Get-SplunkLicenseGroup] ::  - Credential   = $Credential"
+        Write-Verbose " [Get-SplunkLicenseGroup] ::  - WhereFilter  = $WhereFilter"
+
+		Write-Verbose " [Get-SplunkLicenseGroup] :: Setting up Invoke-APIRequest parameters"
+		$InvokeAPIParams = @{
+			ComputerName = $ComputerName
+			Port         = $Port
+			Protocol     = $Protocol
+			Timeout      = $Timeout
+			Credential   = $Credential
+			Endpoint     = '/services/licenser/groups' 
+			Verbose      = $VerbosePreference -eq "Continue"
+		}
+			
+		Write-Verbose " [Get-SplunkLicenseGroup] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
+		try
+		{
+			[XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams
+        }
+        catch
+		{
+			Write-Verbose " [Get-SplunkLicenseGroup] :: Invoke-SplunkAPIRequest threw an exception: $_"
+            Write-Error $_
+		}
+        try
+        {
+			if($Results -and ($Results -is [System.Xml.XmlDocument]))
+			{
+                if($Results.feed.entry)
+                {
+                    foreach($Entry in $Results.feed.entry)
+                    {
+        				$MyObj = @{
+                            ComputerName = $ComputerName
+                            GroupName    = $Entry.title
+                            ID           = $Entry.link | Where-Object {$_.rel -eq "edit"} | Select-Object -expand href
+                        }
+        				Write-Verbose " [Get-SplunkLicenseGroup] :: Creating Hash Table to be used to create Splunk.SDK.License.Group"
+        				switch ($Entry.content.dict.key)
+        				{
+        		        	{$_.name -eq "is_active"}	{ $Myobj.Add("IsActive",[bool]($_.'#text'))  ; continue }
+                            {$_.name -eq "stack_ids"}	{ $Myobj.Add("StackIDs",$_.list.item)        ; continue }
+        				}
+        				
+        				# Creating Splunk.SDK.ServiceStatus
+        			    $obj = New-Object PSObject -Property $MyObj
+        			    $obj.PSTypeNames.Clear()
+        			    $obj.PSTypeNames.Add('Splunk.SDK.License.Group')
+        			    $obj 
+                    }
+                }
+                else
+                {
+                    Write-Verbose " [Get-SplunkLicenseGroup] :: No Messages Found"
+                }
+                
+			}
+			else
+			{
+				Write-Verbose " [Get-SplunkLicenseGroup] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
+			}
+		}
+		catch
+		{
+			Write-Verbose " [Get-SplunkLicenseGroup] :: Get-SplunkDeploymentClient threw an exception: $_"
+            Write-Error $_
+		}
+	}
+	End
+	{
+		Write-Verbose " [Get-SplunkLicenseGroup] :: =========    End   ========="
+	}
+
+}    # Get-SplunkLicenseGroup
+
+#endregion Get-SplunkLicenseGroup
 
 #endregion SPlunk License
 
