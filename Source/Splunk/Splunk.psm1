@@ -974,6 +974,7 @@ function Set-SplunkdPassword
 	
 	Begin
 	{
+		#JDAC: use host.promptforcredential when no username supplied
 		Write-Verbose " [Set-SplunkdPassword] :: Starting..."
 		if(!$NewPassword)
 		{
