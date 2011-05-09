@@ -168,6 +168,7 @@ function Invoke-SplunkAPIRequest
                             }
         }
 
+		#JDAC: refactor for testing to mock network txn
         try
         {
             Write-Verbose " [Invoke-HTTPGet] :: Sending Request"
