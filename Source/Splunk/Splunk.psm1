@@ -1153,9 +1153,7 @@ function Get-SplunkdUser
 		}
 		catch
 		{
-			$ErrMessage = $_.Exception.InnerException.Message
-			Write-Verbose " [Get-SplunkdUser] :: Invoke-SPlunkAPIRequest threw exception"
-			Write-Verbose " [Get-SplunkdUser] ::  -> $errMessage"
+			Write-Verbose " [Get-SplunkdUser] :: Invoke-SplunkAPIRequest threw an exception: $_"
             Write-Error $_
 		}
 		if($Results)
@@ -3625,8 +3623,8 @@ function Get-SplunkLicenseStack
         $ParamSetName = $pscmdlet.ParameterSetName
         switch ($ParamSetName)
         {
-            "byFilter"  { $WhereFilter = { $_.GroupName -match $Filter } } 
-            "byName"    { $WhereFilter = { $_.GroupName -ceq   $Name } }
+            "byFilter"  { $WhereFilter = { $_.StackName -match $Filter } } 
+            "byName"    { $WhereFilter = { $_.StackName -ceq   $Name } }
         }
         
 	}
@@ -3754,8 +3752,8 @@ function Get-SplunkLicensePool
         $ParamSetName = $pscmdlet.ParameterSetName
         switch ($ParamSetName)
         {
-            "byFilter"  { $WhereFilter = { $_.Name -match $Filter } } 
-            "byName"    { $WhereFilter = { $_.Name -ceq   $Name } }
+            "byFilter"  { $WhereFilter = { $_.PoolName -match $Filter } } 
+            "byName"    { $WhereFilter = { $_.PoolName -ceq   $Name } }
         }
 
     }
@@ -3819,7 +3817,7 @@ function Get-SplunkLicensePool
                             $obj = New-Object PSObject -Property $MyObj
                             $obj.PSTypeNames.Clear()
                             $obj.PSTypeNames.Add('Splunk.SDK.License.Pool')
-                            $obj 
+                            $obj | Where-Object $WhereFilter
                         }
                     }
                     else
@@ -4285,7 +4283,7 @@ function Write-SplunkMessage
                 
                 $obj = New-Object PSObject -Property $myobj
                 $obj.PSTypeNames.Clear()
-                $obj.PSTypeNames.Add('BSonPosh.Splunk.MessageResult')
+                $obj.PSTypeNames.Add('Splunk.SDK.MessageResult')
                 $obj
 			}
 			else
@@ -4433,10 +4431,10 @@ function Get-Splunk
 {
     <#
 	    .Synopsis
-	        Get all the command contained in the BSonPosh Module
+	        Get all the command contained in the Splunk Module
 	        
 	    .Description
-	        Get all the command contained in the BSonPosh Module
+	        Get all the command contained in the Splunk Module
 	        
 	    .Parameter Verb
 	    
