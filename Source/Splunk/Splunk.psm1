@@ -15,16 +15,16 @@ function Invoke-SplunkAPIRequest
             Sends a request to the Splunk REST API on the targeted instance.
             
         .Parameter ComputerName
-            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
             Credential object with the user name and password used to access the REST API.	
@@ -54,7 +54,7 @@ function Invoke-SplunkAPIRequest
             Invoke-SplunkAPIRequest
             Description
             -----------
-            Gets the values set for the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Gets the values set for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
         .Example
             Invoke-SplunkAPIRequest -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -76,17 +76,17 @@ function Invoke-SplunkAPIRequest
     Param(
     
 	    [Parameter()]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port = $SplunkDefaultObject.Port,
+        [int]$Port = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout = $SplunkDefaultObject.Timeout,
+        [int]$Timeout = $SplunkDefaultConnectionObject.Timeout,
 		
         [Parameter(Mandatory=$True)]
         [STRING]$Endpoint,
@@ -636,11 +636,14 @@ function Connect-Splunk
 		Password     = ConvertFrom-SecureString $MyCredential.Password
     }
     
+    Write-Verbose " [Connect-Splunk] :: Creating Splunk.SDK.Connection Object"
     # Creating Splunk.Connection
     $obj = New-Object PSObject -Property $myobj
     $obj.PSTypeNames.Clear()
     $obj.PSTypeNames.Add('Splunk.SDK.Connection')
-    $obj
+    
+    Write-Verbose " [Connect-Splunk] :: Setting SplunkDefaultConnectionObject using Set-SplunkConnectionObject"
+    Set-SplunkConnectionObject -ConnectObject $obj
     
 	Write-Verbose " [Connect-Splunk] :: =========    End   ========="
 } # Connect-Splunk
@@ -658,19 +661,19 @@ function Get-SplunkLogin
 		[String]$Name = '.*',
         
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 	Begin
@@ -755,16 +758,16 @@ function Get-SplunkAuthToken
 		[String]$UserName,
         
         [Parameter()]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 		
 		[Parameter(Mandatory=$True,ParameterSetName="byCredential")]
         [System.Management.Automation.PSCredential]$Credential
@@ -860,31 +863,31 @@ function Set-SplunkdPassword
 			Password for the user. If not provide you will be prompted for a password.
 			
         .Parameter ComputerName
-            Name of the Splunk instance to set the user password on (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to set the user password on (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 			
 		.Example
             Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd!
             Description
             -----------
-            Sets the password for user 'admin' to 'P@ssw0rd!' on targeted Splunk instance using the $SplunkDefaultObject settings.
+            Sets the password for user 'admin' to 'P@ssw0rd!' on targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
 		.Example
             Set-SplunkdPassword -UserName admin
             Description
             -----------
-            Sets the password for user 'admin' to provided password on targeted Splunk instance using the $SplunkDefaultObject settings.
+            Sets the password for user 'admin' to provided password on targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
 			
         .Example
             Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd! -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -896,7 +899,7 @@ function Set-SplunkdPassword
             $SplunkServers | Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd!
             Description
             -----------
-            Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Set-SplunkdPassword -UserName admin -NewPassword P@ssw0rd! -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -924,19 +927,19 @@ function Set-SplunkdPassword
 		[STRING]$NewPassword,
 		
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 		
 		[Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential,
 		
 		[Parameter()]
 		[SWITCH]$Force
@@ -1036,31 +1039,31 @@ function Get-SplunkdUser
 			User to return. Returns nothing if user is not found.
 			
         .Parameter ComputerName
-            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 			
 		.Example
             Get-SplunkdUser
             Description
             -----------
-            Gets the users for the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Gets the users for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
 		.Example
             Get-SplunkdUser -UserName admin
             Description
             -----------
-            Returns the admin user for the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Returns the admin user for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
 			
         .Example
             Get-SplunkdUser -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1072,7 +1075,7 @@ function Get-SplunkdUser
             $SplunkServers | Get-SplunkdUser
             Description
             -----------
-            Gets the users for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Gets the users for each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Get-SplunkdUser -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1097,20 +1100,20 @@ function Get-SplunkdUser
 		[STRING]$UserName,
 		
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 	
@@ -1155,9 +1158,7 @@ function Get-SplunkdUser
 		}
 		catch
 		{
-			$ErrMessage = $_.Exception.InnerException.Message
-			Write-Verbose " [Get-SplunkdUser] :: Invoke-SPlunkAPIRequest threw exception"
-			Write-Verbose " [Get-SplunkdUser] ::  -> $errMessage"
+			Write-Verbose " [Get-SplunkdUser] :: Invoke-SplunkAPIRequest threw an exception: $_"
             Write-Error $_
 		}
 		if($Results)
@@ -1219,25 +1220,25 @@ function Get-Splunkd
             Gets the values set for the targeted Splunk instance. These are the settings found in the Splunk web interface Manager » System settings » General settings
             
         .Parameter ComputerName
-            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 			
 		.Example
             Get-Splunkd
             Description
             -----------
-            Gets the values set for the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Gets the values set for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
         .Example
             Get-Splunkd -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1249,7 +1250,7 @@ function Get-Splunkd
             $SplunkServers | Get-Splunkd
             Description
             -----------
-            Gets the values set for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Gets the values set for each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Get-Splunkd -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1271,20 +1272,20 @@ function Get-Splunkd
     Param(
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 	
@@ -1381,25 +1382,25 @@ function Test-Splunkd
             Tests the targeted Splunk instance for a response. Returns $True if the Splunk Instance responds or $False if it encounters a problem.
             
         .Parameter ComputerName
-            Name of the Splunk instance to test (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to test (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 			
 		.Example
             Test-Splunkd
             Description
             -----------
-            Test the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Test the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
         .Example
             Test-Splunkd -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1411,7 +1412,7 @@ function Test-Splunkd
             $SplunkServers | Test-Splunkd
             Description
             -----------
-            Test each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Test each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Test-Splunkd -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1433,19 +1434,19 @@ function Test-Splunkd
     Param(
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential,
 		
 		[Parameter()]
 		[SWITCH]$Native
@@ -1514,19 +1515,19 @@ function Set-Splunkd
             Sets the values for the targeted Splunk instance. These are the settings found in the Splunk web interface Manager » System settings » General settings
             
         .Parameter ComputerName
-            Name of the Splunk instance to set the settings for (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to set the settings for (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 		
 		.Parameter ServerName
 			Value to use for the Splunk server name.
@@ -1559,7 +1560,7 @@ function Set-Splunkd
             Set-Splunkd -SessionTimeout 2h
             Description
             -----------
-            Sets the 'sessionTimeout' to '2h' on the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Sets the 'sessionTimeout' to '2h' on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
         .Example
             Set-Splunkd -SessionTimeout 2h -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1571,7 +1572,7 @@ function Set-Splunkd
             $SplunkServers | Set-Splunkd -SessionTimeout 2h
             Description
             -----------
-            Sets the 'sessionTimeout' to '2h' on each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Sets the 'sessionTimeout' to '2h' on each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Set-Splunkd -SessionTimeout 2h -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1593,16 +1594,16 @@ function Set-Splunkd
     Param(
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [INT]$Timeout         = $SplunkDefaultObject.Timeout,
+        [INT]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 		
 		[Parameter()]
 		[STRING]$ServerName,
@@ -1635,7 +1636,7 @@ function Set-Splunkd
 #		[SWITCH]$EnableSSL,
 		
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential,
 		
 		[Parameter()]
 		[SWITCH]$Force,
@@ -1734,19 +1735,19 @@ function Restart-SplunkService
             Restarts Splunkd and SplunkWeb on targeted Splunk instance. Splunk Web will only be restarted if the services is started.
             
         .Parameter ComputerName
-            Name of the Splunk instance to restart services on (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to restart services on (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 		
 		.Parameter Force
 			Suppresses the confirm prompt.
@@ -1761,7 +1762,7 @@ function Restart-SplunkService
             Restart-SplunkService
             Description
             -----------
-            Restarts the Splunk services using the $SplunkDefaultObject settings.
+            Restarts the Splunk services using the $SplunkDefaultConnectionObject settings.
     
         .Example
             Restart-SplunkService -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1773,7 +1774,7 @@ function Restart-SplunkService
             $SplunkServers | Restart-SplunkService
             Description
             -----------
-            Restarts the Splunk services on each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Restarts the Splunk services on each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Restart-SplunkService -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1795,19 +1796,19 @@ function Restart-SplunkService
     Param(
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential,
 		
 		[Parameter()]
 		[SWITCH]$Force,
@@ -1890,25 +1891,25 @@ function Get-SplunkdVersion
             Gets the OS and Splunk version info for the targeted Splunk instance. 
 			
         .Parameter ComputerName
-            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 			
 		.Example
             Get-SplunkdVersion
             Description
             -----------
-            Gets the OS and Splunk version info for the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Gets the OS and Splunk version info for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
         .Example
             Get-SplunkdVersion -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1920,7 +1921,7 @@ function Get-SplunkdVersion
             $SplunkServers | Get-SplunkdVersion
             Description
             -----------
-            Gets the OS and Splunk version info for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Gets the OS and Splunk version info for each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Get-SplunkdVersion -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -1942,20 +1943,20 @@ function Get-SplunkdVersion
     Param(
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 	
@@ -2053,43 +2054,43 @@ function Get-SplunkdLogging
             If passed will return logger entries with the provided level.
             
         .Parameter ComputerName
-            Name of the Splunk instance to get the log settings for (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to get the log settings for (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 			
 		.Example
             Get-SplunkdLogging
             Description
             -----------
-            Returns all loggers on the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Returns all loggers on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
 		.Example
             Get-SplunkdLogging -Name AdminHandler:Monitor
             Description
             -----------
-            Returns AdminHandler:Monitor logger on the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Returns AdminHandler:Monitor logger on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
 		
 		.Example
             Get-SplunkdLogging -filter monitor
             Description
             -----------
-            Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
 		
         .Example
             Get-SplunkdLogging -level debug
             Description
             -----------
-            Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
         
         .Example
             Get-SplunkdLogging -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -2101,7 +2102,7 @@ function Get-SplunkdLogging
             $SplunkServers | Get-SplunkdLogging
             Description
             -----------
-            Returns all loggers on each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Returns all loggers on each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Get-SplunkdLogging -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -2133,20 +2134,20 @@ function Get-SplunkdLogging
 		[STRING]$Level,
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 	
@@ -2253,20 +2254,20 @@ function Set-SplunkdLogging # Need to note Change does not persist service resta
 		[STRING]$NewLevel,
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 	
@@ -2366,20 +2367,20 @@ function Get-SplunkServerClass
 		[STRING]$Name,
        
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 	
@@ -2531,20 +2532,20 @@ function New-SplunkServerClass
         [STRING]$TmpFolder,
        
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 	
@@ -2712,20 +2713,20 @@ function Invoke-SplunkDeploymentServerReload
     Param(
 
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 	
@@ -2805,20 +2806,20 @@ function Disable-SplunkServerClass
         [Object]$ServerClass,
 	
         [Parameter()]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential,
         
         [Parameter()]
         [SWITCH]$Force
@@ -2937,20 +2938,20 @@ function Enable-SplunkServerClass
         [Object]$ServerClass,
 	
         [Parameter()]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential,
         
         [Parameter()]
         [SWITCH]$Force
@@ -3066,20 +3067,20 @@ function Get-SplunkDeploymentClient
 		[STRING]$Name,
 
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
     Begin
@@ -3188,25 +3189,25 @@ function Get-SplunkLicenseFile
             Returns the licenses files registered for the targeted Splunk instance. These are found in the Splunk web interface Manager » Licensing
             
         .Parameter ComputerName
-            Name of the Splunk instance to get the licenses for (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to get the licenses for (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 			
 		.Example
             Get-SplunkLicenseFile
             Description
             -----------
-            Gets the licenses for the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Gets the licenses for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
         .Example
             Get-SplunkLicenseFile -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -3218,7 +3219,7 @@ function Get-SplunkLicenseFile
             $SplunkServers | Get-SplunkLicenseFile
             Description
             -----------
-            Gets the licenses for each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Gets the licenses for each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Get-SplunkLicenseFile -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -3240,20 +3241,20 @@ function Get-SplunkLicenseFile
     Param(
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential,
         
         [Parameter()]
         [SWITCH]$All
@@ -3356,20 +3357,20 @@ function Get-SplunkLicenseMessage
     Param(
 
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
     Begin
@@ -3476,20 +3477,20 @@ function Get-SplunkLicenseGroup
 		[STRING]$Name,
 
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
     Begin
@@ -3604,20 +3605,20 @@ function Get-SplunkLicenseStack
 		[STRING]$Name,
 
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
     Begin
@@ -3627,8 +3628,8 @@ function Get-SplunkLicenseStack
         $ParamSetName = $pscmdlet.ParameterSetName
         switch ($ParamSetName)
         {
-            "byFilter"  { $WhereFilter = { $_.GroupName -match $Filter } } 
-            "byName"    { $WhereFilter = { $_.GroupName -ceq   $Name } }
+            "byFilter"  { $WhereFilter = { $_.StackName -match $Filter } } 
+            "byName"    { $WhereFilter = { $_.StackName -ceq   $Name } }
         }
         
 	}
@@ -3732,20 +3733,20 @@ function Get-SplunkLicensePool
         [STRING]$Name,
 
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
         [ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
     Begin 
@@ -3756,8 +3757,8 @@ function Get-SplunkLicensePool
         $ParamSetName = $pscmdlet.ParameterSetName
         switch ($ParamSetName)
         {
-            "byFilter"  { $WhereFilter = { $_.Name -match $Filter } } 
-            "byName"    { $WhereFilter = { $_.Name -ceq   $Name } }
+            "byFilter"  { $WhereFilter = { $_.PoolName -match $Filter } } 
+            "byName"    { $WhereFilter = { $_.PoolName -ceq   $Name } }
         }
 
     }
@@ -3821,7 +3822,7 @@ function Get-SplunkLicensePool
                             $obj = New-Object PSObject -Property $MyObj
                             $obj.PSTypeNames.Clear()
                             $obj.PSTypeNames.Add('Splunk.SDK.License.Pool')
-                            $obj 
+                            $obj | Where-Object $WhereFilter
                         }
                     }
                     else
@@ -3863,20 +3864,20 @@ function Set-SplunkLicenseGroup
 		[STRING]$GroupName,
 
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential,
         
         [Parameter()]
         [SWITCH]$Force
@@ -3972,19 +3973,19 @@ function Search-Splunk
 			String you want to search for. 
             
         .Parameter ComputerName
-            Name of the Splunk instance to search (Default is $SplunkDefaultObject.ComputerName.)
+            Name of the Splunk instance to search (Default is $SplunkDefaultConnectionObject.ComputerName.)
         
 		.Parameter Port
-            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultObject.Port.)
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
         
 		.Parameter Protocol
-            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultObject.Protocol.)
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
         
 		.Parameter Timeout
-            How long to wait for the REST API to respond (Default is $SplunkDefaultObject.Timeout.)	
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
 			
         .Parameter Credential
-            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultObject.Credential.)	
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
 			
 		.Parameter StartTime
 			The earliest (inclusive), respectively, time bounds for the search. The time string can be either a UTC time (with fractional seconds), a relative time specifier (to now) or a formatted time string. 
@@ -4005,7 +4006,7 @@ function Search-Splunk
             Search-Splunk -Search 'source="WinEventLog:System"
             Description
             -----------
-            Searches for events with source of "WinEventLog:System" on the targeted Splunk instance using the $SplunkDefaultObject settings.
+            Searches for events with source of "WinEventLog:System" on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
     
         .Example
             Search-Splunk -Search 'source="WinEventLog:System" -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -4017,7 +4018,7 @@ function Search-Splunk
             $SplunkServers | Search-Splunk -Search 'source="WinEventLog:System"
             Description
             -----------
-            Searches for events with source of "WinEventLog:System" on each Splunk server in the pipeline using the $SplunkDefaultObject settings.
+            Searches for events with source of "WinEventLog:System" on each Splunk server in the pipeline using the $SplunkDefaultConnectionObject settings.
         
 		.Example
             $SplunkServers | Search-Splunk -Search 'source="WinEventLog:System" -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
@@ -4042,20 +4043,20 @@ function Search-Splunk
 		[STRING]$Search,
 	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential,
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential,
 		
 		[Parameter()]           # earliest_time
         [String]$StartTime,
@@ -4191,17 +4192,17 @@ function Write-SplunkMessage
     Param(
         
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = $SplunkDefaultObject.ComputerName,
+        [String]$ComputerName = $SplunkDefaultConnectionObject.ComputerName,
         
         [Parameter()]
-        [int]$Port            = $SplunkDefaultObject.Port,
+        [int]$Port            = $SplunkDefaultConnectionObject.Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = $SplunkDefaultObject.Protocol,
+        [STRING]$Protocol     = $SplunkDefaultConnectionObject.Protocol,
         
         [Parameter()]
-        [int]$Timeout         = $SplunkDefaultObject.Timeout,
+        [int]$Timeout         = $SplunkDefaultConnectionObject.Timeout,
 
         [Parameter()]           
         [String]$HostName     = $Env:COMPUTERNAME,
@@ -4219,7 +4220,7 @@ function Write-SplunkMessage
         [String]$Message,
         
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultObject.Credential
+        [System.Management.Automation.PSCredential]$Credential = $SplunkDefaultConnectionObject.Credential
         
     )
 
@@ -4288,7 +4289,7 @@ function Write-SplunkMessage
                 
                 $obj = New-Object PSObject -Property $myobj
                 $obj.PSTypeNames.Clear()
-                $obj.PSTypeNames.Add('BSonPosh.Splunk.MessageResult')
+                $obj.PSTypeNames.Add('Splunk.SDK.MessageResult')
                 $obj
 			}
 			else
@@ -4388,43 +4389,152 @@ function Enable-CertificateValidation
 
 #endregion Enable-CertificateValidation
 
-#region Export-SplunkModuleConfiguration
+#region Export-SplunkConnectionObject
 
-function Export-SplunkModuleConfiguration
+function Export-SplunkConnectionObject
 {
+    [cmdletbinding()]
 	Param(
 		[Parameter()]
-		$Path = "$psScriptRoot\Splunk.Module.Config.xml"
+		$Path = "$SplunkModuleHome\SplunkConnectionObject.xml",
+        
+        [Parameter()]
+        [SWITCH]$Force
 	)
-	Write-Verbose " [Export-SplunkModuleConfiguration] :: Exporting Configuration to $Path"
-	$SplunkDefaultObject | Export-Clixml -Path $Path 
+    
+    Write-Verbose " [Export-SplunkConnectionObject] :: Starting"
+	
+    if((Test-Path $Path) -and (-not $Force))
+    {
+        Write-Host " [Export-SplunkConnectionObject] :: $Path already exists. Please remove or use -Force."
+    }
+    else
+    {
+        Write-Verbose " [Export-SplunkConnectionObject] :: Exporting Module Configuration to $Path"
+        $SplunkDefaultConnectionObject | Export-Clixml -Path $Path
+        Get-Item $Path
+    }
+	
 }
 
-#endregion Export-SplunkModuleConfiguration
+#endregion Export-SplunkConnectionObject
 
-#region Import-SplunkModuleConfiguration
+#region Import-SplunkConnectionObject
 
-function Import-SplunkModuleConfiguration
+function Import-SplunkConnectionObject
 {
-
+    [cmdletbinding()]
 	Param(
 		[Parameter()]
-		$Path = "$psScriptRoot\Splunk.Module.Config.xml"
+		$Path = "$SplunkModuleHome\SplunkConnectionObject.xml",
+        
+        [Parameter()]
+        [SWITCH]$Force
 	)
 	
-	Write-Verbose " [Import-SplunkModuleConfiguration] :: Importing Configuration from $Path"
-	$OldObject = Import-Clixml -Path $Path
+    Write-Verbose " [Import-SplunkConnectionObject] :: Starting"
+    
+    if($SplunkDefaultConnectionObject -and !$Force)
+    {
+        Write-Host " [Import-SplunkConnectionObject] :: `$SplunkDefaultConnectionObject already exists. Use -Force to overwrite."
+    }
+    else
+    {
+    	Write-Verbose " [Import-SplunkConnectionObject] :: Importing Configuration from $Path"
+    	$OldObject = Import-Clixml -Path $Path
+    	
+    	Write-Verbose " [Import-SplunkConnectionObject] :: Creating Credential Object"
+    	$UserName = $OldObject.UserName
+    	$Password = ConvertTo-SecureString $OldObject.Password
+    	$MyCredential = New-Object System.Management.Automation.PSCredential($UserName,$Password)
+    	
+    	Write-Verbose " [Import-SplunkConnectionObject] :: Calling Connect-Splunk"
+    	Connect-Splunk -ComputerName $OldObject.ComputerName -Credentials $MyCredential
+    }
 	
-	Write-Verbose " [Import-SplunkModuleConfiguration] :: Creating Credential Object"
-	$UserName = $OldObject.UserName
-	$Password = ConvertTo-SecureString $OldObject.Password
-	$MyCredential = New-Object System.Management.Automation.PSCredential($UserName,$Password)
+}
+
+#endregion Import-SplunkConnectionObject
+
+#region Set-SplunkConnectionObject
+
+function Set-SplunkConnectionObject
+{
+    [cmdletbinding()]
+	Param(
+		[Parameter(Mandatory=$True)]
+		[PSCustomObject]$ConnectionObject,
+        
+        [Parameter()]
+        [SWITCH]$Force
+	)
 	
+<<<<<<< HEAD
 	Write-Verbose " [Import-SplunkModuleConfiguration] :: Calling Connect-Splunk"
 	Connect-Splunk -ComputerName $OldObject.ComputerName -Credentials $MyCredential	
+=======
+    Write-Verbose " [Set-SplunkConnectionObject] :: Starting...."
+    
+    if($Force -and (!$Script:SplunkDefaultConnectionObject))
+    {
+        if($ConnectionObject.PSTypeNames -contains 'Splunk.SDK.Connection')
+        {
+            Write-Verbose " [Set-SplunkConnectionObject] :: Setting `$SplunkDefaultConnectionObject to $ConnectionObject"
+            $Script:SplunkDefaultConnectionObject = $ConnectionObject
+        }
+        else
+        {
+             Write-Host " [Set-SplunkConnectionObject] :: Wrong type of Object passed" -ForegroundColor Red
+        }
+    }
+    else
+    {
+        Write-Host " [Set-SplunkConnectionObject] :: `$SplunkDefaultConnectionObject already exists. Use -Force to overwrite."
+    }
 }
 
-#endregion Import-SplunkModuleConfiguration
+#endregion Set-SplunkConnectionObject
+
+#region Get-SplunkConnectionObject
+
+function Get-SplunkConnectionObject
+{
+    [cmdletbinding()]
+	Param(
+		[Parameter()]
+		$Path = "$SplunkModuleHome\SplunkConnectionObject.xml",
+        
+        [Parameter()]
+        [SWITCH]$Force
+	)
+	
+    Write-Verbose " [Get-SplunkConnectionObject] :: Starting...."
+    
+    $Script:SplunkDefaultConnectionObject
+}
+
+#endregion Get-SplunkConnectionObject
+
+#region Remove-SplunkConnectionObject
+
+function Remove-SplunkConnectionObject
+{
+    [cmdletbinding(SupportsShouldProcess=$True,ConfirmImpact='High')]
+	Param(
+        [Parameter()]
+        [SWITCH]$Force
+	)
+	
+    Write-Verbose " [Remove-SplunkConnectionObject] :: Starting..."
+    
+    if($Force -or $PSCmdlet.ShouldProcess($SplunkDefaultConnectionObject.AuthToken,"Removing Default Connection Object"))
+	{
+        $Script:SplunkDefaultConnectionObject = $null
+	}
+>>>>>>> 396eaa04f3d88c6fa46bec1f85d9a92abd746156
+}
+
+#endregion Remove-SplunkConnectionObject
 
 #endregion Helper cmdlets
 
@@ -4435,10 +4545,10 @@ function Get-Splunk
 {
     <#
 	    .Synopsis
-	        Get all the command contained in the BSonPosh Module
+	        Get all the command contained in the Splunk Module
 	        
 	    .Description
-	        Get all the command contained in the BSonPosh Module
+	        Get all the command contained in the Splunk Module
 	        
 	    .Parameter Verb
 	    
@@ -4482,7 +4592,8 @@ function Get-Splunk
 # Adding System.Web namespace
 Add-Type -AssemblyName System.Web 
 
-New-Variable -Name SplunkModuleHome -Value $psScriptRoot -Scope Global -Force
+New-Variable -Name SplunkModuleHome              -Value $psScriptRoot -Scope Global -Force
+New-Variable -Name SplunkDefaultConnectionObject -Value $null         -Scope Script -Force
 
 # code to load scripts
 Get-ChildItem $SplunkModuleHome *.ps1xml -Recurse | foreach-object{ Update-FormatData $_.fullname -ea 0 } 
