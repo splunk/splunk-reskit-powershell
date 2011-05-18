@@ -945,7 +945,7 @@ function Set-SplunkdPassword
 	
 	Begin
 	{
-		#JDAC: use host.promptforcredential when no username supplied
+		
 		Write-Verbose " [Set-SplunkdPassword] :: Starting..."
 		if(!$NewPassword)
 		{
@@ -2906,7 +2906,7 @@ function Disable-SplunkServerClass
             }
     		catch
     		{
-    			Write-Verbose " [Disable-SplunkServerClass] :: Invoke-SplunkAPIRequest threw an exception: $_"
+     			Write-Verbose " [Disable-SplunkServerClass] :: Invoke-SplunkAPIRequest threw an exception: $_"
                 Write-Error $_
     		}
             
@@ -4273,6 +4273,7 @@ function Write-SplunkMessage
 			if($Results -and ($Results -is [System.Xml.XmlDocument]))
 			{
                 $Myobj = @{}
+
                 foreach($key in $Results.response.results.result.field)
                 {
                     $data = $key.Value.Text
@@ -4420,8 +4421,7 @@ function Import-SplunkModuleConfiguration
 	$MyCredential = New-Object System.Management.Automation.PSCredential($UserName,$Password)
 	
 	Write-Verbose " [Import-SplunkModuleConfiguration] :: Calling Connect-Splunk"
-	Connect-Splunk -ComputerName $OldObject.ComputerName -Credentials $MyCredential
-	
+	Connect-Splunk -ComputerName $OldObject.ComputerName -Credentials $MyCredential	
 }
 
 #endregion Import-SplunkModuleConfiguration
