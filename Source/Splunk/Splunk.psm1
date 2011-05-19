@@ -642,7 +642,7 @@ function Connect-Splunk
     $obj.PSTypeNames.Add('Splunk.SDK.Connection')
     
     Write-Verbose " [Connect-Splunk] :: Setting SplunkDefaultConnectionObject using Set-SplunkConnectionObject"
-    Set-SplunkConnectionObject -ConnectObject $obj
+    Set-SplunkConnectionObject -ConnectionObject $obj
     
 	Write-Verbose " [Connect-Splunk] :: =========    End   ========="
 } # Connect-Splunk
@@ -4468,7 +4468,7 @@ function Set-SplunkConnectionObject
 	
     Write-Verbose " [Set-SplunkConnectionObject] :: Starting...."
     
-    if($Force -and (!$Script:SplunkDefaultConnectionObject))
+    if($Force -or (!$Script:SplunkDefaultConnectionObject))
     {
         if($ConnectionObject.PSTypeNames -contains 'Splunk.SDK.Connection')
         {
