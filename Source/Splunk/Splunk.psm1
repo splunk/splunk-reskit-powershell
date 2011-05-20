@@ -7,7 +7,7 @@
 function Invoke-SplunkAPIRequest
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Sends a request to the Splunk REST API on the targeted instance.
             
@@ -529,6 +529,38 @@ function Invoke-SplunkAPIRequest
 # Helper function to Get and Store Credentials to be used against the Splunk API
 function New-SplunkCredential
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Creates a new credential object.
+            
+        .Description
+            Creates a new credential object for use in subsequent Splunk API calls.
+            
+        .Parameter UserName
+            The username to use in the new credentials object.  		
+			
+		.Example
+            New-SplunkCredential
+            Description
+            -----------
+            Securely prompts the user for a username and password.
+    
+        .Example
+            New-SplunkCredential -username Admin
+            Description
+            -----------
+            Creates a new credential with username Admin.  The user is securely prompted for a password.
+            
+        .OUTPUTS
+            System.Management.Automation.PSCredential
+            
+        .Notes
+	        NAME:      New-SplunkCredential
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
     Param(
         [Parameter()]
         [STRING]$UserName
@@ -559,6 +591,52 @@ function New-SplunkCredential
 # Creates a Splunk.Connection object. This can be used to create a default context for cmdlets to use.
 function Connect-Splunk
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Creates a Splunk.Connection object. This can be used to create a default context for cmdlets to use.
+            
+        .Description
+            Creates a Splunk.Connection object. This can be used to create a default context for cmdlets to use.
+            
+        .Parameter ComputerName
+            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+        .Parameter UserName
+            The username to use when connection to the Splunk instance.  Using this parameter will cause you to be prompted for a password.
+
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Connect-Splunk -credential $mycreds -computername 'SplunkServer' -protocol 'https' -port 8089 -timeout 30000
+            Description
+            -----------
+            Creates a new connection to the Splunk instance SplunkServer using https over port 8089 with a 30 second timeout.
+    
+        .Example
+            Connect-Splunk -username admin -computername 'SplunkServer' -protocol 'https' -port 8089
+            Description
+            -----------
+            Creates a new connection to the Splunk instance SplunkServer using https over port 8089.  The connect-splunk command will securely request the password for user admin before connecting.
+            		
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Connect-Splunk
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
     [Cmdletbinding(DefaultParameterSetName="byCredentials")]
     Param(
         [Parameter(Mandatory=$true)]
@@ -643,7 +721,7 @@ function Connect-Splunk
     $obj.PSTypeNames.Add('Splunk.SDK.Connection')
     
     Write-Verbose " [Connect-Splunk] :: Setting SplunkDefaultConnectionObject using Set-SplunkConnectionObject"
-    Set-SplunkConnectionObject -ConnectionObject $obj
+    Set-SplunkConnectionObject -ConnectionObject $obj -force
     
 	Write-Verbose " [Connect-Splunk] :: =========    End   ========="
 } # Connect-Splunk
@@ -654,6 +732,53 @@ function Connect-Splunk
 
 function Get-SplunkLogin
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Retrieves the current active Splunk logins.
+            
+        .Description
+            Retrieves the current active Splunk logins.
+            
+		.Parameter Name
+			A reglar expression used to filter the list of login usernames.
+			
+        .Parameter ComputerName
+            Name of the Splunk instance to get the settings for (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Connect-Splunk -credential $mycreds -computername 'SplunkServer' -protocol 'https' -port 8089 -timeout 30000
+            Description
+            -----------
+            Creates a new connection to the Splunk instance SplunkServer using https over port 8089 with a 30 second timeout.
+    
+        .Example
+            Connect-Splunk -username admin -computername 'SplunkServer' -protocol 'https' -port 8089
+            Description
+            -----------
+            Creates a new connection to the Splunk instance SplunkServer using https over port 8089.  The connect-splunk command will securely request the password for user admin before connecting.
+            		
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkLogin
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
 	[Cmdletbinding()]
     Param(
 	
@@ -850,7 +975,7 @@ function Get-SplunkAuthToken
 function Set-SplunkdPassword
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Sets the password for the user provided.
             
@@ -1029,7 +1154,7 @@ function Set-SplunkdPassword
 function Get-SplunkdUser
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Returns users for the targeted Splunk instance.
             
@@ -1213,7 +1338,7 @@ function Get-SplunkdUser
 function Get-Splunkd
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Gets the values set for the targeted Splunk instance.
             
@@ -1375,7 +1500,7 @@ function Get-Splunkd
 function Test-Splunkd
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Tests the targeted Splunk instance for a response.
             
@@ -1508,7 +1633,7 @@ function Test-Splunkd
 function Set-Splunkd
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Sets the values for the targeted Splunk instance.
             
@@ -1728,7 +1853,7 @@ function Set-Splunkd
 function Restart-SplunkService
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Restarts Splunkd and SplunkWeb on targeted Splunk instance.
             
@@ -1884,7 +2009,7 @@ function Restart-SplunkService
 function Get-SplunkdVersion
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Gets the OS and Splunk version info for the targeted Splunk instance.
             
@@ -2038,7 +2163,7 @@ function Get-SplunkdVersion
 function Get-SplunkdLogging
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Gets the logging values set for the targeted Splunk instance.
             
@@ -2238,6 +2363,62 @@ function Get-SplunkdLogging
 
 function Set-SplunkdLogging # Need to note Change does not persist service restart
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Updates the logging configuration of the specified Splunk instance.
+            
+        .Description
+            Updates the logging configuration of the specified Splunk instance.
+            
+		.Parameter Logger
+			The logger object to update.
+		
+		.Parameter Filter
+			A reglar expression used to filter the list of loggers to update.
+			
+		.Parameter Name
+			The explicit name of the logger to update.
+			
+		.Parameter NewLevel
+			The new logging level to apply.  Must be one of the following values: "WARN", "DEBUG", "INFO", "CRIT", "ERROR", or "FATAL"
+			
+        .Parameter ComputerName
+            Name of the Splunk instance (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Set-SplunkdLogging -Filter "^C" -NewLevel "INFO"
+            Description
+            -----------
+            Changes the current logging level for all loggers with a name that start with "C" to the level "INFO".
+    
+        .Example
+            Get-SplunkdLogging | Set-SplunkdLogging -NewLevel "ERROR"
+            Description
+            -----------
+            Resets the logging level for all loggers to "ERROR".
+            		
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Set-SplunkLogging
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
 	[Cmdletbinding(SupportsShouldProcess=$true,DefaultParameterSetName="byFilter")]
     Param(
     
@@ -2358,6 +2539,68 @@ function Set-SplunkdLogging # Need to note Change does not persist service resta
 
 function Get-SplunkServerClass
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Gets information about a defined Splunk server class.
+            
+        .Description
+            Gets information about a defined Splunk server class.
+        
+		.Parameter Filter
+            A regular expression used to filter the names of the Server Classes returned. (Default is ".*")
+            
+        .Parameter Name
+            Name of the server class to retrieve.
+		
+        .Parameter ComputerName
+            Name of the Splunk instance (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Get-SplunkServerClass
+            Description
+            -----------
+            Returns all defined server classes, using the current default connection parameters.
+    
+		.Example
+            Get-SplunkServerClass -filter "list" -computername "Server001" -Port 8088 -protocol 'http' -credential $myCreds
+            Description
+            -----------
+            Returns all server classes whose name contains the string "list" from the Splunk instance installed on Server001.  Custom connection parameters are supplied.
+		
+		.Example
+            Get-SplunkdLogging -name MyServerClass
+            Description
+            -----------
+            Returns the server class with the name MyServerClass, using the current default connection parameters.
+		
+        .Example
+            Get-SplunkServerClass -name MyServerClass -computername "Server001" -Port 8088 -protocol 'http' -credential $myCreds
+            Description
+            -----------
+            Returns the server class with name MyServerClass from the Splunk instance installed on Server001.  Custom connection parameters are supplied.		        
+						
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkServerClass
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
 	[Cmdletbinding(DefaultParameterSetName="byFilter")]
     Param(
 	    
@@ -2502,6 +2745,70 @@ function Get-SplunkServerClass
 
 function New-SplunkServerClass
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Defines a new server class on the specified Splunk instance.
+            
+        .Description
+            Defines a new server class on the specified Splunk instance.
+        
+        .Parameter Name
+            Name of the server class to create.
+		
+        .Parameter Whitelist
+            List of machines to include on the server class whitelist.
+			
+		.Parameter Blacklist
+            List of machines to include on the server class blacklist.
+			
+		.Parameter ContinueMatching
+            If specified, configuration lookups will match server classes beyond the first match.  If unspecified, only the first match will apply.
+
+		.Parameter FilterType
+            Defines the type of filtering applied by the server class.  Must be one of the following values: "whitelist" or "blacklist".
+
+		.Parameter RepositoryLocation
+            The repository location on the Splunk server.
+
+		.Parameter TargetRepositoryLocation
+            The location on the deployment client to install the apps and configuration content defined for this server class.
+			
+		.Parameter TmpFolder
+            The location of the working folder used by the deployment server.
+
+		.Parameter EndPoint
+            The endpoint (specified as URL) from which content can be downloaded by a deployment client.
+
+		.Parameter ComputerName
+            Name of the Splunk instance from which to get the server class settings (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            New-SplunkServerClass -filterType WhiteList -WhiteList 'mymachine','yourmachine' 
+            Description
+            -----------
+            Defines a whiltelist server class containing two machine listings: mymachine and yourmachine.
+						
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      New-SplunkServerClass
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 	[Cmdletbinding(SupportsShouldProcess=$true)]
     Param(
 	    
@@ -2710,6 +3017,44 @@ function New-SplunkServerClass
 
 function Invoke-SplunkDeploymentServerReload
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Causes the specified Splunk instance to reload its deployment server.
+            
+        .Description
+            Causes the specified Splunk instance to reload its deployment server.
+        
+		.Parameter ComputerName
+            Name of the Splunk instance (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Invoke-SplunkDeploymentServerReload
+            Description
+            -----------
+            Reloads the deployment server for the Splunk instance identified in the current default connection.
+						
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Invoke-SplunkDeploymentServerReload
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
 	[Cmdletbinding()]
     Param(
 
@@ -2794,6 +3139,63 @@ function Invoke-SplunkDeploymentServerReload
 
 function Disable-SplunkServerClass
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Disables the specified server classes for the spefied Splunk instance.
+            
+        .Description
+            Disables the specified server classes for the spefied Splunk instance.
+        
+		.Parameter Name
+			The name of the server class to disable.
+			
+		.Parameter Filter
+			A regular expression used to match the name of the server classes.  Any server class with a name matching the filter will be disabled.
+			
+		.Parameter ServerClass
+			The server class instance to disable.
+
+		.Parameter ComputerName
+            Name of the Splunk instance (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Parameter Force
+			Forces disabling of the server class without prompting for confirmation.
+			
+		.Example
+            Disable-SplunkServerClass -filter "QA"
+            Description
+            -----------
+            Disables all server classes matching the regular expression 'QA', using the default connection parameters.
+						
+		.Example
+            Disable-SplunkServerClass -name "Special" -ComputerName 'SplunkInst' -credential $myCred -port 8098 -protocol https -timeout 30000
+            Description
+            -----------
+            Disables the server class named 'Special' on Splunk server 'SplunkInst' using the connection parameters and credential supplied.
+
+		.OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Disable-SplunkServerClass
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
+
 	[Cmdletbinding(SupportsShouldProcess=$true,DefaultParameterSetName="byPipeline")]
     Param(
 	    
@@ -2926,6 +3328,63 @@ function Disable-SplunkServerClass
 
 function Enable-SplunkServerClass
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Enables the specified server classes for the spefied Splunk instance.
+            
+        .Description
+            Enables the specified server classes for the spefied Splunk instance.
+        
+		.Parameter Name
+			The name of the server class to disable.
+			
+		.Parameter Filter
+			A regular expression used to match the name of the server classes.  Any server class with a name matching the filter will be enabled.
+			
+		.Parameter ServerClass
+			The server class instance to enable.
+
+		.Parameter ComputerName
+            Name of the Splunk instance (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Parameter Force
+			Forces enabling of the server class without prompting for confirmation.
+
+		.Example
+            Enable-SplunkServerClass -filter "QA" -force
+            Description
+            -----------
+            Enables all server classes matching the regular expression 'QA', using the default connection parameters.
+						
+		.Example
+            Enable-SplunkServerClass -name "Special" -ComputerName 'SplunkInst' -credential $myCred -port 8098 -protocol https -timeout 30000
+            Description
+            -----------
+            Enables the server class named 'Special' on Splunk server 'SplunkInst' using the connection parameters and credential supplied.  The user will be prompted for confirmation.
+
+		.OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Enable-SplunkServerClass
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
+
 	[Cmdletbinding(SupportsShouldProcess=$true,DefaultParameterSetName="byPipeline")]
     Param(
 	    
@@ -3058,6 +3517,53 @@ function Enable-SplunkServerClass
 
 function Get-SplunkDeploymentClient
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Retrieves the specified deployment client from the specified Splunk instance.
+            
+        .Description
+            Retrieves the specified deployment client from the specified Splunk instance.
+        
+		.Parameter Name
+			The name of the deployment client to retrieve.
+			
+		.Parameter Filter
+			A regular expression used to match the name of the deployment client.  Any client with a name matching the filter will be retrieved.
+			
+		.Parameter ComputerName
+            Name of the Splunk instance (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Parameter Force
+			Forces enabling of the server class without prompting for confirmation.
+
+		.Example
+            Get-SplunkDeploymentClient -filter "QA" 
+            Description
+            -----------
+            Enables all deployment clients with names matching the regular expression 'QA', using the default connection parameters.						
+
+		.OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkDeploymentClient
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
     [Cmdletbinding(DefaultParameterSetName="byFilter")]
     Param(
 
@@ -3182,7 +3688,7 @@ function Get-SplunkDeploymentClient
 function Get-SplunkLicenseFile
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Returns the licenses files registered for the targeted Splunk instance.
             
@@ -3354,7 +3860,51 @@ function Get-SplunkLicenseFile
 
 function Get-SplunkLicenseMessage
 {
-    [Cmdletbinding()]
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Returns licenses messages from the targeted Splunk instance.
+            
+        .Description
+            Returns licenses messages from the targeted Splunk instance.
+            
+        .Parameter ComputerName
+            Name of the Splunk instance to get the licenses for (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Get-SplunkLicenseMessage
+            Description
+            -----------
+            Gets the license messages for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
+    
+        .Example
+            Get-SplunkLicenseMessage -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets any license messages for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkLicenseMessage
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
+	[Cmdletbinding()]
     Param(
 
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
@@ -3467,7 +4017,61 @@ function Get-SplunkLicenseMessage
 
 function Get-SplunkLicenseGroup
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Returns the specified license groups from the targeted Splunk instance.
+            
+        .Description
+            Returns the specified license groups from the targeted Splunk instance.
+            
+		.Parameter Filter
+			A regular expression used to match the names of license groups.  Any license group with a name matching the regular expression will be retrieved.
+			
+		.Parameter Name
+			The name of the license group to retrieve.
 
+		.Parameter ComputerName
+            Name of the Splunk instance (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Get-SplunkLicenseGroup
+            Description
+            -----------
+            Gets the license groups for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
+    
+		.Example
+            Get-SplunkLicenseGroup -filter 'enterprise$'
+            Description
+            -----------
+            Gets the license groups whose name ends with 'enterprise' for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
+			
+		.Example
+            Get-SplunkLicenseGroup -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets all license groups for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkLicenseGroup
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
     [Cmdletbinding(DefaultParameterSetName="byFilter")]
     Param(
 
@@ -3595,6 +4199,61 @@ function Get-SplunkLicenseGroup
 
 function Get-SplunkLicenseStack
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Returns the specified license stacks from the targeted Splunk instance.
+            
+        .Description
+            Returns the specified license stacks from the targeted Splunk instance.
+            
+		.Parameter Filter
+			A regular expression used to match the names of license stacks.  Any license stack with a name matching the regular expression will be retrieved.
+			
+		.Parameter Name
+			The name of the license stack to retrieve.
+
+		.Parameter ComputerName
+            Name of the Splunk instance (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Get-SplunkLicenseStack
+            Description
+            -----------
+            Gets all license stacks for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
+    
+		.Example
+            Get-SplunkLicenseStack -filter 'enterprise$'
+            Description
+            -----------
+            Gets the license stacks whose name ends with 'enterprise' for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
+			
+		.Example
+            Get-SplunkLicenseStack -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets all license stacks for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkLicenseStack
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 
     [Cmdletbinding(DefaultParameterSetName="byFilter")]
     Param(
@@ -3724,6 +4383,62 @@ function Get-SplunkLicenseStack
 
 function Get-SplunkLicensePool
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Returns the specified license pool from the targeted Splunk instance.
+            
+        .Description
+            Returns the specified license pool from the targeted Splunk instance.
+            
+		.Parameter Filter
+			A regular expression used to match the names of license pool.  Any license pool with a name matching the regular expression will be retrieved.
+			
+		.Parameter Name
+			The name of the license pool to retrieve.
+
+		.Parameter ComputerName
+            Name of the Splunk instance (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Get-SplunkLicensePool
+            Description
+            -----------
+            Gets the license pools for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
+    
+		.Example
+            Get-SplunkLicensePool -filter 'enterprise$'
+            Description
+            -----------
+            Gets the license pools whose name ends with 'enterprise' for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
+			
+		.Example
+            Get-SplunkLicensePool -ComputerName MySplunkInstance -Port 8089 -Protocol https -Timeout 5000 -Credential $MyCreds
+            Description
+            -----------
+            Gets all license pools for MySplunkInstance connecting on port 8089 with a 5sec timeout.
+            			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkLicensePool
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
     [Cmdletbinding(DefaultParameterSetName="byFilter")]
     Param(
 
@@ -3857,6 +4572,46 @@ function Get-SplunkLicensePool
 
 function Set-SplunkLicenseGroup
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Applies the specified license group to the specified Splunk instance.
+            
+        .Description
+            Applies the specified license group to the specified Splunk instance.
+            
+		.Parameter GroupName
+			The name of the license group to apply.
+			
+		.Parameter ComputerName
+            Name of the Splunk instance to get the licenses for (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Set-SplunkLicenseGroup -Group 'Enterprise'
+            Description
+            -----------
+            Applies the Enterprise license group for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
+                			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Set-SplunkLicenseGroup
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 
     [Cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='High')]
     Param(
@@ -3963,7 +4718,7 @@ function Set-SplunkLicenseGroup
 function Search-Splunk
 {
 
-	<#
+	<# .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Performs a simple search against targeted Splunk instance.
             
@@ -4189,6 +4944,59 @@ function Search-Splunk
 
 function Write-SplunkMessage
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Writes a message to the specified splunk instance.
+            
+        .Description
+            Writes a message to the specified splunk instance.
+            
+		.Parameter HostName
+            The hostname field of the message.  Defaults to the value of the COMPUTERNAME environment variable.
+
+		.Parameter Source
+            The value of the message source field.  Defaults to 'PowerShell_Script'.
+			
+		.Parameter SourceType
+            The value of the message sourcetype field.  Defaults to 'Splunk_SDK_PowerShell'.
+			
+		.Parameter Index
+            The index to which the message should be targeted.  Defaults to 'main'.
+
+		.Parameter Message
+            The message text.
+
+		.Parameter ComputerName
+            Name of the Splunk instance to get the licenses for (Default is $SplunkDefaultConnectionObject.ComputerName.)
+		       
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Set-SplunkLicenseGroup -Group 'Enterprise'
+            Description
+            -----------
+            Applies the Enterprise license group for the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.
+                			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Write-SplunkMessage
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
     [Cmdletbinding()]
     Param(
         
@@ -4323,6 +5131,31 @@ function Write-SplunkMessage
 
 function ConvertFrom-UnixTime
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Converts a UNIX datetime value to a .NET DateTime instance.
+            
+        .Description
+            Converts a UNIX datetime value to a .NET DateTime instance
+            
+        .Parameter UnixTime
+            The UNIX datetime value to convert.
+        		
+		.Example
+            ConvertFrom-UnixTime $timestamp
+            Description
+            -----------
+            Converts the unix datetime value in $timestamp to a .NET DateTime type.
+                		
+        .OUTPUTS
+            System.DateTime
+            
+        .Notes
+	        NAME:      ConvertFrom-UnixTime
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 	[Cmdletbinding()]
 	Param($UnixTime)
 	
@@ -4346,6 +5179,31 @@ function ConvertFrom-UnixTime
 
 function ConvertFrom-SplunkTime($TimeAccessed)
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Converts a Splunk datetime string to a .NET DateTime instance.
+            
+        .Description
+            Converts a Splunk datetime string to a .NET DateTime instance
+            
+        .Parameter TimeAccessed
+            The Splunk datetime string value to convert.
+        		
+		.Example
+            ConvertFrom-SplunkTime 'Fri May 20 14:56:00 2011'
+            Description
+            -----------
+            Converts the given string returned by the Splunk server into a .NET DateTime instance.
+                		
+        .OUTPUTS
+            System.DateTime
+            
+        .Notes
+	        NAME:      ConvertFrom-SplunkTime
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
     try
 	{
 		$DateTimeFormat = "ddd MMM dd HH:mm:ss yyyy"
@@ -4376,6 +5234,25 @@ function ConvertFrom-SplunkTime($TimeAccessed)
 
 function Disable-CertificateValidation
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Disables SSL certificate validation for the current AppDomain.
+            
+        .Description
+            Disables SSL certificate validation for the current AppDomain.  This can be useful to enable SSL against a Splunk instance using self-issued certificates.
+            
+		.Example
+            Disable-CertificateValidation
+            Description
+            -----------
+            Disables SSL certificate validation for the current AppDomain.
+                		
+        .Notes
+	        NAME:      Disable-CertificateValidation
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 	[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
 }
 
@@ -4385,6 +5262,25 @@ function Disable-CertificateValidation
 
 function Enable-CertificateValidation
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Enables SSL certificate validation for the current AppDomain.
+            
+        .Description
+            Enables SSL certificate validation for the current AppDomain.
+            
+       .Example
+            Enable-CertificateValidation
+            Description
+            -----------
+            Enables SSL certificate validation for the current AppDomain.
+                		
+        .Notes
+	        NAME:      Enable-CertificateValidation
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 	[System.Net.ServicePointManager]::ServerCertificateValidationCallback = $Null
 }
 
@@ -4394,6 +5290,41 @@ function Enable-CertificateValidation
 
 function Export-SplunkConnectionObject
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Persists the current default Splunk connection data to a file.
+            
+        .Description
+            Persists the current default Splunk connection data to a file.
+            
+		.Parameter Path
+            The path to the file where the connection data will be persisted.
+			
+		.Parameter Force
+            Overwrites any existing file at the path supplied.
+
+        .OUTPUTS
+            System.IO.FileInfo
+		
+		.Example
+            Export-SplunkConnectionObject
+            Description
+            -----------
+            Saves the current connection information to the default location ($SplunkModuleHome\SplunkConnectionObject.xml).
+        
+		.Example
+            Export-SplunkConnectionObject -path ./myConn.xml -force
+            Description
+            -----------
+            Saves the current connection information to a file named myConn.xml in the local directory, overwriting any existing file.
+
+		.Notes
+	        NAME:      Export-SplunkConnectionObject
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
     [cmdletbinding()]
 	Param(
 		[Parameter()]
@@ -4424,6 +5355,40 @@ function Export-SplunkConnectionObject
 
 function Import-SplunkConnectionObject
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Imports Splunk connection data from a file.
+            
+        .Description
+            Imports Splunk connection data from a file.
+            
+		.Parameter Path
+            The path to the file where the connection data is persisted.
+			
+		.Parameter Force
+            Overwrites any existing connection stored in the current session.
+ 
+        .OUTPUTS
+            PSObject
+
+		.Example
+            Import-SplunkConnectionObject
+            Description
+            -----------
+            Loads current connection information from the default location ($SplunkModuleHome\SplunkConnectionObject.xml).
+        
+		.Example
+            Import-SplunkConnectionObject -path ./myConn.xml -force
+            Description
+            -----------
+            Loads connection information to a file named myConn.xml in the local directory, overwriting any existing connection that may exist.
+
+		.Notes
+	        NAME:      Import-SplunkConnectionObject
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
     [cmdletbinding()]
 	Param(
 		[Parameter()]
@@ -4461,6 +5426,32 @@ function Import-SplunkConnectionObject
 
 function Set-SplunkConnectionObject
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Updates the default Splunk connection object.
+            
+        .Description
+            Updates the default Splunk connection object.
+            
+		.Parameter ConnectionObject
+            The Splunk connection to use as the default connection for all Splunk API calls in the current session.
+			
+		.Parameter Force
+            Overwrites any existing connection stored in the current session.
+ 
+		.Example
+            Set-SplunkConnectionObject $connection
+            Description
+            -----------
+            Saves the connection information in variable $connection as the default connection to use for API calls in the current session.
+        
+		.Notes
+	        NAME:      Set-SplunkConnectionObject
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
     [cmdletbinding()]
 	Param(
 		[Parameter(Mandatory=$True)]
@@ -4496,6 +5487,29 @@ function Set-SplunkConnectionObject
 
 function Get-SplunkConnectionObject
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Retrieves the default Splunk connection object.
+            
+        .Description
+            Retrieves the default Splunk connection object.
+            
+		.OUTPUTS
+			PSObject
+			
+		.Example
+          	Get-SplunkConnectionObject 
+            Description
+            -----------
+            Returns the default connection to use for API calls in the current session.
+        
+		.Notes
+	        NAME:      Get-SplunkConnectionObject
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
     [cmdletbinding()]
 	Param(
 		[Parameter()]
@@ -4516,6 +5530,28 @@ function Get-SplunkConnectionObject
 
 function Remove-SplunkConnectionObject
 {
+	<# .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Removes any default Splunk connection object.
+            
+        .Description
+            Removes any default Splunk connection object.
+
+		.Parameter Force
+			Forces the removal of the default Splunk connection information without prompting for confirmation.
+			
+		.Example
+          	Get-SplunkConnectionObject 
+            Description
+            -----------
+            Returns the default connection to use for API calls in the current session.
+        
+		.Notes
+	        NAME:      Remove-SplunkConnectionObject
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
     [cmdletbinding(SupportsShouldProcess=$True,ConfirmImpact='High')]
 	Param(
         [Parameter()]
@@ -4539,7 +5575,7 @@ function Remove-SplunkConnectionObject
 ################################################################################
 function Get-Splunk
 {
-    <#
+    <# .ExternalHelp Splunk-Help.xml
 	    .Synopsis
 	        Get all the command contained in the Splunk Module
 	        
