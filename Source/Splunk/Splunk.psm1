@@ -643,7 +643,7 @@ function Connect-Splunk
     $obj.PSTypeNames.Add('Splunk.SDK.Connection')
     
     Write-Verbose " [Connect-Splunk] :: Setting SplunkDefaultConnectionObject using Set-SplunkConnectionObject"
-    Set-SplunkConnectionObject -ConnectObject $obj
+    Set-SplunkConnectionObject -ConnectionObject $obj
     
 	Write-Verbose " [Connect-Splunk] :: =========    End   ========="
 } # Connect-Splunk
@@ -727,10 +727,11 @@ function Get-SplunkLogin
 				}
 				
 				Write-Verbose " [Get-SplunkLogin] :: Returning Object"
-				$obj = New-Object PSObject -Property $Myobj -ea 0 | where{$_.UserName -match $Name}
-				$obj.PSTypeNames.Clear()
-			    $obj.PSTypeNames.Add('Splunk.SDK.AuthToken')
-			    $obj
+				New-Object PSObject -Property $Myobj -ea 0 | where{$_.UserName -match $Name} | foreach {				
+					$_.PSTypeNames.Clear()
+				    $_.PSTypeNames.Add('Splunk.SDK.AuthToken')
+				    $_
+				}
 			}
 		}
 		else
@@ -4469,13 +4470,9 @@ function Set-SplunkConnectionObject
         [SWITCH]$Force
 	)
 	
-<<<<<<< HEAD
-	Write-Verbose " [Import-SplunkModuleConfiguration] :: Calling Connect-Splunk"
-	Connect-Splunk -ComputerName $OldObject.ComputerName -Credentials $MyCredential	
-=======
     Write-Verbose " [Set-SplunkConnectionObject] :: Starting...."
     
-    if($Force -and (!$Script:SplunkDefaultConnectionObject))
+    if($Force -or (!$Script:SplunkDefaultConnectionObject))
     {
         if($ConnectionObject.PSTypeNames -contains 'Splunk.SDK.Connection')
         {
@@ -4531,7 +4528,6 @@ function Remove-SplunkConnectionObject
 	{
         $Script:SplunkDefaultConnectionObject = $null
 	}
->>>>>>> 396eaa04f3d88c6fa46bec1f85d9a92abd746156
 }
 
 #endregion Remove-SplunkConnectionObject
