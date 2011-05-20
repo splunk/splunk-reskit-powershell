@@ -5,7 +5,7 @@
 #
 ipmo ./Splunk
 #
-# disabling certificate checking
+# Disabling certificate checking
 #
 Disable-CertificateValidation
 #
@@ -16,8 +16,7 @@ Get-Splunk
 # Lets take a look at Get-Splunkd
 #
 $MyCreds = Get-Credential
-$SplunkServers = "192.168.56.101"
-Get-Splunkd -ComputerName $SplunkServers -port 8089 -Protocol https -timeout 5000 -Credential $MyCreds
+Get-Splunkd -ComputerName Lagos -port 8089 -Protocol https -timeout 5000 -Credential $MyCreds
 
 #
 # Having to pass parameters everytime we want to use a cmdlet can be a pain. 
@@ -33,11 +32,9 @@ Get-Splunkd
 #
 # If the admin account has the same password on multiple splunk instances you can do this.
 #
+#
+$SplunkServers = "Lagos","Win-Dev-2","GOOSE"
 $SplunkServers | Get-Splunkd
-#
-# This process works with most of the cmdlets. Lets take a look at Set-Splunkd
-#
-Get-Help Set-Splunkd -Full
 #
 # Lets use Set-Splunkd to change the session timeout
 #
@@ -78,10 +75,6 @@ Get-SplunkLicenseFile
 #
 Get-SplunkdLogging
 #
-# Finally, lets take a look at Search-Splunk
-#
-Get-Help search-splunk -Full
-#
 # Lets see it at work
 #
-Search-Splunk -Search 'source="WinEventLog:System"'
+Search-Splunk -Search 'Type=Error source=WinEventLog:Application'
