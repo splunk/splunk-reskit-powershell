@@ -49,10 +49,6 @@ Get-SplunkConnectionObject
 #
 # Import
 #
-Import-SplunkConnectionObject -Path C:\Data\Myconnection.xml
-#
-# Whoops... If we want to force the import use -Force
-#
 Import-SplunkConnectionObject -Path C:\Data\Myconnection.xml -Force
 #
 # 
