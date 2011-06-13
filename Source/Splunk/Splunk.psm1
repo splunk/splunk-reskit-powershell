@@ -7,7 +7,7 @@
 function Invoke-SplunkAPIRequest
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Sends a request to the Splunk REST API on the targeted instance.
             
@@ -529,7 +529,7 @@ function Invoke-SplunkAPIRequest
 # Helper function to Get and Store Credentials to be used against the Splunk API
 function New-SplunkCredential
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Creates a new credential object.
             
@@ -591,7 +591,7 @@ function New-SplunkCredential
 # Creates a Splunk.Connection object. This can be used to create a default context for cmdlets to use.
 function Connect-Splunk
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Creates a Splunk.Connection object. This can be used to create a default context for cmdlets to use.
             
@@ -655,7 +655,10 @@ function Connect-Splunk
         [System.Management.Automation.PSCredential]$Credentials,
         
         [Parameter(Mandatory=$true,ParameterSetName="byUserName")]
-        [STRING]$UserName
+        [STRING]$UserName,
+		
+		[Parameter()]
+        [Switch]$Passthru 
     )
 	
     Write-Verbose " [Connect-Splunk] :: Starting..."
@@ -722,6 +725,11 @@ function Connect-Splunk
     
     Write-Verbose " [Connect-Splunk] :: Setting SplunkDefaultConnectionObject using Set-SplunkConnectionObject"
     Set-SplunkConnectionObject -ConnectionObject $obj -force
+	
+	if($Passthru)
+	{
+		$obj;
+	}
     
 	Write-Verbose " [Connect-Splunk] :: =========    End   ========="
 } # Connect-Splunk
@@ -732,7 +740,7 @@ function Connect-Splunk
 
 function Get-SplunkLogin
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Retrieves the current active Splunk logins.
             
@@ -877,6 +885,48 @@ function Get-SplunkLogin
 
 function Get-SplunkAuthToken
 {
+	<#   .ExternalHelp Splunk-Help.xml
+        .Synopsis 
+            Retrieves a splunk authentication token from the splunk server.
+            
+        .Description
+            Retrieves a splunk authentication token from the splunk server.  This method is called internally as part of the standard 
+			splunk authention protocol.
+        
+		.Parameter UserName
+			User get the credentials for. 
+						
+        .Parameter ComputerName
+            Name of the Splunk instance to set the user password on (Default is $SplunkDefaultConnectionObject.ComputerName.)
+        
+		.Parameter Port
+            Port of the REST Instance (i.e. 8089) (Default is $SplunkDefaultConnectionObject.Port.)
+        
+		.Parameter Protocol
+            Protocol to use to access the REST API must be 'http' or 'https' (Default is $SplunkDefaultConnectionObject.Protocol.)
+        
+		.Parameter Timeout
+            How long to wait for the REST API to respond (Default is $SplunkDefaultConnectionObject.Timeout.)	
+			
+        .Parameter Credential
+            Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)	
+			
+		.Example
+            Get-SplunkAuthToken -credential $credential -computername MySplunkServer
+            Description
+            -----------
+            Returns an authentication token from the MySplunkServer server for the user credentials in $credential.   
+			
+        .OUTPUTS
+            PSObject
+            
+        .Notes
+	        NAME:      Get-SplunkAuthToken 
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
 	[Cmdletbinding(DefaultParameterSetName="byUserName")]
     Param(
 	
@@ -975,7 +1025,7 @@ function Get-SplunkAuthToken
 function Set-SplunkdPassword
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Sets the password for the user provided.
             
@@ -1154,7 +1204,7 @@ function Set-SplunkdPassword
 function Get-SplunkdUser
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Returns users for the targeted Splunk instance.
             
@@ -1338,7 +1388,7 @@ function Get-SplunkdUser
 function Get-Splunkd
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Gets the values set for the targeted Splunk instance.
             
@@ -1500,7 +1550,7 @@ function Get-Splunkd
 function Test-Splunkd
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Tests the targeted Splunk instance for a response.
             
@@ -1614,7 +1664,7 @@ function Test-Splunkd
 			}
 			else
 			{
-				$True
+				$False
 			}
 		}
 	}
@@ -1633,7 +1683,7 @@ function Test-Splunkd
 function Set-Splunkd
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Sets the values for the targeted Splunk instance.
             
@@ -1853,7 +1903,7 @@ function Set-Splunkd
 function Restart-SplunkService
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Restarts Splunkd and SplunkWeb on targeted Splunk instance.
             
@@ -2009,7 +2059,7 @@ function Restart-SplunkService
 function Get-SplunkdVersion
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Gets the OS and Splunk version info for the targeted Splunk instance.
             
@@ -2163,7 +2213,7 @@ function Get-SplunkdVersion
 function Get-SplunkdLogging
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Gets the logging values set for the targeted Splunk instance.
             
@@ -2363,7 +2413,7 @@ function Get-SplunkdLogging
 
 function Set-SplunkdLogging # Need to note Change does not persist service restart
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Updates the logging configuration of the specified Splunk instance.
             
@@ -2539,7 +2589,7 @@ function Set-SplunkdLogging # Need to note Change does not persist service resta
 
 function Get-SplunkServerClass
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Gets information about a defined Splunk server class.
             
@@ -2745,7 +2795,7 @@ function Get-SplunkServerClass
 
 function New-SplunkServerClass
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Defines a new server class on the specified Splunk instance.
             
@@ -3017,7 +3067,7 @@ function New-SplunkServerClass
 
 function Invoke-SplunkDeploymentServerReload
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Causes the specified Splunk instance to reload its deployment server.
             
@@ -3139,7 +3189,7 @@ function Invoke-SplunkDeploymentServerReload
 
 function Disable-SplunkServerClass
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Disables the specified server classes for the spefied Splunk instance.
             
@@ -3328,7 +3378,7 @@ function Disable-SplunkServerClass
 
 function Enable-SplunkServerClass
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Enables the specified server classes for the spefied Splunk instance.
             
@@ -3517,7 +3567,7 @@ function Enable-SplunkServerClass
 
 function Get-SplunkDeploymentClient
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Retrieves the specified deployment client from the specified Splunk instance.
             
@@ -3688,7 +3738,7 @@ function Get-SplunkDeploymentClient
 function Get-SplunkLicenseFile
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Returns the licenses files registered for the targeted Splunk instance.
             
@@ -3860,7 +3910,7 @@ function Get-SplunkLicenseFile
 
 function Get-SplunkLicenseMessage
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Returns licenses messages from the targeted Splunk instance.
             
@@ -4017,7 +4067,7 @@ function Get-SplunkLicenseMessage
 
 function Get-SplunkLicenseGroup
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Returns the specified license groups from the targeted Splunk instance.
             
@@ -4199,7 +4249,7 @@ function Get-SplunkLicenseGroup
 
 function Get-SplunkLicenseStack
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Returns the specified license stacks from the targeted Splunk instance.
             
@@ -4383,7 +4433,7 @@ function Get-SplunkLicenseStack
 
 function Get-SplunkLicensePool
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Returns the specified license pool from the targeted Splunk instance.
             
@@ -4572,7 +4622,7 @@ function Get-SplunkLicensePool
 
 function Set-SplunkLicenseGroup
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Applies the specified license group to the specified Splunk instance.
             
@@ -4718,7 +4768,7 @@ function Set-SplunkLicenseGroup
 function Search-Splunk
 {
 
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Performs a simple search against targeted Splunk instance.
             
@@ -4944,7 +4994,7 @@ function Search-Splunk
 
 function Write-SplunkMessage
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Writes a message to the specified splunk instance.
             
@@ -5131,30 +5181,7 @@ function Write-SplunkMessage
 
 function ConvertFrom-UnixTime
 {
-	<# .ExternalHelp Splunk-Help.xml
-        .Synopsis 
-            Converts a UNIX datetime value to a .NET DateTime instance.
-            
-        .Description
-            Converts a UNIX datetime value to a .NET DateTime instance
-            
-        .Parameter UnixTime
-            The UNIX datetime value to convert.
-        		
-		.Example
-            ConvertFrom-UnixTime $timestamp
-            Description
-            -----------
-            Converts the unix datetime value in $timestamp to a .NET DateTime type.
-                		
-        .OUTPUTS
-            System.DateTime
-            
-        .Notes
-	        NAME:      ConvertFrom-UnixTime
-	        AUTHOR:    Splunk\bshell
-	        Website:   www.splunk.com
-	        #Requires -Version 2.0
+	<#   .ExternalHelp Splunk-Help.xml
     #>
 	[Cmdletbinding()]
 	Param($UnixTime)
@@ -5179,7 +5206,7 @@ function ConvertFrom-UnixTime
 
 function ConvertFrom-SplunkTime($TimeAccessed)
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Converts a Splunk datetime string to a .NET DateTime instance.
             
@@ -5234,7 +5261,7 @@ function ConvertFrom-SplunkTime($TimeAccessed)
 
 function Disable-CertificateValidation
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Disables SSL certificate validation for the current AppDomain.
             
@@ -5262,7 +5289,7 @@ function Disable-CertificateValidation
 
 function Enable-CertificateValidation
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Enables SSL certificate validation for the current AppDomain.
             
@@ -5290,7 +5317,7 @@ function Enable-CertificateValidation
 
 function Export-SplunkConnectionObject
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Persists the current default Splunk connection data to a file.
             
@@ -5355,7 +5382,7 @@ function Export-SplunkConnectionObject
 
 function Import-SplunkConnectionObject
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Imports Splunk connection data from a file.
             
@@ -5426,7 +5453,7 @@ function Import-SplunkConnectionObject
 
 function Set-SplunkConnectionObject
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Updates the default Splunk connection object.
             
@@ -5487,7 +5514,7 @@ function Set-SplunkConnectionObject
 
 function Get-SplunkConnectionObject
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Retrieves the default Splunk connection object.
             
@@ -5530,7 +5557,7 @@ function Get-SplunkConnectionObject
 
 function Remove-SplunkConnectionObject
 {
-	<# .ExternalHelp Splunk-Help.xml
+	<#   .ExternalHelp Splunk-Help.xml
         .Synopsis 
             Removes any default Splunk connection object.
             
@@ -5575,28 +5602,39 @@ function Remove-SplunkConnectionObject
 ################################################################################
 function Get-Splunk
 {
-    <# .ExternalHelp Splunk-Help.xml
+    <#   .ExternalHelp Splunk-Help.xml
 	    .Synopsis
-	        Get all the command contained in the Splunk Module
+	        Get all the commands contained in the Splunk Module
 	        
 	    .Description
-	        Get all the command contained in the Splunk Module
+	        Get all the commands contained in the Splunk Module
 	        
 	    .Parameter Verb
+			Gets module cmdlets with names that include the specified verb.  <String> represents all or part of the name of the cmdlet.  Wildcards are permitted.
 	    
-	    .Parameter Noun
-	    
+		.Parameter Noun
+	    	Gets module cmdlets with names that include the specified noun.  <String> represents all or part of the name of the cmdlet.  Wildcards are permitted.
+			
 	    .Example
 	        Get-Splunk
+	    	Description
+            -----------
+            Returns the complete list of public cmdlets from the Splunk module.
 	        
 	    .Example
 	        Get-Splunk -verb Get
+	    	Description
+            -----------
+            Returns the complete list of public cmdlets from the Splunk module that contain the verb 'Get'.
 	        
 	    .Example
 	        Get-Splunk -noun Host
+	    	Description
+            -----------
+            Returns the complete list of public cmdlets from the Splunk module that contain the noun 'Host'.
 	        
-	    .ReturnValue
-	        function
+	    .OUTPUTS
+	        CmdletInfo
 	        
 	    .Notes
 	        NAME:      Get-Splunk
