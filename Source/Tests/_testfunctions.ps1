@@ -1,9 +1,22 @@
-﻿function global:reset-connection
+﻿function global:reset-connection( $fixture )
 {
 	Write-Debug 'creating default splunk object using connect-splunk';
 	Disable-CertificateValidation;
-	$global:SplunkDefaultConnectionObject = Connect-Splunk -ComputerName $script:fixture.splunkServer -Credentials $script:fixture.splunkAdminCredentials -passthru;
+	Connect-Splunk -ComputerName $fixture.splunkServer -Credentials $fixture.splunkAdminCredentials;
 }
+
+function global:reset-moduleState( $fixture )
+{
+	if( get-module Splunk )
+	{
+		Write-Debug "removing Splunk module"
+		Remove-Module Splunk
+	}
+	
+	Import-Module ../Splunk;
+	reset-connection $fixture;
+}
+
 function global:verify-all( $value = $true )
 {
 	begin
