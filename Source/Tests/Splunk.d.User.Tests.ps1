@@ -31,7 +31,7 @@ Describe "get-splunkduser" {
 	}
 	
 	It "yields results with custom protocol" {
-		$results = Get-SplunkdUser -protocol 'http';
+		$results = Get-SplunkdUser -protocol 'https';
 		verify-results $results $fields;	
 	}
 	

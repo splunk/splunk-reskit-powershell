@@ -99,7 +99,6 @@ Describe "new-splunkServerClass" {
 		
 		$local:scc = Get-SplunkServerClass -Name $local:name;
 		$results += compare-serverclass $local:sc $local:scc;
-		
 		$results | verify-all;
 	}
 	

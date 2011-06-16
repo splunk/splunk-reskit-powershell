@@ -140,6 +140,11 @@ Describe "get-splunklicensegroup" {
 		get-SplunkLicenseGroup | verify-results -fields $fields | verify-all;
 	}
 	
+	It "fetches active license group when active switch is specified" {
+		$results = @(get-SplunkLicenseGroup -active);
+		( 1 -eq $results.length ) -and ( $results[0].IsActive );
+	}
+	
 	It "fetches license groups using custom splunk connection parameters" {
 		get-SplunkLicensegroup -ComputerName $script:fixture.splunkServer `
 			-port $script:fixture.splunkPort `

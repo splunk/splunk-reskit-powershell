@@ -15,16 +15,21 @@ param(
 Import-Module Pester;
 Import-Module ../Splunk;
 
-$local:root = $MyInvocation.myCommand.Path | Split-Path;
-. "$local:root/_testfunctions.ps1";
-
-if( Test-Path $fixtureFilePath )
+try
 {
-	$script:fixture = & $fixtureFilePath;
+	$local:root = $MyInvocation.myCommand.Path | Split-Path;
+	. "$local:root/_testfunctions.ps1";
+
+	if( Test-Path $fixtureFilePath )
+	{
+		$script:fixture = & $fixtureFilePath;
+	}
+
+	reset-connection $script:fixture;
+	Invoke-Pester -fixture $script:fixture -filepattern $filter 
 }
-
-reset-connection;
-Invoke-Pester -fixture $script:fixture -filepattern $filter 
-
-remove-Module Pester;
-remove-Module Splunk;
+finally
+{
+	remove-Module Pester;
+	remove-Module Splunk;
+}

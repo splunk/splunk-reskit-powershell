@@ -2,7 +2,7 @@
 {
 	Write-Debug 'creating default splunk object using connect-splunk';
 	Disable-CertificateValidation;
-	$global:SplunkDefaultObject = Connect-Splunk -ComputerName $script:fixture.splunkServer -Credentials $script:fixture.splunkAdminCredentials;
+	$global:SplunkDefaultConnectionObject = Connect-Splunk -ComputerName $script:fixture.splunkServer -Credentials $script:fixture.splunkAdminCredentials -passthru;
 }
 function global:verify-all( $value = $true )
 {

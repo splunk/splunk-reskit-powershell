@@ -13,7 +13,7 @@ $local:fixture = @{
 	splunkPort = 8089
 	#------- you do not need to edit below this line ----------
 	
-	defaultConfigPath = get-module splunk | split-path | join-path -ChildPath "Splunk.Module.Config.xml";
+	defaultConfigPath = get-module splunk | split-path | join-path -ChildPath "SplunkConnectionObject.xml";
 };
 
 $local:fixture.splunkAdminCredentials = New-Object System.Management.Automation.PSCredential( 
