@@ -116,7 +116,7 @@ Describe "add-splunkLicenseFile" {
 		
 		$pre = get-splunkLicenseFile -all | where{ $_.label -eq $trialLicenseLabel }
 		
-		add-SplunkLicenseFile -Name $trialLicenseLabel -payload $trialLicenseXml | out-host;				
+		add-SplunkLicenseFile -Name $trialLicenseLabel -payload $trialLicenseXml;				
 		
 		$post = get-splunkLicenseFile -all | where{ $_.label -eq $trialLicenseLabel }
 		

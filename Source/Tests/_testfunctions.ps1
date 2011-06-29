@@ -57,6 +57,7 @@ function global:verify-results
 	process
 	{
 		$local:resultFields = $results | Get-Member -membertype properties | foreach{ $_.name };
+		
 		if( $fields | where{ $local:resultFields -notcontains $_ } )
 		{
 			return $false;

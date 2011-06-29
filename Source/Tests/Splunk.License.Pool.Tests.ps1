@@ -37,7 +37,7 @@ Describe "add-splunkLicensePool" {
 		{
 			$pre = get-splunklicensepool $name;
 			$slave = get-splunkLicenseSlave | select -First 1;
-			add-splunkLicensePool -name $name -description "just a test license pool" -quota 0mb -stack 'enterprise' -slave $slave.ID | Out-Null
+			add-splunkLicensePool -name $name -description "just a test license pool" -quota 0mb -stack 'enterprise' -slave $slave.Label | Out-Null
 			
 			$post = get-splunklicensepool -name $name;
 			
