@@ -111,12 +111,12 @@ Describe "add-splunkLicenseFile" {
 		if( $pre )
 		{
 			Write-Debug 'removing trial license file to test add-splunklicensefile'
-			$pre.Hash | Remove-SplunkLicenseFile;
+			$pre.Hash | Remove-SplunkLicenseFile | out-null;
 		}
 		
 		$pre = get-splunkLicenseFile -all | where{ $_.label -eq $trialLicenseLabel }
 		
-		add-SplunkLicenseFile -Name $trialLicenseLabel -payload $trialLicenseXml;				
+		add-SplunkLicenseFile -Name $trialLicenseLabel -payload $trialLicenseXml | out-null;				
 		
 		$post = get-splunkLicenseFile -all | where{ $_.label -eq $trialLicenseLabel }
 		
