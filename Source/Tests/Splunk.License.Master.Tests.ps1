@@ -20,6 +20,6 @@ Describe "set-splunkLicenseMaster" {
 
 	It "sets license master using default connection parameters" {
 		set-splunkLicenseMaster -force
-		
+		$true
 	}	
 }

@@ -56,6 +56,12 @@ function global:verify-results
 	
 	process
 	{
+		if( -not $results )
+		{
+			Write-Debug 'no results to process';
+			return $false;
+		}
+		
 		$local:resultFields = $results | Get-Member -membertype properties | foreach{ $_.name };
 		
 		if( $fields | where{ $local:resultFields -notcontains $_ } )

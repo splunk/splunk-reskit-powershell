@@ -59,6 +59,7 @@ Describe "new-splunkServerClass" {
 	
 	function compare-serverclass( $a, $b )
 	{
+		Write-Debug "[compare-serverclass] $a $b";
 		if( -not( $a -and $b ) )
 		{
 			return $false;
@@ -86,7 +87,7 @@ Describe "new-splunkServerClass" {
 	
 	function new-serverlist( $c )
 	{
-		$i = Get-Random -Minimum 1 -Maximum 233
+		$i = Get-Random -Minimum 1 -Maximum 50
 		
 		1..$c | foreach{ "SERVER_$_" }
 	}
@@ -119,7 +120,7 @@ Describe "new-splunkServerClass" {
 	It "creates a new server class with a blacklist" {
 		$local:name = new-serverclassname;
 		$local:list = new-serverlist 5;
-		
+					
 		$local:sc = New-SplunkServerClass -Name $local:name -Blacklist $local:list;
 		$results = @( $local:sc | verify-results -fields $local:fields );
 		
@@ -135,10 +136,11 @@ Describe "new-splunkServerClass" {
 		$local:name = new-serverclassname;
 				
 		$local:sc = New-SplunkServerClass -Name $local:name -endpoint 'myEndpoint';
+		$local:sc | Write-Debug;
 		$results = @( $local:sc -ne $null -and ( $local:sc | verify-results -fields $local:fields ) );
 		
 		$local:scc = Get-SplunkServerClass -Name $local:name;
-		$results += $local:scc -and $local:scc.endpoint -and ($null -ne $local:scc.endpoint );
+		$results += $local:scc -and $local:scc.endpoint -and ($local:sc.endpoint  -eq $local:scc.endpoint );
 		$results += compare-serverclass $local:sc $local:scc;
 		
 		$results | verify-all;
@@ -147,11 +149,11 @@ Describe "new-splunkServerClass" {
 	It "creates a new server class with custom filtertype" {
 		$local:name = new-serverclassname;
 				
-		$local:sc = New-SplunkServerClass -Name $local:name -filtertype 'whitelist';
+		$local:sc = New-SplunkServerClass -Name $local:name -filtertype 'whitelist' -whitelist (new-serverlist 3);
 		$results = @( $local:sc -ne $null -and ( $local:sc | verify-results -fields $local:fields ) );
 		
 		$local:scc = Get-SplunkServerClass -Name $local:name;
-		$results += $local:scc -and $local:scc.filtertype -and ($local:sc.filtertype -ne $local:scc.filtertype );
+		$results += $local:scc -and $local:scc.filtertype -and ($local:sc.filtertype -eq $local:scc.filtertype );
 		$results += compare-serverclass $local:sc $local:scc;
 		
 		$results | verify-all;
@@ -164,7 +166,7 @@ Describe "new-splunkServerClass" {
 		$results = @( $local:sc -ne $null -and ( $local:sc | verify-results -fields $local:fields ) );
 		
 		$local:scc = Get-SplunkServerClass -Name $local:name;
-		$results += $local:scc -and $local:scc.tmpfolder -and ($local:sc.tmpfolder -ne $local:scc.tmpfolder );
+		$results += $local:scc -and $local:scc.tmpfolder -and ($local:sc.tmpfolder -eq $local:scc.tmpfolder );
 		$results += compare-serverclass $local:sc $local:scc;
 		
 		$results | verify-all;
@@ -174,11 +176,11 @@ Describe "new-splunkServerClass" {
 		$local:name = new-serverclassname;
 				
 		#note: not sure 
-		$local:sc = New-SplunkServerClass -Name $local:name -RepositoryLocation '$SPLUNK_HOME/etc/myRepoLocation';
+		$local:sc = New-SplunkServerClass -Name $local:name -RepositoryLocation 'c:\data';
 		$results = @( $local:sc -ne $null -and ( $local:sc | verify-results -fields $local:fields ) );
 		
 		$local:scc = Get-SplunkServerClass -Name $local:name;
-		$results += $local:scc -and $local:scc.repositorylocation -and ($local:sc.repositorylocation -ne $local:scc.repositorylocation );
+		$results += $local:scc -and $local:scc.repositorylocation -and ($local:sc.repositorylocation -eq $local:scc.repositorylocation );
 		$results += compare-serverclass $local:sc $local:scc;
 		
 		$results | verify-all;
@@ -192,7 +194,7 @@ Describe "new-splunkServerClass" {
 		$results = @( $local:sc -ne $null -and ( $local:sc | verify-results -fields $local:fields ) );
 		
 		$local:scc = Get-SplunkServerClass -Name $local:name;
-		$results += $local:scc -and $local:scc.targetrepositorylocation -and ($local:sc.targetrepositorylocation -ne $local:scc.targetrepositorylocation );
+		$results += $local:scc -and $local:scc.targetrepositorylocation -and ($local:sc.targetrepositorylocation -eq $local:scc.targetrepositorylocation );
 		$results += compare-serverclass $local:sc $local:scc;
 		
 		$results | verify-all;
