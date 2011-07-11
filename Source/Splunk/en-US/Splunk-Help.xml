@@ -168,10 +168,10 @@
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Connect-Splunk inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -180,10 +180,10 @@
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Connect-Splunk returnType</maml:name>
+          <maml:name>Splunk.SDK.Connection object</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>Connect-Splunk returns an object representing the new connection when the PassThru parameter is specified.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -300,12 +300,12 @@ Creates a new connection to the Splunk instance SplunkServer using https over po
       </command:parameter>
     </command:parameters>
     <command:inputTypes>
-      <command:inputType>
+      <command:inputType>        
         <dev:type>
-          <maml:name>TODO Add ConvertFrom-SplunkTime inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -314,10 +314,10 @@ Creates a new connection to the Splunk instance SplunkServer using https over po
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add ConvertFrom-SplunkTime returnType</maml:name>
+          <maml:name>System.DateTime</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>The converted timestamp, as a standard .NET DateTime instance.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -527,10 +527,10 @@ Converts the given timestamp into a .NET DateTime instance.</maml:para>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Disable-CertificateValidation inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -539,10 +539,10 @@ Converts the given timestamp into a .NET DateTime instance.</maml:para>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Disable-CertificateValidation returnType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not generate any output.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -837,10 +837,10 @@ Disables SSL certificate validation for the current AppDomain.</maml:para>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Disable-SplunkServerClass inputType</maml:name>
+          <maml:name>Splunk.SDK.Deployment.ServerClass</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>You can pipe a server class object to this cmdlet.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -849,10 +849,10 @@ Disables SSL certificate validation for the current AppDomain.</maml:para>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Disable-SplunkServerClass returnType</maml:name>
+          <maml:name>Splunk.SDK.Deployment.ServerClass</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>The disabled server class object.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -977,10 +977,10 @@ Disables the server class named 'Special' on Splunk server 'SplunkInst' using th
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Enable-CertificateValidation inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -989,10 +989,10 @@ Disables the server class named 'Special' on Splunk server 'SplunkInst' using th
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Enable-CertificateValidation returnType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not generate pipeline output.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -1287,10 +1287,10 @@ Enables SSL certificate validation for the current AppDomain.</maml:para>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Enable-SplunkServerClass inputType</maml:name>
+          <maml:name>Splunk.SDK.Deployment.ServerClass</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a server class object from the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -1299,10 +1299,10 @@ Enables SSL certificate validation for the current AppDomain.</maml:para>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Enable-SplunkServerClass returnType</maml:name>
+          <maml:name>Splunk.SDK.Deployment.ServerClass</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs the enabled server class object to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -1440,10 +1440,10 @@ Enables the server class named 'Special' on Splunk server 'SplunkInst' using the
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Export-SplunkConnectionObject inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -1452,10 +1452,10 @@ Enables the server class named 'Special' on Splunk server 'SplunkInst' using the
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Export-SplunkConnectionObject returnType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not generate pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -1530,114 +1530,6 @@ Saves the current connection information to a file named myConn.xml in the local
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
     <command:details>
-      <command:name>Export-SplunkModuleConfiguration</command:name>
-      <maml:description>
-        <maml:para>Export-SplunkModuleConfiguration [[-Path] &lt;Object&gt;] [-Verbose] [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]
-</maml:para>
-      </maml:description>
-      <maml:copyright>
-        <maml:para />
-      </maml:copyright>
-      <command:verb>Export</command:verb>
-      <command:noun>SplunkModuleConfiguration</command:noun>
-      <dev:version />
-    </command:details>
-    <maml:description>
-      <maml:para>
-      </maml:para>
-    </maml:description>
-    <command:syntax>
-      <command:syntaxItem>
-        <command:name>Export-SplunkModuleConfiguration</command:name>
-        <command:parameter require="" variableLength="false" globbing="false" pipelineInput="" position="">
-          <maml:name>
-          </maml:name>
-          <maml:description>
-            <maml:para>
-            </maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">
-          </command:parameterValue>
-        </command:parameter>
-      </command:syntaxItem>
-    </command:syntax>
-    <command:parameters>
-      <command:parameter required="" variableLength="false" globbing="false" pipelineInput="" position="">
-        <maml:name>
-        </maml:name>
-        <maml:description>
-          <maml:para>
-          </maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">
-        </command:parameterValue>
-        <dev:type>
-          <maml:name>
-          </maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue />
-      </command:parameter>
-    </command:parameters>
-    <command:inputTypes>
-      <command:inputType>
-        <dev:type>
-          <maml:name>TODO Add Export-SplunkModuleConfiguration inputType</maml:name>
-          <maml:uri />
-          <maml:description>
-            <maml:para />
-          </maml:description>
-        </dev:type>
-        <maml:description />
-      </command:inputType>
-    </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>TODO Add Export-SplunkModuleConfiguration returnType</maml:name>
-          <maml:uri />
-          <maml:description>
-            <maml:para />
-          </maml:description>
-        </dev:type>
-        <maml:description />
-      </command:returnValue>
-    </command:returnValues>
-    <command:terminatingErrors />
-    <command:nonTerminatingErrors />
-    <maml:alertSet>
-      <maml:title />
-      <maml:alert>
-        <maml:para />
-      </maml:alert>
-    </maml:alertSet>
-    <command:examples>
-      <command:example>
-        <maml:title />
-        <maml:introduction>
-          <maml:para />
-        </maml:introduction>
-        <dev:code />
-        <dev:remarks>
-          <maml:para>
-          </maml:para>
-        </dev:remarks>
-        <command:commandLines>
-          <command:commandLine>
-            <command:commandText />
-          </command:commandLine>
-        </command:commandLines>
-      </command:example>
-    </command:examples>
-    <maml:relatedLinks>
-      <maml:navigationLink>
-        <maml:linkText>Export-SplunkModuleConfiguration</maml:linkText>
-        <maml:uri />
-      </maml:navigationLink>
-    </maml:relatedLinks>
-  </command:command>
-  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
-    <command:details>
       <command:name>Get-Splunk</command:name>
       <maml:description>
         <maml:para>Get all the commands contained in the Splunk Module</maml:para>
@@ -1702,10 +1594,10 @@ Saves the current connection information to a file named myConn.xml in the local
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-Splunk inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -1714,10 +1606,10 @@ Saves the current connection information to a file named myConn.xml in the local
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-Splunk returnType</maml:name>
+          <maml:name>System.Management.Automation.FunctionInfo</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs Splunk command information to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -1962,10 +1854,10 @@ splunk authention protocol.</maml:para>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkAuthToken inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -1974,10 +1866,10 @@ splunk authention protocol.</maml:para>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkAuthToken returnType</maml:name>
+          <maml:name>Splunk.SDK.AuthToken</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs an AuthToken object to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -2094,10 +1986,10 @@ Returns an authentication token from the MySplunkServer server for the user cred
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkConnectionObject inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -2106,10 +1998,10 @@ Returns an authentication token from the MySplunkServer server for the user cred
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkConnectionObject returnType</maml:name>
+          <maml:name>Splunk.SDK.Connection</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs the last cached Splunk connection to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -2283,10 +2175,10 @@ Returns an authentication token from the MySplunkServer server for the user cred
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-Splunkd inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computer name or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -2295,10 +2187,10 @@ Returns an authentication token from the MySplunkServer server for the user cred
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-Splunkd returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunkd.Setting</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs an object containing Splunk instance configuration settings to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -2587,10 +2479,10 @@ Gets the values set for each Splunk server in the pipeline connecting on port 80
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkDeploymentClient inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computer name or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -2599,10 +2491,10 @@ Gets the values set for each Splunk server in the pipeline connecting on port 80
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkDeploymentClient returnType</maml:name>
+          <maml:name>Splunk.SDK.Deployment.DeploymentClient</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs a deployment client object to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -2836,10 +2728,10 @@ Enables all deployment clients with names matching the regular expression 'QA', 
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkdLogging inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -2848,10 +2740,10 @@ Enables all deployment clients with names matching the regular expression 'QA', 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkdLogging returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunkd.Logger</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more logger objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -3195,10 +3087,10 @@ Returns all loggers on each Splunk server in the pipeline connecting on port 808
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkdUser inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -3207,10 +3099,10 @@ Returns all loggers on each Splunk server in the pipeline connecting on port 808
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkdUser returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunkd.User</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more user objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -3484,10 +3376,10 @@ Gets the users for each Splunk server in the pipeline connecting on port 8089 wi
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkdVersion inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -3496,10 +3388,10 @@ Gets the users for each Splunk server in the pipeline connecting on port 8089 wi
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkdVersion returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunkd.VersionInfo</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates a version object as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -3769,10 +3661,10 @@ Gets the OS and Splunk version info for each Splunk server in the pipeline conne
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseFile inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -3781,10 +3673,10 @@ Gets the OS and Splunk version info for each Splunk server in the pipeline conne
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseFile returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunk.Licenser.License</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more license objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -4092,10 +3984,10 @@ Gets the licenses for each Splunk server in the pipeline connecting on port 8089
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseGroup inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -4104,10 +3996,10 @@ Gets the licenses for each Splunk server in the pipeline connecting on port 8089
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseGroup returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunk.License.Group</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more license group objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -4331,10 +4223,10 @@ Gets all license groups for MySplunkInstance connecting on port 8089 with a 5sec
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseMessage inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -4343,15 +4235,16 @@ Gets all license groups for MySplunkInstance connecting on port 8089 with a 5sec
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseMessage returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunk.License.Message</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more license message objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
       </command:returnValue>
     </command:returnValues>
+
     <command:terminatingErrors />
     <command:nonTerminatingErrors />
     <maml:alertSet>
@@ -4585,10 +4478,10 @@ Gets any license messages for MySplunkInstance connecting on port 8089 with a 5s
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicensePool inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -4597,10 +4490,10 @@ Gets any license messages for MySplunkInstance connecting on port 8089 with a 5s
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicensePool returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunk.License.LicensePool</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more license pool objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -4864,10 +4757,10 @@ Gets all license pools for MySplunkInstance connecting on port 8089 with a 5sec 
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseStack inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -4876,10 +4769,10 @@ Gets all license pools for MySplunkInstance connecting on port 8089 with a 5sec 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseStack returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunk.License.Stack</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more license stack objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -5123,10 +5016,10 @@ Gets all license stacks for MySplunkInstance connecting on port 8089 with a 5sec
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLogin inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -5135,10 +5028,10 @@ Gets all license stacks for MySplunkInstance connecting on port 8089 with a 5sec
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLogin returnType</maml:name>
+          <maml:name>Splunk.SDK.AuthToken</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more authentication token objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -5377,10 +5270,10 @@ Creates a new connection to the Splunk instance SplunkServer using https over po
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkServerClass inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -5389,10 +5282,10 @@ Creates a new connection to the Splunk instance SplunkServer using https over po
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkServerClass returnType</maml:name>
+          <maml:name>Splunk.SDK.Deployment.ServerClass</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more server class objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -5580,10 +5473,10 @@ Returns the server class with name MyServerClass from the Splunk instance instal
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Import-SplunkConnectionObject inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -5592,10 +5485,10 @@ Returns the server class with name MyServerClass from the Splunk instance instal
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Import-SplunkConnectionObject returnType</maml:name>
+          <maml:name>Splunk.SDK.Connection</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates a connection object as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -5664,114 +5557,6 @@ Loads connection information to a file named myConn.xml in the local directory, 
     <maml:relatedLinks>
       <maml:navigationLink>
         <maml:linkText>Import-SplunkConnectionObject</maml:linkText>
-        <maml:uri />
-      </maml:navigationLink>
-    </maml:relatedLinks>
-  </command:command>
-  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
-    <command:details>
-      <command:name>Import-SplunkModuleConfiguration</command:name>
-      <maml:description>
-        <maml:para>Import-SplunkModuleConfiguration [[-Path] &lt;Object&gt;] [-Verbose] [-Debug] [-ErrorAction &lt;ActionPreference&gt;] [-WarningAction &lt;ActionPreference&gt;] [-ErrorVariable &lt;String&gt;] [-WarningVariable &lt;String&gt;] [-OutVariable &lt;String&gt;] [-OutBuffer &lt;Int32&gt;]
-</maml:para>
-      </maml:description>
-      <maml:copyright>
-        <maml:para />
-      </maml:copyright>
-      <command:verb>Import</command:verb>
-      <command:noun>SplunkModuleConfiguration</command:noun>
-      <dev:version />
-    </command:details>
-    <maml:description>
-      <maml:para>
-      </maml:para>
-    </maml:description>
-    <command:syntax>
-      <command:syntaxItem>
-        <command:name>Import-SplunkModuleConfiguration</command:name>
-        <command:parameter require="" variableLength="false" globbing="false" pipelineInput="" position="">
-          <maml:name>
-          </maml:name>
-          <maml:description>
-            <maml:para>
-            </maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">
-          </command:parameterValue>
-        </command:parameter>
-      </command:syntaxItem>
-    </command:syntax>
-    <command:parameters>
-      <command:parameter required="" variableLength="false" globbing="false" pipelineInput="" position="">
-        <maml:name>
-        </maml:name>
-        <maml:description>
-          <maml:para>
-          </maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">
-        </command:parameterValue>
-        <dev:type>
-          <maml:name>
-          </maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue />
-      </command:parameter>
-    </command:parameters>
-    <command:inputTypes>
-      <command:inputType>
-        <dev:type>
-          <maml:name>TODO Add Import-SplunkModuleConfiguration inputType</maml:name>
-          <maml:uri />
-          <maml:description>
-            <maml:para />
-          </maml:description>
-        </dev:type>
-        <maml:description />
-      </command:inputType>
-    </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>TODO Add Import-SplunkModuleConfiguration returnType</maml:name>
-          <maml:uri />
-          <maml:description>
-            <maml:para />
-          </maml:description>
-        </dev:type>
-        <maml:description />
-      </command:returnValue>
-    </command:returnValues>
-    <command:terminatingErrors />
-    <command:nonTerminatingErrors />
-    <maml:alertSet>
-      <maml:title />
-      <maml:alert>
-        <maml:para />
-      </maml:alert>
-    </maml:alertSet>
-    <command:examples>
-      <command:example>
-        <maml:title />
-        <maml:introduction>
-          <maml:para />
-        </maml:introduction>
-        <dev:code />
-        <dev:remarks>
-          <maml:para>
-          </maml:para>
-        </dev:remarks>
-        <command:commandLines>
-          <command:commandLine>
-            <command:commandText />
-          </command:commandLine>
-        </command:commandLines>
-      </command:example>
-    </command:examples>
-    <maml:relatedLinks>
-      <maml:navigationLink>
-        <maml:linkText>Import-SplunkModuleConfiguration</maml:linkText>
         <maml:uri />
       </maml:navigationLink>
     </maml:relatedLinks>
@@ -6085,10 +5870,10 @@ Loads connection information to a file named myConn.xml in the local directory, 
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Invoke-SplunkAPIRequest inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -6097,10 +5882,10 @@ Loads connection information to a file named myConn.xml in the local directory, 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Invoke-SplunkAPIRequest returnType</maml:name>
+          <maml:name>System.Net.WebResponse</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates a web response object as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -6299,10 +6084,10 @@ Gets the values set for MySplunkInstance connecting on port 8089 with a 5sec tim
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Invoke-SplunkDeploymentServerReload inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -6311,10 +6096,10 @@ Gets the values set for MySplunkInstance connecting on port 8089 with a 5sec tim
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Invoke-SplunkDeploymentServerReload returnType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not produce pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -6408,10 +6193,10 @@ Reloads the deployment server for the Splunk instance identified in the current 
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add New-SplunkCredential inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -6420,10 +6205,10 @@ Reloads the deployment server for the Splunk instance identified in the current 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add New-SplunkCredential returnType</maml:name>
+          <maml:name>System.Management.Automation.PSCredential</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates a PSCredential objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -6843,10 +6628,10 @@ Creates a new credential with username Admin.  The user is securely prompted for
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add New-SplunkServerClass inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -6855,10 +6640,10 @@ Creates a new credential with username Admin.  The user is securely prompted for
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add New-SplunkServerClass returnType</maml:name>
+          <maml:name>Splunk.SDK.Deployment.ServerClass</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates a server class object as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -6993,10 +6778,10 @@ Defines a whiltelist server class containing two machine listings: mymachine and
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Remove-SplunkConnectionObject inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -7005,10 +6790,10 @@ Defines a whiltelist server class containing two machine listings: mymachine and
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Remove-SplunkConnectionObject returnType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not generate pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -7028,7 +6813,7 @@ Defines a whiltelist server class containing two machine listings: mymachine and
         <maml:introduction>
           <maml:para />
         </maml:introduction>
-        <dev:code>Get-SplunkConnectionObject</dev:code>
+        <dev:code>Remove-SplunkConnectionObject</dev:code>
         <dev:remarks>
           <maml:para>Description
  -----------
@@ -7281,10 +7066,10 @@ Defines a whiltelist server class containing two machine listings: mymachine and
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Restart-SplunkService inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -7293,10 +7078,10 @@ Defines a whiltelist server class containing two machine listings: mymachine and
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Restart-SplunkService returnType</maml:name>
+          <maml:name>None or Splunk.SDK.Splunkd.Setting</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more setting objects as pipeline ouput when the Wait parameter is specified.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -7665,10 +7450,10 @@ Restarts the Splunk services on each Splunk server in the pipeline connecting on
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Search-Splunk inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -7677,10 +7462,10 @@ Restarts the Splunk services on each Splunk server in the pipeline connecting on
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Search-Splunk returnType</maml:name>
+          <maml:name>Splunk.SDK.Search.OneShotResult</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more search result objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -7868,10 +7653,10 @@ Searches for events with source of "WinEventLog:System" on each Splunk server in
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkConnectionObject inputType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not accept pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -7880,10 +7665,10 @@ Searches for events with source of "WinEventLog:System" on each Splunk server in
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkConnectionObject returnType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not generate pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -8301,10 +8086,10 @@ Saves the connection information in variable $connection as the default connecti
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Set-Splunkd inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -8313,10 +8098,10 @@ Saves the connection information in variable $connection as the default connecti
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Set-Splunkd returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunkd.Setting</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs the modified setting object as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -8687,10 +8472,10 @@ Sets the 'sessionTimeout' to '2h' on each Splunk server in the pipeline connecti
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkdLogging inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -8699,10 +8484,10 @@ Sets the 'sessionTimeout' to '2h' on each Splunk server in the pipeline connecti
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkdLogging returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunkd.Logger</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs the modified logger objects to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -9004,10 +8789,10 @@ Resets the logging level for all loggers to "ERROR".</maml:para>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkdPassword inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -9016,10 +8801,10 @@ Resets the logging level for all loggers to "ERROR".</maml:para>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkdPassword returnType</maml:name>
+          <maml:name>None</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet does not generate pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -9376,10 +9161,10 @@ Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the 
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkLicenseGroup inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -9388,10 +9173,10 @@ Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkLicenseGroup returnType</maml:name>
+          <maml:name>Splunk.SDK.License.Group</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more license group objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -9586,10 +9371,10 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Test-Splunkd inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -9598,10 +9383,10 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Test-Splunkd returnType</maml:name>
+          <maml:name>boolean</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates a boolean as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -9950,10 +9735,10 @@ Test each Splunk server in the pipeline connecting on port 8089 with a 5sec time
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Write-SplunkMessage inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -9962,10 +9747,10 @@ Test each Splunk server in the pipeline connecting on port 8089 with a 5sec time
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Write-SplunkMessage returnType</maml:name>
+          <maml:name>Splunk.SDK.MessageResult</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or message result objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -10179,10 +9964,10 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Add-SplunkLicenseFile inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -10191,10 +9976,10 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Add-SplunkLicenseFile returnType</maml:name>
+          <maml:name>Splunk.SDK.Licenser.License</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet produces the modified license objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -10504,10 +10289,10 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Add-SplunkLicensePool inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -10516,10 +10301,10 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Add-SplunkLicensePool returnType</maml:name>
+          <maml:name>Splunk.SDK.License.Pool</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet generates one or more license pool objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -10774,10 +10559,10 @@ Creates a new license pool on the Enterprise license stack with a 500mb data quo
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Remove-SplunkLicensePool inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -10786,10 +10571,10 @@ Creates a new license pool on the Enterprise license stack with a 500mb data quo
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Remove-SplunkLicensePool returnType</maml:name>
+          <maml:name>Splunk.SDK.License.Pool</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs the removed license pools to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -11044,10 +10829,10 @@ Removes the license pool named 'CorporateLicensePool' from the current default S
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Remove-SplunkLicenseFile inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -11056,10 +10841,10 @@ Removes the license pool named 'CorporateLicensePool' from the current default S
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Remove-SplunkLicenseFile returnType</maml:name>
+          <maml:name>Splunk.SDK.License.File</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs the removed license objects as pipeline ouput.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -11233,10 +11018,10 @@ Removes the license namedf 'TempLicense' from the current default Splunk instanc
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseSlave inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -11245,10 +11030,10 @@ Removes the license namedf 'TempLicense' from the current default Splunk instanc
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseSlave returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunk.Licenser.Slave</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs one or more license slave objects to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -11483,10 +11268,10 @@ Gets the current license slaves for the default Splunk instance.</maml:para>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkLicenseMaster inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -11495,10 +11280,10 @@ Gets the current license slaves for the default Splunk instance.</maml:para>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Set-SplunkLicenseMaster returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunk.Licenser.Slave</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs the current license master object to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -11672,10 +11457,10 @@ Sets the current default Splunk instance as the license master.</maml:para>
     <command:inputTypes>
       <command:inputType>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseMaster inputType</maml:name>
+          <maml:name>System.String</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet accepts a Splunk instance computername or IP address as pipeline input.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />
@@ -11684,10 +11469,10 @@ Sets the current default Splunk instance as the license master.</maml:para>
     <command:returnValues>
       <command:returnValue>
         <dev:type>
-          <maml:name>TODO Add Get-SplunkLicenseMaster returnType</maml:name>
+          <maml:name>Splunk.SDK.Splunk.Licenser.Slave</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para />
+            <maml:para>This cmdlet outputs the current license master to the pipeline.</maml:para>
           </maml:description>
         </dev:type>
         <maml:description />

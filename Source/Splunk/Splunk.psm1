@@ -204,7 +204,7 @@ function Set-SplunkConnectionObject
     }
 }
 
-#endregion Set-SplunkConnectionObject
+#endregion Set-SplunkConnectionObject 
 
 #region Get-SplunkConnectionObject
 

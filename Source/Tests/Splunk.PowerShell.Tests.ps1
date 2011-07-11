@@ -3,6 +3,7 @@
 Get-Command -Module splunk | foreach {
 	$script:this = $_;
 	$script:commandName = $_.Name;
+	
 	Describe $script:commandName {		
 		It "has custom help" {
 			$script:this | Write-Debug;
