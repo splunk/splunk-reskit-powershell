@@ -435,6 +435,7 @@
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
@@ -447,6 +448,9 @@
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Description</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Quota</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>UsedBytes</PropertyName>
