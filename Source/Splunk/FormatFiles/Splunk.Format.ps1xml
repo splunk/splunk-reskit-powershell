@@ -577,6 +577,44 @@
         </TableRowEntries>
       </TableControl>
     </View>
+        
+    <View>
+      <Name>Splunk.SDK.Splunk.Licenser.LocalSlave</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Splunk.Licenser.LocalSlave</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>MasterURI</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>MasterGUID</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>LastContactAttempt</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>LastContactSuccess</PropertyName>
+              </TableColumnItem>
+			</TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
     
    </ViewDefinitions>
 </Configuration>
