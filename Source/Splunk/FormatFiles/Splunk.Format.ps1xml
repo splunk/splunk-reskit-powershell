@@ -460,7 +460,37 @@
                 <PropertyName>UsedBytes</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>SlavesUsedBytes</PropertyName>
+                <PropertyName>Slaves</PropertyName>
+              </TableColumnItem>
+			</TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    
+    <View>
+      <Name>Splunk.SDK.License.PoolSlave</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.License.PoolSlave</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>SlaveID</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>BytesUsed</PropertyName>
               </TableColumnItem>
 			</TableColumnItems>
           </TableRowEntry>
