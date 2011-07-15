@@ -11,6 +11,10 @@ $local:fixture = @{
 	
 	# splunk management port
 	splunkPort = 8089
+	
+	#test license file
+	licenseFilePath = $MyInvocation.MyCommand.Path | split-path -parent | Join-Path -ChildPath 'splunk.license';
+	
 	#------- you do not need to edit below this line ----------
 	
 	defaultConfigPath = get-module splunk | split-path | join-path -ChildPath "SplunkConnectionObject.xml";

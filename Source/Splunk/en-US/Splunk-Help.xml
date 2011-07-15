@@ -9860,9 +9860,9 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
-          <maml:name>Payload</maml:name>
+          <maml:name>Path</maml:name>
           <maml:description>
-            <maml:para>The license XML to add to the Splunk server.</maml:para>
+            <maml:para>The file path for the license XML file to add to the Splunk server.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
@@ -9948,9 +9948,9 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
         <dev:defaultValue />
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
-        <maml:name>Payload</maml:name>
+        <maml:name>Path</maml:name>
         <maml:description>
-          <maml:para>The license XML to add to the Splunk server.</maml:para>
+          <maml:para>The file path for the license XML file to add to the Splunk server.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -10642,9 +10642,9 @@ Removes the license pool named 'CorporateLicensePool' from the current default S
       <command:syntaxItem>
         <command:name>Remove-SplunkLicenseFile</command:name>
         <command:parameter require="true" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
-          <maml:name>Name</maml:name>
+          <maml:name>Hash</maml:name>
           <maml:description>
-            <maml:para>Name of the license to remove.</maml:para>
+            <maml:para>The hash of the license to remove.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
@@ -10707,9 +10707,9 @@ Removes the license pool named 'CorporateLicensePool' from the current default S
     </command:syntax>
     <command:parameters>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
-        <maml:name>Name</maml:name>
+        <maml:name>Hash</maml:name>
         <maml:description>
-          <maml:para>Name of the license to remove.</maml:para>
+          <maml:para>The hash of the license to remove.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>

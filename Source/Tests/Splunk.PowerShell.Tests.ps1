@@ -5,6 +5,19 @@ Get-Command -Module splunk | foreach {
 	$script:commandName = $_.Name;
 	
 	Describe $script:commandName {		
+			
+		$commonParameterNames = @"
+			Verbose
+			Debug
+			ErrorAction
+			WarningAction
+			ErrorVariable
+			WarningVariable
+			OutVariable
+			OutBuffer
+			UseTransaction
+"@ -split '\s+'; 
+
 		It "has custom help" {
 			$script:this | Write-Debug;
 			$local:help = ( $script:this | Get-Help -full ) | Out-String;
@@ -28,6 +41,19 @@ Get-Command -Module splunk | foreach {
 			UseTransaction
 "@ -split '\s+'; 
 
+		$script:this | get-help -full | select -exp parameters | select -exp parameter | select -exp Name | where {
+			$commonParameterNames -notcontains $_
+		} | foreach {	
+			It "has documented parameter $_" {
+				$paramNames = $script:this | `
+					select -exp parameters | `
+					select -exp keys;
+					
+				$paramNames -contains $_;
+				
+			}
+		}
+
 		$script:this | select -exp parameters | select -expand keys | where {
 			$commonParameterNames -notcontains $_
 		} | foreach {	
@@ -42,6 +68,5 @@ Get-Command -Module splunk | foreach {
 				
 			}
 		}
-
 	}
 }
