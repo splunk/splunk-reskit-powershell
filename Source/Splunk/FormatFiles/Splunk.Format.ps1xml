@@ -366,6 +366,7 @@
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
@@ -381,6 +382,9 @@
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Category</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Message</PropertyName>
               </TableColumnItem>
 			</TableColumnItems>
           </TableRowEntry>
