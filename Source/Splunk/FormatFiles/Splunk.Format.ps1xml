@@ -649,6 +649,36 @@
         </TableRowEntries>
       </TableControl>
     </View>
+
+    <View>
+      <Name>Splunk.SDK.Message</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Message</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Message</PropertyName>
+              </TableColumnItem>
+			</TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
     
    </ViewDefinitions>
 </Configuration>
