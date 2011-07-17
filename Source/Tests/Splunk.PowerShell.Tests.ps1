@@ -16,6 +16,8 @@ Get-Command -Module splunk | foreach {
 			OutVariable
 			OutBuffer
 			UseTransaction
+			Confirm
+			Whatif
 "@ -split '\s+'; 
 
 		It "has custom help" {
@@ -39,6 +41,8 @@ Get-Command -Module splunk | foreach {
 			OutVariable
 			OutBuffer
 			UseTransaction
+			Confirm
+			Whatif
 "@ -split '\s+'; 
 
 		$script:this | get-help -full | select -exp parameters | select -exp parameter | select -exp Name | where {

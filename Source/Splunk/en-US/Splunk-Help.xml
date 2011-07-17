@@ -203,7 +203,7 @@
         <maml:introduction>
           <maml:para />
         </maml:introduction>
-        <dev:code>Connect-Splunk -credential $mycreds -computername 'SplunkServer' -protocol 'https' -port 8089 -timeout 30000</dev:code>
+        <dev:code>Connect-Splunk -Credential $mycreds -ComputerName 'SplunkServer' -Protocol 'https' -Port 8089 -Timeout 30000</dev:code>
         <dev:remarks>
           <maml:para>Description
 -----------
@@ -228,11 +228,11 @@ Creates a new connection to the Splunk instance SplunkServer using https over po
         <maml:introduction>
           <maml:para />
         </maml:introduction>
-        <dev:code>Connect-Splunk -username admin -computername 'SplunkServer' -protocol 'https' -port 8089</dev:code>
+        <dev:code>Connect-Splunk -UserName admin -ComputerName 'SplunkServer' -Protocol 'https' -Port 8089</dev:code>
         <dev:remarks>
           <maml:para>Description
 -----------
-Creates a new connection to the Splunk instance SplunkServer using https over port 8089.  The connect-splunk command will securely request the password for user admin before connecting.</maml:para>
+Creates a new connection to the Splunk instance SplunkServer using https over port 8089.  The Connect-Splunk command will securely request the password for user admin before connecting.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -585,7 +585,7 @@ Disables SSL certificate validation for the current AppDomain.</maml:para>
     </command:examples>
     <maml:relatedLinks>
       <maml:navigationLink>
-        <maml:linkText>Disable-CertificateValidation</maml:linkText>
+        <maml:linkText>Enable-CertificateValidation</maml:linkText>
         <maml:uri />
       </maml:navigationLink>
     </maml:relatedLinks>
@@ -594,7 +594,7 @@ Disables SSL certificate validation for the current AppDomain.</maml:para>
     <command:details>
       <command:name>Disable-SplunkServerClass</command:name>
       <maml:description>
-        <maml:para>Disables the specified server classes for the spefied Splunk instance.</maml:para>
+        <maml:para>Disables the specified server classes for the specified Splunk instance.</maml:para>
       </maml:description>
       <maml:copyright>
         <maml:para />
@@ -604,7 +604,7 @@ Disables SSL certificate validation for the current AppDomain.</maml:para>
       <dev:version />
     </command:details>
     <maml:description>
-      <maml:para>Disables the specified server classes for the spefied Splunk instance.</maml:para>
+      <maml:para>Disables the specified server classes for the specified Splunk instance.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -944,35 +944,9 @@ Disables the server class named 'Special' on Splunk server 'SplunkInst' using th
     <command:syntax>
       <command:syntaxItem>
         <command:name>Enable-CertificateValidation</command:name>
-        <command:parameter require="" variableLength="false" globbing="false" pipelineInput="" position="">
-          <maml:name>
-          </maml:name>
-          <maml:description>
-            <maml:para>
-            </maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">
-          </command:parameterValue>
-        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="" variableLength="false" globbing="false" pipelineInput="" position="">
-        <maml:name>
-        </maml:name>
-        <maml:description>
-          <maml:para>
-          </maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">
-        </command:parameterValue>
-        <dev:type>
-          <maml:name>
-          </maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue />
-      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -1044,7 +1018,7 @@ Enables SSL certificate validation for the current AppDomain.</maml:para>
     <command:details>
       <command:name>Enable-SplunkServerClass</command:name>
       <maml:description>
-        <maml:para>Enables the specified server classes for the spefied Splunk instance.</maml:para>
+        <maml:para>Enables the specified server classes for the specified Splunk instance.</maml:para>
       </maml:description>
       <maml:copyright>
         <maml:para />
@@ -1054,7 +1028,7 @@ Enables SSL certificate validation for the current AppDomain.</maml:para>
       <dev:version />
     </command:details>
     <maml:description>
-      <maml:para>Enables the specified server classes for the spefied Splunk instance.</maml:para>
+      <maml:para>Enables the specified server classes for the specified Splunk instance.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -1721,8 +1695,7 @@ Saves the current connection information to a file named myConn.xml in the local
       <dev:version />
     </command:details>
     <maml:description>
-      <maml:para>Retrieves a splunk authentication token from the splunk server.  This method is called internally as part of the standard 
-splunk authention protocol.</maml:para>
+      <maml:para>Retrieves a splunk authentication token from the splunk server.  This method is called internally as part of the standard splunk authentication protocol.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -1730,7 +1703,7 @@ splunk authention protocol.</maml:para>
         <command:parameter require="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
           <maml:name>UserName</maml:name>
           <maml:description>
-            <maml:para>User get the credentials for.</maml:para>
+            <maml:para>User to get the credentials for.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
@@ -2239,7 +2212,7 @@ Gets the values set for the targeted Splunk instance using the $SplunkDefaultCon
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets the values set for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Gets the values set for MySplunkInstance connecting on port 8089 with a 5 second timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -2289,7 +2262,7 @@ Gets the values set for each Splunk server in the pipeline using the $SplunkDefa
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets the values set for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Gets the values set for each Splunk server in the pipeline connecting on port 8089 with a 5 second timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -2792,7 +2765,7 @@ Returns all loggers on the targeted Splunk instance using the $SplunkDefaultConn
         <dev:remarks>
           <maml:para>Description
 -----------
-Returns AdminHandler:Monitor logger on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.</maml:para>
+Returns the AdminHandler:Monitor logger on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -2817,7 +2790,7 @@ Returns AdminHandler:Monitor logger on the targeted Splunk instance using the $S
         <dev:remarks>
           <maml:para>Description
 -----------
-Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.</maml:para>
+Returns all loggers that match 'monitor' on the targeted Splunk instance using the default Splunk connection.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -2838,11 +2811,11 @@ Returns all loggers that match 'monitor' on the targeted Splunk instance using t
         <maml:introduction>
           <maml:para />
         </maml:introduction>
-        <dev:code>Get-SplunkdLogging -level debug</dev:code>
+        <dev:code>Get-SplunkdLogging -level DEBUG</dev:code>
         <dev:remarks>
           <maml:para>Description
 -----------
-Returns all loggers that match 'monitor' on the targeted Splunk instance using the $SplunkDefaultConnectionObject settings.</maml:para>
+Returns all loggers that are currently logging DEBUG level messages using the default Splunk connection.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -2867,7 +2840,7 @@ Returns all loggers that match 'monitor' on the targeted Splunk instance using t
         <dev:remarks>
           <maml:para>Description
 -----------
-Returns all loggers for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Returns all loggers for MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -2917,7 +2890,7 @@ Returns all loggers on each Splunk server in the pipeline using the $SplunkDefau
         <dev:remarks>
           <maml:para>Description
 -----------
-Returns all loggers on each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Returns all loggers on each Splunk server in the pipeline connecting on port 8089 with a 5 seconds timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -3176,7 +3149,7 @@ Returns the admin user for the targeted Splunk instance using the $SplunkDefault
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets the users for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Gets the users for MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -3226,7 +3199,7 @@ Gets the users for each Splunk server in the pipeline using the $SplunkDefaultCo
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets the users for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Gets the users for each Splunk server in the pipeline connecting on port 8089 with a 5 seconds timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -3440,7 +3413,7 @@ Gets the OS and Splunk version info for the targeted Splunk instance using the $
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets the OS and Splunk version info for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Gets the OS and Splunk version info for MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -3490,7 +3463,7 @@ Gets the OS and Splunk version info for each Splunk server in the pipeline using
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets the OS and Splunk version info for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Gets the OS and Splunk version info for each Splunk server in the pipeline connecting on port 8089 with a 5 seconds timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -3725,7 +3698,7 @@ Gets the licenses for the targeted Splunk instance using the $SplunkDefaultConne
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets the licenses for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Gets the licenses for MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -3775,7 +3748,7 @@ Gets the licenses for each Splunk server in the pipeline using the $SplunkDefaul
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets the licenses for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Gets the licenses for each Splunk server in the pipeline connecting on port 8089 with a 5 seconds timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -4073,7 +4046,7 @@ Gets the license groups whose name ends with 'enterprise' for the targeted Splun
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets all license groups for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Gets all license groups for MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -4288,7 +4261,7 @@ Gets the license messages for the targeted Splunk instance using the $SplunkDefa
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets any license messages for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Gets any license messages for MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -4567,7 +4540,7 @@ Gets the license pools whose name ends with 'enterprise' for the targeted Splunk
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets all license pools for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Gets all license pools for MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -4846,7 +4819,7 @@ Gets the license stacks whose name ends with 'enterprise' for the targeted Splun
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets all license stacks for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Gets all license stacks for MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -5051,11 +5024,11 @@ Gets all license stacks for MySplunkInstance connecting on port 8089 with a 5sec
         <maml:introduction>
           <maml:para />
         </maml:introduction>
-        <dev:code>Connect-Splunk -credential $mycreds -computername 'SplunkServer' -protocol 'https' -port 8089 -timeout 30000</dev:code>
+        <dev:code>Get-SplunkLogin -Name ^s -Credential $mycreds -ComputerName 'SplunkServer' -Protocol 'https' -Port 8089 -Timeout 30000</dev:code>
         <dev:remarks>
           <maml:para>Description
 -----------
-Creates a new connection to the Splunk instance SplunkServer using https over port 8089 with a 30 second timeout.</maml:para>
+Retrieves all logins with names that start with 's' from the Splunk instance SplunkServer using https over port 8089 with a 30 second timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -5076,11 +5049,11 @@ Creates a new connection to the Splunk instance SplunkServer using https over po
         <maml:introduction>
           <maml:para />
         </maml:introduction>
-        <dev:code>Connect-Splunk -username admin -computername 'SplunkServer' -protocol 'https' -port 8089</dev:code>
+        <dev:code>Get-SplunkLogin</dev:code>
         <dev:remarks>
           <maml:para>Description
 -----------
-Creates a new connection to the Splunk instance SplunkServer using https over port 8089.  The connect-splunk command will securely request the password for user admin before connecting.</maml:para>
+Retrieves all logins from the current default Splunk instance.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -5934,7 +5907,7 @@ Gets the values set for the targeted Splunk instance using the $SplunkDefaultCon
         <dev:remarks>
           <maml:para>Description
 -----------
-Gets the values set for MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Gets the values set for MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -6324,13 +6297,19 @@ Creates a new credential with username Admin.  The user is securely prompted for
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
           <maml:name>ContinueMatching</maml:name>
           <maml:description>
-            <maml:para>If specified, configuration lookups will match server classes beyond the first match.  If unspecified, only the first match will apply.</maml:para>
+            <maml:para>Controls how configuration is layered across classes and server-specific settings.
+If true, configuration lookups continue matching server classes, beyond the first match. If false, only the first match is used. Matching is done in the order that server classes are defined. Defaults to true.</maml:para>
+<maml:para>A serverClass can override this property and stop the matching.</maml:para>
           </maml:description>
         </command:parameter>
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
           <maml:name>Endpoint</maml:name>
           <maml:description>
             <maml:para>The endpoint (specified as URL) from which content can be downloaded by a deployment client.</maml:para>
+			<maml:para>Specify a URL template string, which specifies the endpoint from which content can be downloaded by a deployment client. The deployment client knows how to substitute the values of the variables in the URL. Any custom URL can also be supplied here as long as it uses the specified variables.
+This attribute does not need to be specified unless you have a very specific need, for example: to acquire deployment application files from a third-party httpd, for extremely large environments.</maml:para>
+<maml:para>Can be overridden at the serverClass level.</maml:para>
+<maml:para>Defaults to $deploymentServerUri$/services/streams/deployment?name=$serverClassName$:$appName$</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
@@ -6338,6 +6317,19 @@ Creates a new credential with username Admin.  The user is securely prompted for
           <maml:name>FilterType</maml:name>
           <maml:description>
             <maml:para>Defines the type of filtering applied by the server class.  Must be one of the following values: "whitelist" or "blacklist".</maml:para>
+			<maml:para>If filterType is whitelist, all whitelist filters are applied first, followed by blacklist filters. If filterType is blacklist, all blacklist filters are applied first, followed by whitelist filters.</maml:para>
+<maml:para>The whitelist setting indicates a filtering strategy that pulls in a subset:
+    * Items are not considered to match the stanza by default.
+    * Items that match any whitelist entry, and do not match any blacklist entry, are considered to match the stanza.
+    * Items that match any blacklist entry are not considered to match the stanza, regardless of whitelist. </maml:para>
+<maml:para>The blacklist setting indicates a filtering strategy that rules out a subset:
+    * Items are considered to match the stanza by default.
+    * Items that match any blacklist entry, and do not match any whitelist entry, are considered to not match the stanza.
+    * Items that match any whitelist entry are considered to match the stanza. </maml:para>
+<maml:para>More briefly:
+    * whitelist: default no-match -> whitelists enable -> blacklists disable
+    * blacklist: default match -> blacklists disable-> whitelists enable </maml:para>
+<maml:para>You can override this value at the serverClass and serverClass:app levels. If you specify whitelist at the global level, and then specify blacklist for an individual server class, the setting becomes blacklist for that server class, and you have to provide another filter in that server class definition to replace the one you overrode.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
@@ -6359,6 +6351,7 @@ Creates a new credential with username Admin.  The user is securely prompted for
           <maml:name>TmpFolder</maml:name>
           <maml:description>
             <maml:para>The location of the working folder used by the deployment server.</maml:para>
+			<maml:para>Defaults to $SPLUNK_HOME@OsDirSep@var@OsDirSep@run@OsDirSep@tmp</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
@@ -6456,7 +6449,9 @@ Creates a new credential with username Admin.  The user is securely prompted for
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
         <maml:name>ContinueMatching</maml:name>
         <maml:description>
-          <maml:para>If specified, configuration lookups will match server classes beyond the first match.  If unspecified, only the first match will apply.</maml:para>
+		  <maml:para>Controls how configuration is layered across classes and server-specific settings.
+If true, configuration lookups continue matching server classes, beyond the first match. If false, only the first match is used. Matching is done in the order that server classes are defined. Defaults to true.</maml:para>
+<maml:para>A serverClass can override this property and stop the matching.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -6469,7 +6464,12 @@ Creates a new credential with username Admin.  The user is securely prompted for
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
         <maml:name>Endpoint</maml:name>
         <maml:description>
-          <maml:para>The endpoint (specified as URL) from which content can be downloaded by a deployment client.</maml:para>
+            <maml:para>The endpoint (specified as URL) from which content can be downloaded by a deployment client.</maml:para>
+			<maml:para>Specify a URL template string, which specifies the endpoint from which content can be downloaded by a deployment client. The deployment client knows how to substitute the values of the variables in the URL. Any custom URL can also be supplied here as long as it uses the specified variables.
+This attribute does not need to be specified unless you have a very specific need, for example: to acquire deployment application files from a third-party httpd, for extremely large environments.</maml:para>
+<maml:para>Can be overridden at the serverClass level.</maml:para>
+<maml:para>Defaults to $deploymentServerUri$/services/streams/deployment?name=$serverClassName$:$appName$</maml:para>
+
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -6482,7 +6482,20 @@ Creates a new credential with username Admin.  The user is securely prompted for
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
         <maml:name>FilterType</maml:name>
         <maml:description>
-          <maml:para>Defines the type of filtering applied by the server class.  Must be one of the following values: "whitelist" or "blacklist".</maml:para>
+            <maml:para>Defines the type of filtering applied by the server class.  Must be one of the following values: "whitelist" or "blacklist".</maml:para>
+			<maml:para>If filterType is whitelist, all whitelist filters are applied first, followed by blacklist filters. If filterType is blacklist, all blacklist filters are applied first, followed by whitelist filters.</maml:para>
+<maml:para>The whitelist setting indicates a filtering strategy that pulls in a subset:
+    * Items are not considered to match the stanza by default.
+    * Items that match any whitelist entry, and do not match any blacklist entry, are considered to match the stanza.
+    * Items that match any blacklist entry are not considered to match the stanza, regardless of whitelist. </maml:para>
+<maml:para>The blacklist setting indicates a filtering strategy that rules out a subset:
+    * Items are considered to match the stanza by default.
+    * Items that match any blacklist entry, and do not match any whitelist entry, are considered to not match the stanza.
+    * Items that match any whitelist entry are considered to match the stanza. </maml:para>
+<maml:para>More briefly:
+    * whitelist: default no-match -> whitelists enable -> blacklists disable
+    * blacklist: default match -> blacklists disable-> whitelists enable </maml:para>
+<maml:para>You can override this value at the serverClass and serverClass:app levels. If you specify whitelist at the global level, and then specify blacklist for an individual server class, the setting becomes blacklist for that server class, and you have to provide another filter in that server class definition to replace the one you overrode.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -6522,6 +6535,7 @@ Creates a new credential with username Admin.  The user is securely prompted for
         <maml:name>TmpFolder</maml:name>
         <maml:description>
           <maml:para>The location of the working folder used by the deployment server.</maml:para>
+		  <maml:para>Defaults to $SPLUNK_HOME@OsDirSep@var@OsDirSep@run@OsDirSep@tmp</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -7130,7 +7144,7 @@ Restarts the Splunk services using the $SplunkDefaultConnectionObject settings.<
         <dev:remarks>
           <maml:para>Description
 -----------
-Restarts the Splunk services on MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Restarts the Splunk services on MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -7180,7 +7194,7 @@ Restarts the Splunk services on each Splunk server in the pipeline using the $Sp
         <dev:remarks>
           <maml:para>Description
 -----------
-Restarts the Splunk services on each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Restarts the Splunk services on each Splunk server in the pipeline connecting on port 8089 with a 5 seconds timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -7514,7 +7528,7 @@ Searches for events with source of "WinEventLog:System" on the targeted Splunk i
         <dev:remarks>
           <maml:para>Description
 -----------
-Searches for events with source of "WinEventLog:System" on MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Searches for events with source of "WinEventLog:System" on MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -7564,7 +7578,7 @@ Searches for events with source of "WinEventLog:System" on each Splunk server in
         <dev:remarks>
           <maml:para>Description
 -----------
-Searches for events with source of "WinEventLog:System" on each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Searches for events with source of "WinEventLog:System" on each Splunk server in the pipeline connecting on port 8089 with a 5 seconds timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -8150,7 +8164,7 @@ Sets the 'sessionTimeout' to '2h' on the targeted Splunk instance using the $Spl
         <dev:remarks>
           <maml:para>Description
 -----------
-Sets the 'sessionTimeout' to '2h' on MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Sets the 'sessionTimeout' to '2h' on MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -8200,7 +8214,7 @@ Sets the 'sessionTimeout' to '2h' on each Splunk server in the pipeline using th
         <dev:remarks>
           <maml:para>Description
 -----------
-Sets the 'sessionTimeout' to '2h' on each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Sets the 'sessionTimeout' to '2h' on each Splunk server in the pipeline connecting on port 8089 with a 5 seconds timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -8589,7 +8603,7 @@ Resets the logging level for all loggers to "ERROR".</maml:para>
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
           <maml:name>NewPassword</maml:name>
           <maml:description>
-            <maml:para>Password for the user. If not provide you will be prompted for a password.</maml:para>
+            <maml:para>Password for the user. If not provided, you are prompted for a password.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
@@ -8668,7 +8682,7 @@ Resets the logging level for all loggers to "ERROR".</maml:para>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
         <maml:name>NewPassword</maml:name>
         <maml:description>
-          <maml:para>Password for the user. If not provide you will be prompted for a password.</maml:para>
+          <maml:para>Password for the user. If not provided, you are prompted for a password.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -8878,7 +8892,7 @@ Sets the password for user 'admin' to provided password on targeted Splunk insta
         <dev:remarks>
           <maml:para>Description
 -----------
-Sets the password for user 'admin' to 'P@ssw0rd!' on MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Sets the password for user 'admin' to 'P@ssw0rd!' on MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -8928,7 +8942,7 @@ Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the 
         <dev:remarks>
           <maml:para>Description
 -----------
-Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Sets the password for user 'admin' to 'P@ssw0rd!' for each Splunk server in the pipeline connecting on port 8089 with a 5 seconds timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -9435,7 +9449,7 @@ Test the targeted Splunk instance using the $SplunkDefaultConnectionObject setti
         <dev:remarks>
           <maml:para>Description
 -----------
-Test MySplunkInstance connecting on port 8089 with a 5sec timeout.</maml:para>
+Test MySplunkInstance connecting on port 8089 with a 5 seconds timeout.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -9485,7 +9499,7 @@ Test each Splunk server in the pipeline using the $SplunkDefaultConnectionObject
         <dev:remarks>
           <maml:para>Description
 -----------
-Test each Splunk server in the pipeline connecting on port 8089 with a 5sec timeout and using credentials provided.</maml:para>
+Test each Splunk server in the pipeline connecting on port 8089 with a 5 seconds timeout and using credentials provided.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -9513,7 +9527,7 @@ Test each Splunk server in the pipeline connecting on port 8089 with a 5sec time
     <command:details>
       <command:name>Write-SplunkMessage</command:name>
       <maml:description>
-        <maml:para>Writes a message to the specified splunk instance.</maml:para>
+        <maml:para>Writes a message to the specified Splunk instance.</maml:para>
       </maml:description>
       <maml:copyright>
         <maml:para />
@@ -9523,7 +9537,7 @@ Test each Splunk server in the pipeline connecting on port 8089 with a 5sec time
       <dev:version />
     </command:details>
     <maml:description>
-      <maml:para>Writes a message to the specified splunk instance.</maml:para>
+      <maml:para>Writes a message to the specified Splunk instance.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -9999,47 +10013,11 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
         <maml:introduction>
           <maml:para />
         </maml:introduction>
-        <dev:code>$licenseXml = @'</dev:code>
+        <dev:code>Add-SplunkLicenseFile -name 'my_license' -path licenses\enterprise.license</dev:code>
         <dev:remarks>
-          <maml:para>&lt;license&gt;
-   &lt;signature&gt;ORjrS0GsHtQ/SlxeVazPI/TnOUJtw2w7ItW0ni6ovwFAwhvI8Q5Gfzg2jsz0nBvDyDv9vUzehN7CRpxm9GsLyntGjKoZzq7Pi+RAU3HEOFGWNPexf5e3uMMt4PD/okxkLjwlO
-   VBxJaSd939cufIl1h0OsHcZ2jNye/pyqAjWY6qsP5f4ZR0a4uiuq20wo5VyWHI7T3YgRzfrQqjx9oN+Ad6UOKOvfkz7gzIA+cfGapZOI/R+J33WlYPb34S0ThToGQZc04q12PCPXn1L0zPBtchRUtl
-   gBq8HuRaNMjcmaqFxUcn0EzRpGzVOH313g41Fz8n8Q8ZylMMFir+tpuTn8Q==&lt;/signature&gt;
-   &lt;payload&gt;
-    &lt;type&gt;download-trial&lt;/type&gt;
-    &lt;group_id&gt;Trial&lt;/group_id&gt;
-    &lt;quota&gt;524288000&lt;/quota&gt;
-    &lt;max_violations&gt;5&lt;/max_violations&gt;
-    &lt;window_period&gt;30&lt;/window_period&gt;
-    &lt;creation_time&gt;1308038408&lt;/creation_time&gt;
-    &lt;expiration_time&gt;1313827208&lt;/expiration_time&gt;
-    &lt;label&gt;Splunk Enterprise Download Trial&lt;/label&gt;
-    &lt;features&gt;
-      &lt;feature&gt;Auth&lt;/feature&gt;
-      &lt;feature&gt;FwdData&lt;/feature&gt;
-      &lt;feature&gt;RcvData&lt;/feature&gt;
-      &lt;feature&gt;LocalSearch&lt;/feature&gt;
-      &lt;feature&gt;DistSearch&lt;/feature&gt;
-      &lt;feature&gt;RcvSearch&lt;/feature&gt;
-      &lt;feature&gt;ScheduledSearch&lt;/feature&gt;
-      &lt;feature&gt;Alerting&lt;/feature&gt;
-      &lt;feature&gt;DeployClient&lt;/feature&gt;
-      &lt;feature&gt;DeployServer&lt;/feature&gt;
-      &lt;feature&gt;SplunkWeb&lt;/feature&gt;
-      &lt;feature&gt;SigningProcessor&lt;/feature&gt;
-      &lt;feature&gt;SyslogOutputProcessor&lt;/feature&gt;
-      &lt;feature&gt;AllowDuplicateKeys&lt;/feature&gt;
-    &lt;/features&gt;
-    &lt;sourcetypes/&gt;
-    &lt;guid&gt;820378f3-bb7b-4bd2-998a-ab7defba4079&lt;/guid&gt;
-   &lt;/payload&gt;
-   &lt;/license&gt;
-   '@;
-   
-            Add-SplunkLicenseFile -name 'my_license' -payload $licenseXml
-            Description
-            -----------
-            Adds the license specified in the $licenseXml variable to the Splunk server specified in the current default connection settings.</maml:para>
+          <maml:para>Description
+-----------
+Adds the license located in the licenses\enterprise.license file to the Splunk server specified in the current default connection settings.</maml:para>
           <maml:para>
           </maml:para>
           <maml:para>
@@ -10058,7 +10036,7 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
     </command:examples>
     <maml:relatedLinks>
       <maml:navigationLink>
-        <maml:linkText>Add-SplunkLicenseFile</maml:linkText>
+        <maml:linkText>Remove-SplunkLicenseFile</maml:linkText>
         <maml:uri />
       </maml:navigationLink>
     </maml:relatedLinks>
@@ -10113,7 +10091,7 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
           <maml:name>Slave</maml:name>
           <maml:description>
-            <maml:para>One or more slaves to apply to the new license pool.</maml:para>
+            <maml:para>One or more slaves to apply to the new license pool, or '*' to accept all slaves.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">String[]</command:parameterValue>
         </command:parameter>
@@ -10210,7 +10188,7 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
         <maml:name>Slave</maml:name>
         <maml:description>
-          <maml:para>One or more slaves to apply to the new license pool.</maml:para>
+          <maml:para>One or more slaves to apply to the new license pool, or '*' to accept all slaves.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
         <dev:type>
@@ -10324,7 +10302,7 @@ Applies the Enterprise license group for the targeted Splunk instance using the 
         <maml:introduction>
           <maml:para />
         </maml:introduction>
-        <dev:code>Add-SplunkLicensePool -name 'Corporate IT' -description "License Pool for Corporate IT" -quota 500mb -stack 'enterprise'</dev:code>
+        <dev:code>Add-SplunkLicensePool -Name 'Corporate IT' -Description "License Pool for Corporate IT" -Quota 500mb -StackID 'enterprise'</dev:code>
         <dev:remarks>
           <maml:para>Description
 -----------
@@ -10347,7 +10325,7 @@ Creates a new license pool on the Enterprise license stack with a 500mb data quo
     </command:examples>
     <maml:relatedLinks>
       <maml:navigationLink>
-        <maml:linkText>Add-SplunkLicensePool</maml:linkText>
+        <maml:linkText>Remove-SplunkLicensePool</maml:linkText>
         <maml:uri />
       </maml:navigationLink>
     </maml:relatedLinks>
@@ -11520,4 +11498,374 @@ Retrieves the license master for the current default Splunk instance.</maml:para
       </maml:navigationLink>
     </maml:relatedLinks>
   </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>Set-SplunkLicensePool</command:name>
+      <maml:description>
+        <maml:para>Updates the specified license pool on the specified Splunk instance.</maml:para>
+      </maml:description>
+      <maml:copyright>
+        <maml:para />
+      </maml:copyright>
+      <command:verb>Set</command:verb>
+      <command:noun>SplunkLicensePool</command:noun>
+      <dev:version />
+    </command:details>
+    <maml:description>
+      <maml:para>Updates the specified license pool on the specified Splunk instance.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <command:name>Set-SplunkLicensePool</command:name>
+        <command:parameter require="true" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="1">
+          <maml:name>PoolName</maml:name>
+          <maml:description>
+            <maml:para>The name of the license pool to update.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="2">
+          <maml:name>ComputerName</maml:name>
+          <maml:description>
+            <maml:para>Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName.)</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
+          <maml:name>Port</maml:name>
+          <maml:description>
+            <maml:para>Port of the REST service (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port.)</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
+          <maml:name>Protocol</maml:name>
+          <maml:description>
+            <maml:para>Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol.)</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
+          <maml:name>Timeout</maml:name>
+          <maml:description>
+            <maml:para>How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout.)</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="6">
+          <maml:name>Quota</maml:name>
+          <maml:description>
+            <maml:para>The data quota for the license pool, specified in bytes.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int64</command:parameterValue>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
+          <maml:name>Description</maml:name>
+          <maml:description>
+            <maml:para>The description of the license pool.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="8">
+          <maml:name>Slaves</maml:name>
+          <maml:description>
+            <maml:para>One or more slaves to apply to the new license pool, or '*' to accept all slaves.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="9">
+          <maml:name>Credential</maml:name>
+          <maml:description>
+            <maml:para>Credential object with the user name and password used to access the REST API.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">PSCredential</command:parameterValue>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Append</maml:name>
+          <maml:description>
+            <maml:para>Specify to append the list of slaves in the Slaves parameter to the existing license pool slave list.</maml:para>
+          </maml:description>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Specify to bypass standard PowerShell confirmation processes.</maml:para>
+          </maml:description>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para></maml:para>
+          </maml:description>
+        </command:parameter>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para></maml:para>
+          </maml:description>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByPropertyName)" position="1">
+        <maml:name>PoolName</maml:name>
+        <maml:description>
+          <maml:para>The name of the license pool to update.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue, ByPropertyName)" position="2">
+        <maml:name>ComputerName</maml:name>
+        <maml:description>
+          <maml:para>Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName.)</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
+        <maml:name>Port</maml:name>
+        <maml:description>
+          <maml:para>Port of the REST service (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port.)</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
+        <maml:name>Protocol</maml:name>
+        <maml:description>
+          <maml:para>Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol.)</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
+        <maml:name>Timeout</maml:name>
+        <maml:description>
+          <maml:para>How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout.)</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="6">
+        <maml:name>Quota</maml:name>
+        <maml:description>
+          <maml:para>The data quota for the license pool, specified in bytes.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int64</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
+        <maml:name>Description</maml:name>
+        <maml:description>
+          <maml:para>The description of the license pool.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="8">
+        <maml:name>Slaves</maml:name>
+        <maml:description>
+          <maml:para>One or more slaves to apply to the new license pool, or '*' to accept all slaves.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="9">
+        <maml:name>Credential</maml:name>
+        <maml:description>
+          <maml:para>Credential object with the user name and password used to access the REST API.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>Append</maml:name>
+        <maml:description>
+          <maml:para>Specify to append the list of slaves in the Slaves parameter to the existing license pool slave list.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Specify to bypass standard PowerShell confirmation processes.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>WhatIf</maml:name>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>Confirm</maml:name>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name></maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>TODO Add Set-SplunkLicensePool inputType</maml:name>
+          <maml:uri />
+          <maml:description>
+            <maml:para />
+          </maml:description>
+        </dev:type>
+        <maml:description />
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>TODO Add Set-SplunkLicensePool returnType</maml:name>
+          <maml:uri />
+          <maml:description>
+            <maml:para />
+          </maml:description>
+        </dev:type>
+        <maml:description />
+      </command:returnValue>
+    </command:returnValues>
+    <command:terminatingErrors />
+    <command:nonTerminatingErrors />
+    <maml:alertSet>
+      <maml:title />
+      <maml:alert>
+        <maml:para />
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <maml:introduction>
+          <maml:para />
+        </maml:introduction>
+        <dev:code>Set-SplunkLicensePool -PoolName "CorporateITPool" -Quota 1.2gb</dev:code>
+        <dev:remarks>
+          <maml:para>Description
+-----------
+Updates data quota of the license pool "CorporateITPool" on the current default Splunk instance to 1.2 gigabytes.</maml:para>
+          <maml:para></maml:para>
+          <maml:para></maml:para>
+          <maml:para></maml:para>
+          <maml:para></maml:para>
+        </dev:remarks>
+        <command:commandLines>
+          <command:commandLine>
+            <command:commandText />
+          </command:commandLine>
+        </command:commandLines>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <maml:introduction>
+          <maml:para />
+        </maml:introduction>
+        <dev:code>Set-SplunkLicensePool -PoolName "CorporateITPool" -Slaves BuildServer,VBoxServer,CIServer</dev:code>
+        <dev:remarks>
+          <maml:para>Description
+-----------
+Changes the list of slaves for the "CorporateITPool" license pool on the current default Splunk instance.  The new list of slaves replaces any existing slave list for the license pool.</maml:para>
+          <maml:para></maml:para>
+          <maml:para></maml:para>
+          <maml:para></maml:para>
+          <maml:para></maml:para>
+        </dev:remarks>
+        <command:commandLines>
+          <command:commandLine>
+            <command:commandText />
+          </command:commandLine>
+        </command:commandLines>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 3 --------------------------</maml:title>
+        <maml:introduction>
+          <maml:para />
+        </maml:introduction>
+        <dev:code>Set-SplunkLicensePool -PoolName "CorporateITPool" -Slaves BuildServer,VBoxServer,CIServer -Append</dev:code>
+        <dev:remarks>
+          <maml:para>Description
+-----------
+Changes the list of slaves for the "CorporateITPool" license pool on the current default Splunk instance.  The new list of slaves is appended to any existing slave list for the license pool.</maml:para>
+          <maml:para></maml:para>
+          <maml:para></maml:para>
+          <maml:para></maml:para>
+          <maml:para></maml:para>
+        </dev:remarks>
+        <command:commandLines>
+          <command:commandLine>
+            <command:commandText />
+          </command:commandLine>
+        </command:commandLines>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Set-SplunkLicensePool</maml:linkText>
+        <maml:uri />
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>  
 </helpItems>
