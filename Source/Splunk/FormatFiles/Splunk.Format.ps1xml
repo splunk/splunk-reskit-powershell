@@ -306,13 +306,13 @@
                 <PropertyName>FilterType</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
+                <PropertyName>RestartSplunkd</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
                 <PropertyName>Whitelist</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Blacklist</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>RestartSplunkd</PropertyName>
               </TableColumnItem>
 			</TableColumnItems>
           </TableRowEntry>
