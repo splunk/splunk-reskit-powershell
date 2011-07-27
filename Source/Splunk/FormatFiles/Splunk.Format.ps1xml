@@ -3,9 +3,9 @@
   <ViewDefinitions>
   
     <View>
-      <Name>Splunk.SDK.Splunkd.Setting</Name>
+      <Name>Splunk.SDK.Splunkd</Name>
       <ViewSelectedBy>
-        <TypeName>Splunk.SDK.Splunkd.Setting</TypeName>
+        <TypeName>Splunk.SDK.Splunkd</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <AutoSize />
@@ -18,6 +18,7 @@
           <TableColumnHeader></TableColumnHeader>
 		  <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
@@ -26,25 +27,28 @@
                 <PropertyName>ComputerName</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>MgmtPort</PropertyName>
+                <PropertyName>OSName</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>HTTPPort</PropertyName>
+                <PropertyName>Version</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>MgmtPort</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>SessionTimeout</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>MinFreeSpace</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
                 <PropertyName>EnableWeb</PropertyName>
               </TableColumnItem>
-			  <TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>HTTPPort</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
                 <PropertyName>EnableWebSSL</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>Splunk_Home</PropertyName>
+                <PropertyName>GUID</PropertyName>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
