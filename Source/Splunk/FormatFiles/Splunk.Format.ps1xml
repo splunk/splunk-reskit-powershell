@@ -297,7 +297,7 @@
                 <PropertyName>ComputerName</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>Name</PropertyName>
+                <PropertyName>ServerClass</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Disabled</PropertyName>
