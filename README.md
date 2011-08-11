@@ -43,12 +43,12 @@ For a gentle introduction to the Splunk product and some of its capabilities:
 
 ## Community
 
-* Email: Stay connected with other developers building on Splunk: **COMING SOON**
+* Email: Stay connected with other developers building on Splunk: devinfo@splunk.com
 * Issues: https://github.com/splunk/splunk-reskit-powershell/issues
 * Answers: Check out this tag on Splunk answers for:  
     http://splunk-base.splunk.com/tags/powershell/
 * Blog:  http://blogs.splunk.com/dev/
-* Twitter: **COMING SOON**
+* Twitter: [@splunkdev](http://twitter.com/splunkdev)
 
 ### How to contribute
 
