@@ -12,6 +12,11 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+function global:new-guid()
+{
+	return [Guid]::NewGuid().ToString('N');
+}
+
 function global:reset-connection( $fixture )
 {
 	Write-Debug 'creating default splunk object using connect-splunk';
@@ -76,10 +81,16 @@ function global:verify-results
 			return $false;
 		}
 		
+		Write-Verbose "expected fields: $fields"
+		
 		$local:resultFields = $results | Get-Member -membertype properties | foreach{ $_.name };
 		
-		if( $fields | where{ $local:resultFields -notcontains $_ } )
+		Write-Verbose "actual fields: $local:resultFields"
+		
+		$missing = $fields | where{ $local:resultFields -notcontains $_ };
+		if( $missing )
 		{
+			Write-Verbose "Missing Fields: $missing";
 			return $false;
 		}
 		
