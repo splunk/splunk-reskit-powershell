@@ -29,7 +29,7 @@ Describe "enable-splunkIndex" {
 		write-verbose "Result: $result"
 		[bool]-not($result.disabled);
 	}
-return
+
 	It "can enable enabled index" {
 		$name = (new-guid)
 		$result = new-splunkIndex -Name $name
@@ -62,7 +62,6 @@ Describe "disable-splunkIndex" {
 	}
 }
 
-return;
 Describe "set-splunkIndex" {
 
 	It "can update named index" {
