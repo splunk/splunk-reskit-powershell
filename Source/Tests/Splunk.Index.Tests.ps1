@@ -14,6 +14,55 @@
 
 param( $fixture )
 
+Describe "enable-splunkIndex" {
+
+	It "can enable disabled index" {
+		$name = (new-guid)
+		$result = new-splunkIndex -Name $name
+		$result = disable-splunkIndex -Name $name;				
+		if( ! [bool]($result.disabled) )
+		{
+			throw "index is not disabled"
+		}
+		
+		$result = enable-splunkIndex -Name $name;
+		write-verbose "Result: $result"
+		[bool]-not($result.disabled);
+	}
+return
+	It "can enable enabled index" {
+		$name = (new-guid)
+		$result = new-splunkIndex -Name $name
+				
+		$result = enable-splunkIndex -Name $name;
+		write-verbose "Result: $result"
+		[bool]-not($result.disabled);
+	}
+}
+
+Describe "disable-splunkIndex" {
+
+	It "can disable enabled index" {
+		$name = (new-guid)
+		$result = new-splunkIndex -Name $name
+				
+		$result = disable-splunkIndex -Name $name;
+		write-verbose "Result: $result"
+		[bool]($result.disabled);
+	}
+
+	It "can disable disabled index" {
+		$name = (new-guid)
+		$result = new-splunkIndex -Name $name				
+		$result = disable-splunkIndex -Name $name;
+		
+		$result = disable-splunkIndex -Name $name;
+		write-verbose "Result: $result"
+		[bool]($result.disabled);
+	}
+}
+
+return;
 Describe "set-splunkIndex" {
 
 	It "can update named index" {
@@ -24,7 +73,7 @@ Describe "set-splunkIndex" {
 		( ( $result2.name -eq $result.name ) -and ( $result2.maxWarmDBCount -eq 500 ) -and ( $result.maxWarmDBCount -ne 500 ) );
 	}
 }
-return;
+
 Describe "new-splunkIndex" {
 
 	It "can create named index" {
@@ -35,7 +84,7 @@ Describe "new-splunkIndex" {
 	}
 }
 
-return;
+
 Describe "get-splunkIndex" {
 
 	$script:fields = data {

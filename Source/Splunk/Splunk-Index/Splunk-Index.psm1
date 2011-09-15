@@ -620,6 +620,9 @@ function Set-SplunkIndex
 	{          
 		Write-Verbose " [Set-SplunkIndex] :: Parameters"
         Write-Verbose " [Set-SplunkIndex] ::  - ParameterSet = $ParamSetName"
+		$PSBoundParameters.Keys | foreach{
+			Write-Verbose " [Set-SplunkIndex] ::  - $_ = $($PSBoundParameters[$_])"		
+		}
 		$Arguments = @{};
 		$nc = 'ComputerName','Port','Protocol','Timeout','Credential';
 		$fields = data {
@@ -757,6 +760,207 @@ function Set-SplunkIndex
 		Write-Verbose " [Set-SplunkIndex] :: =========    End   ========="
 	}
 } # Set-SplunkIndex
+
+#endregion
+
+#region Disable-SplunkIndex
+
+function Disable-SplunkIndex
+{
+	[CmdletBinding(DefaultParameterSetName='byFilter', SupportsShouldProcess=$true)]
+    Param(
+
+		[Parameter(Position=0,ParameterSetName='byFilter')]
+		#Regular expression used to match index name
+		[string]$Filter = '.*',
+		
+		[Parameter(Position=0,ParameterSetName='byName',Mandatory=$true)]
+		#Boolean predicate to filter results
+		[string]$Name,
+		
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = ( get-splunkconnectionobject ).Port,
+        
+        [Parameter()]
+        [ValidateSet("http", "https")]
+        [STRING]$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = ( get-splunkconnectionobject ).Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = ( get-splunkconnectionobject ).Credential,
+		
+		[Parameter()]
+		[Switch] $Force
+        
+    )
+	Begin 
+	{
+	        Write-Verbose " [Get-SplunkIndex] :: Starting..."	        
+	}
+	Process
+	{          
+		Write-Verbose " [Disable-SplunkIndex] :: Parameters"
+        Write-Verbose " [Disable-SplunkIndex] ::  - ParameterSet = $ParamSetName"
+		$PSBoundParameters.Keys | foreach{
+			Write-Verbose " [Disable-SplunkIndex] ::  - $_ = $($PSBoundParameters[$_])"		
+		}
+
+		try
+		{
+			$items = get-splunkIndex @PSBoundParameters;
+			$items | ? { -not $_.disabled } | foreach {
+				if( $force -or $pscmdlet.ShouldProcess( $ComputerName, "Disabling Splunk index named $($_.Name)" ) )
+				{
+					Write-Verbose " [Disable-SplunkIndex] :: Setting up Invoke-APIRequest parameters"
+					$InvokeAPIParams = @{
+						ComputerName = $ComputerName
+						Port         = $Port
+						Protocol     = $Protocol
+						Timeout      = $Timeout
+						Credential   = $Credential
+						Endpoint 	 = "/services/data/indexes/$($_.Name)/disable"
+						Verbose      = $VerbosePreference -eq "Continue"
+					}
+			        	
+					Write-Verbose " [Disable-SplunkIndex] :: Calling Invoke-SplunkAPIRequest $InvokeAPIParams"
+					try
+					{
+					    [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -RequestType POST -Arguments @{}
+			        }
+					catch
+					{
+						Write-Verbose " [Disable-SplunkIndex] :: Invoke-SplunkAPIRequest threw an exception: $_"
+			            Write-Error $_;
+
+						return;
+					}
+				}
+			}
+			
+			get-splunkIndex @PSBoundParameters;							
+		}
+		catch
+		{
+			Write-Verbose " [Disable-SplunkIndex] :: Disable-SplunkIndex threw an exception: $_"
+            Write-Error $_
+		}
+	}
+	End
+	{
+		Write-Verbose " [Disable-SplunkIndex] :: =========    End   ========="
+	}
+} # Disable-SplunkIndex
+
+#endregion
+
+#region Enable-SplunkIndex
+
+function Enable-SplunkIndex
+{
+	[CmdletBinding(DefaultParameterSetName='byFilter', SupportsShouldProcess=$true)]
+    Param(
+
+		[Parameter(Position=0,ParameterSetName='byFilter')]
+		#Regular expression used to match index name
+		[string]$Filter = '.*',
+		
+		[Parameter(Position=0,ParameterSetName='byName',Mandatory=$true)]
+		#Boolean predicate to filter results
+		[string]$Name,
+		
+        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+        
+        [Parameter()]
+        [int]$Port            = ( get-splunkconnectionobject ).Port,
+        
+        [Parameter()]
+        [ValidateSet("http", "https")]
+        [STRING]$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        
+        [Parameter()]
+        [int]$Timeout         = ( get-splunkconnectionobject ).Timeout,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]$Credential = ( get-splunkconnectionobject ).Credential,
+		
+		[Parameter()]
+		[Switch] $Force
+        
+    )
+	Begin 
+	{
+	        Write-Verbose " [Get-SplunkIndex] :: Starting..."	        
+	}
+	Process
+	{          
+		Write-Verbose " [Enable-SplunkIndex] :: Parameters"
+        Write-Verbose " [Enable-SplunkIndex] ::  - ParameterSet = $ParamSetName"
+		$PSBoundParameters.Keys | foreach{
+			Write-Verbose " [Enable-SplunkIndex] ::  - $_ = $($PSBoundParameters[$_])"		
+		}
+
+		try
+		{
+			$items = get-splunkIndex @PSBoundParameters;
+			$items | where { 1 -eq $_.disabled } | foreach {
+				
+				if( $force -or $pscmdlet.ShouldProcess( $ComputerName, "Enabling Splunk index named $($_.Name)" ) )
+				{
+					Write-Verbose " [Enable-SplunkIndex] :: Setting up Invoke-APIRequest parameters"
+					$InvokeAPIParams = @{
+						ComputerName = $ComputerName
+						Port         = $Port
+						Protocol     = $Protocol
+						Timeout      = $Timeout
+						Credential   = $Credential
+						Endpoint 	 = "/services/data/indexes/$($_.Name)/enable"
+						Verbose      = $VerbosePreference -eq "Continue"
+					}
+			        	
+					Write-Verbose " [Enable-SplunkIndex] :: Calling Invoke-SplunkAPIRequest $InvokeAPIParams"
+					try
+					{
+					    [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -RequestType POST -Arguments @{}
+			        }
+					catch
+					{
+						Write-Verbose " [Enable-SplunkIndex] :: Invoke-SplunkAPIRequest threw an exception: $_"
+			            Write-Error $_;
+
+						return;
+					}
+				}
+				
+				$getIndexParams = @{
+					ComputerName = $ComputerName
+					Port         = $Port
+					Protocol     = $Protocol
+					Timeout      = $Timeout
+					Credential   = $Credential
+					name		 = $_.Name
+				}
+				# get-splunkIndex @getIndexParams
+			}
+			
+			get-splunkIndex @PSBoundParameters;
+		}
+		catch
+		{
+			Write-Verbose " [Enable-SplunkIndex] :: Enable-SplunkIndex threw an exception: $_"
+            Write-Error $_
+		}
+	}
+	End
+	{
+		Write-Verbose " [Enable-SplunkIndex] :: =========    End   ========="
+	}
+} # Enable-SplunkIndex
 
 #endregion
 
