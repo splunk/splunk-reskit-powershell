@@ -35,7 +35,19 @@ Describe "remove-SplunkApplication" {
 		[bool]-not(get-splunkApplication -filter $Name) | verify-all;
 	}
 }
-return;
+
+Describe "set-SplunkApplication" {
+
+	It "can update named application" {
+		$name = (new-guid)
+		$result = new-SplunkApplication -Name $name -timeout 30000
+		$result2 = set-SplunkApplication -Name $name -description 'desc123'
+		write-verbose "Result: $result; set Result: $result2"
+		( ( $result2.name -eq $result.name ) -and ( $result2.description -eq 'desc123' ) -and ( $result.description -ne 'desc123' ) );
+	}
+}
+
+
 Describe "get-SplunkApplication" {
 
 	$script:fields = data {
@@ -101,67 +113,4 @@ Describe "get-SplunkApplication" {
 		$result2[-1].ServiceEndpoint, $result1[0].ServiceEndpoint | Write-Verbose;
 	}
 }
-
-return;
-
-Describe "enable-SplunkApplication" {
-
-	It "can enable disabled index" {
-		$name = (new-guid)
-		$result = new-SplunkApplication -Name $name
-		$result = disable-SplunkApplication -Name $name;				
-		if( ! [bool]($result.disabled) )
-		{
-			throw "index is not disabled"
-		}
-		
-		$result = enable-SplunkApplication -Name $name;
-		write-verbose "Result: $result"
-		[bool]-not($result.disabled);
-	}
-
-	It "can enable enabled index" {
-		$name = (new-guid)
-		$result = new-SplunkApplication -Name $name
-				
-		$result = enable-SplunkApplication -Name $name;
-		write-verbose "Result: $result"
-		[bool]-not($result.disabled);
-	}
-}
-
-Describe "disable-SplunkApplication" {
-
-	It "can disable enabled index" {
-		$name = (new-guid)
-		$result = new-SplunkApplication -Name $name
-				
-		$result = disable-SplunkApplication -Name $name;
-		write-verbose "Result: $result"
-		[bool]($result.disabled);
-	}
-
-	It "can disable disabled index" {
-		$name = (new-guid)
-		$result = new-SplunkApplication -Name $name				
-		$result = disable-SplunkApplication -Name $name;
-		
-		$result = disable-SplunkApplication -Name $name;
-		write-verbose "Result: $result"
-		[bool]($result.disabled);
-	}
-}
-
-Describe "set-SplunkApplication" {
-
-	It "can update named index" {
-		$name = (new-guid)
-		$result = new-SplunkApplication -Name $name
-		$result2 = set-SplunkApplication -Name $name -maxWarmDBCount 500
-		write-verbose "Result: $result; set Result: $result2"
-		( ( $result2.name -eq $result.name ) -and ( $result2.maxWarmDBCount -eq 500 ) -and ( $result.maxWarmDBCount -ne 500 ) );
-	}
-}
-
-
 
