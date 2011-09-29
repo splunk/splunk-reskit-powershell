@@ -279,4 +279,4 @@ New-Variable -Name SplunkDefaultConnectionObject -Value $null -Scope Script
 
 # code to load scripts
 Get-ChildItem $SplunkModuleHome *.ps1xml -Recurse | foreach-object{ Update-FormatData $_.fullname -ea 0 } 
-Get-ChildItem $SplunkModuleHome -Filter Splunk-*  | where{$_.PSisContainer} | foreach{Import-Module $_.FullName}
+Get-ChildItem $SplunkModuleHome -Filter Splunk-*  | where{$_.PSisContainer} | foreach{Import-Module $_.FullName }
