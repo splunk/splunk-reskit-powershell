@@ -14,15 +14,6 @@
 
 param( $fixture )
 
-Describe "new-SplunkInputWinPerfmon" {
-
-	It "creates input" {
-		$result = new-SplunkInputWinPerfMon -name 'processes' -interval 30 -object 'process' -counters 'elapsed time' -instances *
-		Write-Verbose "Result: $result"
-		[bool]$result | verify-all;
-	}
-}
-
 Describe "set-SplunkInputWinPerfmon" {
 
 	It "updates input by name" {
@@ -31,12 +22,20 @@ Describe "set-SplunkInputWinPerfmon" {
 		$result = set-SplunkInputWinPerfMon -name $name -interval 30
 		remove-splunkInputWinPerfMon -name $name -force;
 
-		Write-Host $prev;
-		Write-Host $result;
 		[bool] $prev,[bool]$result,( $prev.interval -ne $result.interval )	| verify-all;
 	}
 }
-return;
+
+Describe "new-SplunkInputWinPerfmon" {
+
+	It "creates input" {
+		$name = new-guid;
+		$result = new-SplunkInputWinPerfMon -name $name -interval 30 -object 'process' -counters 'elapsed time' -instances *
+		Write-Verbose "Result: $result"
+		[bool]$result | verify-all;
+	}
+}
+
 Describe "get-SplunkInputRegistry" {
 
 	It "fetches nothing for empty search" {

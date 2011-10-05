@@ -14,8 +14,8 @@
 
 #region Inputs
 
-#region Get-SplunkInput
-function Get-SplunkInput
+#region Get-InputProxy
+function Get-InputProxy
 {
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
@@ -184,9 +184,9 @@ function Get-SplunkInput
 												
 	                    switch ($Entry.content.dict.key)
 	                    {
-							{ $ignoreParams -contains $_.name }         { Write-Debug "ignoring key $_"; break; }
-	                        { $booleanParams -contains $_.name }        { Write-Debug "taking boolean action on key $_"; $Myobj.Add( $_.Name, [bool]([int]$_.'#text') ); break;}													
-	                        { $intParams -contains $_.name }            { Write-Debug "taking integer action on key $_"; $Myobj.Add( $_.Name, ([int]$_.'#text') ); break; }
+							{ $ignoreParams -contains $_.name }         { Write-Debug "ignoring key $_"; continue; }
+	                        { $booleanParams -contains $_.name }        { Write-Debug "taking boolean action on key $_"; $Myobj.Add( $_.Name, [bool]([int]$_.'#text') ); continue;}													
+	                        { $intParams -contains $_.name }            { Write-Debug "taking integer action on key $_"; $Myobj.Add( $_.Name, ([int]$_.'#text') ); continue; }
 	                        Default                                     { 
 																			Write-Debug "taking default action on key $_";
 																			
@@ -194,7 +194,11 @@ function Get-SplunkInput
 																			if( $_.list -and $_.list.item )
 																			{
 																				Write-Debug "taking array action on key $_";
-																				$Myobj.Add($_.Name,$_.list.item); 
+																				[string[]]$i = $_.list.item | %{ 
+																					write-debug "item: $_"
+																					$_;
+																				}
+																				$Myobj.Add($_.Name,$i); 
 																			}
 																			# assume single string value
 																			else
@@ -202,7 +206,7 @@ function Get-SplunkInput
 																				Write-Debug "taking default string action on key $_";
 																				$Myobj.Add($_.Name,$_.'#text'); 
 																			}
-																			break; 
+																			continue; 
 																		}
 	                    }
 	                    	                    
@@ -219,7 +223,7 @@ function Get-SplunkInput
 	        }
 	        catch
 	        {
-	            Write-Verbose " [$CurrentFunctionName] :: Get-SplunkInput threw an exception: $_"
+	            Write-Verbose " [$CurrentFunctionName] :: Get-InputProxy threw an exception: $_"
 	            Write-Error $_
 	        }
 	    
@@ -229,11 +233,11 @@ function Get-SplunkInput
 	        Write-Verbose " [$CurrentFunctionName] :: =========    End   ========="	    
 	}
 }
-#endregion Get-SplunkInput
+#endregion Get-InputProxy
 
 #region Remove-SplunkInput
 
-function Remove-SplunkInput
+function Remove-InputProxy
 {	
 	[Cmdletbinding(SupportsShouldProcess=$true,ConfirmImpact='high')]
     Param(
@@ -309,7 +313,7 @@ function Remove-SplunkInput
 					inputType	 = $inputType
 					outputFields = $outputFields
                 }
-        $ExistingApplication = Get-SplunkInput @InvokeAPIParams -erroraction 'silentlycontinue';
+        $ExistingApplication = Get-InputProxy @InvokeAPIParams -erroraction 'silentlycontinue';
         
         if( -not $ExistingApplication )
         {
@@ -345,12 +349,12 @@ function Remove-SplunkInput
 	{
 		Write-Verbose " [$CurrentFunctionName] :: =========    End   ========="
 	}
-} # Remove-SplunkInput
+} # Remove-InputProxy
 
 #endregion
 
-#region set-slunkinput
-function Set-SplunkInput
+#region Set-InputProxy
+function Set-InputProxy
 {
 	[Cmdletbinding(SupportsShouldProcess=$true)]
     Param(
@@ -401,7 +405,7 @@ function Set-SplunkInput
 		}
 		$Arguments = @{};		
 		
-		Write-Verbose " [Set-SplunkInput] :: checking for existance of input type [$inputType] with name [$name]"
+		Write-Verbose " [$CurrentFunctionName] :: checking for existance of input type [$inputType] with name [$name]"
         $InvokeAPIParams = @{
         			ComputerName = $ComputerName
         			Port         = $Port
@@ -412,7 +416,7 @@ function Set-SplunkInput
 					inputType	 = $inputType
 					outputFields = $outputFields
                 }
-        $ExistingInput = Get-SplunkInput @InvokeAPIParams -erroraction 'silentlycontinue';
+        $ExistingInput = Get-InputProxy @InvokeAPIParams -erroraction 'silentlycontinue';
         
         if(-not $ExistingInput)
         {
@@ -482,7 +486,7 @@ function Set-SplunkInput
 			Write-Verbose " [$CurrentFunctionName] :: Checking for valid results"
 			if($Results -and ($Results -is [System.Xml.XmlDocument]))
 			{
-				Write-Verbose " [Set-SplunkInput] :: Fetching index $name"
+				Write-Verbose " [Set-InputProxy] :: Fetching index $name"
                 $InvokeAPIParams = @{
         			ComputerName = $ComputerName
         			Port         = $Port
@@ -493,7 +497,7 @@ function Set-SplunkInput
 					inputType	 = $InputType
 					outputFields = $outputFields
                 }
-                Get-SplunkInput @InvokeAPIParams 
+                Get-InputProxy @InvokeAPIParams 
 			}
 			else
 			{
@@ -502,7 +506,7 @@ function Set-SplunkInput
 		}
 		catch
 		{
-			Write-Verbose " [$CurrentFunctionName] :: Set-SplunkInput threw an exception: $_"
+			Write-Verbose " [$CurrentFunctionName] :: Set-InputProxy threw an exception: $_"
             Write-Error $_
 		}
 	}
@@ -510,13 +514,13 @@ function Set-SplunkInput
 	{
 		Write-Verbose " [$CurrentFunctionName] :: =========    End   ========="
 	}
-} # Set-SplunkInput
+} # Set-InputProxy
 
-#endregion set-slunkinput
+#endregion Set-InputProxy
 
-#region New-SplunkInput
+#region New-InputProxy
 
-function New-SplunkInput
+function New-InputProxy
 {
 	[Cmdletbinding(SupportsShouldProcess=$true)]
     Param(
@@ -563,7 +567,7 @@ function New-SplunkInput
 		$Arguments = @{};
 		
 		$PSBoundParameters.Keys | foreach{
-			Write-Verbose " [New-SplunkInput] ::  - $_ = $($PSBoundParameters[$_])"		
+			Write-Verbose " [$CurrentFunctionName] ::  - $_ = $($PSBoundParameters[$_])"		
 			if( $nc -notcontains $_ )
 			{
 				$arguments.Add( $_, $PSBoundParameters[$_] );
@@ -588,7 +592,7 @@ function New-SplunkInput
 					inputType	 = $InputType
 					outputFields = $outputFields
                 }
-        $ExistingInput = Get-SplunkInput @InvokeAPIParams -erroraction 'silentlycontinue';
+        $ExistingInput = Get-InputProxy @InvokeAPIParams -erroraction 'silentlycontinue';
         
         if($ExistingInput)
         {
@@ -654,7 +658,7 @@ function New-SplunkInput
 					inputType	 = $InputType
 					outputFields = $outputFields
                 }
-                Get-SplunkInput @InvokeAPIParams
+                Get-InputProxy @InvokeAPIParams
 			}
 			else
 			{
@@ -663,7 +667,7 @@ function New-SplunkInput
 		}
 		catch
 		{
-			Write-Verbose " [$CurrentFunctionName] :: New-SplunkInput threw an exception: $_"
+			Write-Verbose " [$CurrentFunctionName] :: New-InputProxy threw an exception: $_"
             Write-Error $_
 		}
 	}
@@ -671,13 +675,82 @@ function New-SplunkInput
 	{
 		Write-Verbose " [$CurrentFunctionName] :: =========    End   ========="
 	}
-} # New-SplunkInput
+} # New-InputProxy
 
 #endregion
 #region input parameter table
 $inputs = @{
 
 'Ad' = @{
+sethelp = @'
+<#
+    .Synopsis 
+        Modifies a given AD monitoring stanza.
+        
+    .Description
+        Modifies a given AD monitoring stanza.
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+gethelp = @'
+<#
+    .Synopsis 
+        Gets current AD monitoring configuration.
+        
+    .Description
+        Gets current AD monitoring configuration.
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+newhelp = @'
+<#
+    .Synopsis 
+        Creates new or modifies existing performance monitoring settings.
+        
+    .Description
+        Creates new or modifies existing performance monitoring settings.
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
 	setParameters = @(
 		@{
 			powerShellName='monitorSubtree';
@@ -773,6 +846,56 @@ $inputs = @{
 };
 
 'win-event-log-collections' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Creates of modifies existing event log collection settings.  You can configure both native and WMI collection with this endpoint.
+
+        
+    .Description
+        Creates of modifies existing event log collection settings.  You can configure both native and WMI collection with this endpoint.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+sethelp = @'
+<#
+    .Synopsis 
+        Modifies existing event log collection.
+
+        
+    .Description
+        Modifies existing event log collection.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
 	newParameters = @(
 		@{
 			powerShellName='lookuphost';
@@ -852,6 +975,56 @@ $inputs = @{
 };
 
 'Monitor' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Create a new file or directory monitor input.
+
+        
+    .Description
+        Create a new file or directory monitor input.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+sethelp = @'
+<#
+    .Synopsis 
+        Update properties of the named monitor input.
+
+        
+    .Description
+        Update properties of the named monitor input.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
 	newParameters = @(
 		@{
 			powerShellName='name';
@@ -1108,6 +1281,34 @@ $inputs = @{
 };
 
 'OneShot' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Queues a file for immediate indexing by the file input subsystem. The file must be locally accessible from the server.
+This endpoint can handle any single file: plain, compressed or archive. The file is indexed in full, regardless of whether it has been indexed before.
+
+        
+    .Description
+        Queues a file for immediate indexing by the file input subsystem. The file must be locally accessible from the server.
+This endpoint can handle any single file: plain, compressed or archive. The file is indexed in full, regardless of whether it has been indexed before.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+
 	newParameters = @(
 		@{
 			powerShellName='name';
@@ -1171,6 +1372,57 @@ $inputs = @{
 };
 
 'win-perfmon' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Creates new or modifies existing performance monitoring collection settings.
+
+        
+    .Description
+        Creates new or modifies existing performance monitoring collection settings.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+
+sethelp = @'
+<#
+    .Synopsis 
+        Modifies existing monitoring stanza
+
+        
+    .Description
+        Modifies existing monitoring stanza
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
 	newParameters = @(
 		@{
 			powerShellName='interval';
@@ -1283,6 +1535,56 @@ $inputs = @{
 };
 
 'Registry' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Creates new or modifies existing registry monitoring settings.
+
+        
+    .Description
+        Creates new or modifies existing registry monitoring settings.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+sethelp = @'
+<#
+    .Synopsis 
+        Modifies given registry monitoring stanza.
+
+        
+    .Description
+        Modifies given registry monitoring stanza.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
 
 	newParameters = @(
 		@{
@@ -1412,6 +1714,56 @@ $inputs = @{
 };
 
 'Script' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Configures settings for new scripted inputs.
+
+        
+    .Description
+        Configures settings for new scripted inputs.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+sethelp = @'
+<#
+    .Synopsis 
+        Configures settings for scripted input specified by {name}.
+
+        
+    .Description
+        Configures settings for scripted input specified by {name}.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
 	newParameters = @(
 		@{
 			powerShellName='interval';
@@ -1539,6 +1891,56 @@ $inputs = @{
 };
 
 'TCP/Cooked' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Creates a new container for managing cooked data.
+
+        
+    .Description
+        Creates a new container for managing cooked data.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+sethelp = @'
+<#
+    .Synopsis 
+        Updates the container for managaing cooked data.
+
+        
+    .Description
+        Updates the container for managaing cooked data.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
 
 	newParameters = @(
 		@{
@@ -1636,6 +2038,57 @@ $inputs = @{
 };
 
 'TCP/Raw' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Creates a new data input for accepting raw TCP data.
+
+        
+    .Description
+        Creates a new data input for accepting raw TCP data.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+sethelp = @'
+<#
+    .Synopsis 
+        Updates the container for managing raw data.
+
+        
+    .Description
+        Updates the container for managing raw data.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+
 	newParameters = @(
 		@{
 			powerShellName='name';
@@ -1796,6 +2249,57 @@ $inputs = @{
 };
 
 'UDP' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Create a new UDP data input.
+
+        
+    .Description
+        Create a new UDP data input.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+
+sethelp = @'
+<#
+    .Synopsis 
+        Edit properties of the named UDP data input.
+
+        
+    .Description
+        Edit properties of the named UDP data input.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
 	newParameters = @(
 		@{
 			powerShellName='name';
@@ -1940,6 +2444,57 @@ $inputs = @{
 };
 
 'win-wmi-collections' = @{
+newhelp = @'
+<#
+    .Synopsis 
+        Creates of modifies existing WMI collection settings.
+
+        
+    .Description
+        Creates of modifies existing WMI collection settings.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
+
+sethelp = @'
+<#
+    .Synopsis 
+        Updates existing WMI collection settings.
+
+        
+    .Description
+        Updates existing WMI collection settings.
+
+        
+    .Example
+
+    .Inputs
+        This function does not accept pipeline input.
+        
+    .Outputs
+        This function does not output data to the pipeline.
+        
+    .Notes
+        NAME:      {{NAME}} 
+	    AUTHOR:    Splunk\bshell
+	    Website:   www.splunk.com
+	    #Requires -Version 2.0
+#>
+'@
 	newParameters = @(
 		@{
 			powerShellName='classes';
@@ -2099,11 +2654,11 @@ $inputs | select -ExpandProperty keys | foreach {
 	{
 		{ $_.Name -eq 'Number' } { 
 			$integerFields = $_.group | select -ExpandProperty name; 
-			break; 
+			continue; 
 		}
 		{ $_.Name -eq 'Boolean' } { 
 			$booleanFields = $_.group | select -ExpandProperty name; 
-			break; 
+			continue; 
 		}
 		default {}
 	}		
@@ -2111,6 +2666,22 @@ $inputs | select -ExpandProperty keys | foreach {
 @"
 	function Get-SplunkInput$functionTag
 	{
+	<#
+        .Synopsis 
+            Obtains the specified Splunk input.
+            
+        .Description
+            Obtains the specified Splunk input.
+            
+		.OUTPUTS
+            This function does not produce pipeline output.
+            
+        .Notes
+	        NAME:      Get-SplunkInput$functionTag
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter()]
@@ -2130,7 +2701,7 @@ $inputs | select -ExpandProperty keys | foreach {
 		[string]`$Filter = '.*',
 		
 		[Parameter(Position=0,ParameterSetName='byName',Mandatory=`$true)]
-		#Boolean predicate to filter results
+		#The name of the input to retrieve
 		[string]`$Name,
 		
 		[Parameter()]
@@ -2147,28 +2718,38 @@ $inputs | select -ExpandProperty keys | foreach {
 		# Field to sort by.
 		[string]`$SortKey,
 		
-        [Parameter(ValueFromPipelineByPropertyName=`$true,ValueFromPipeline=`$true)]
-        [String]`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+                [Parameter(ValueFromPipelineByPropertyName=`$true,ValueFromPipeline=`$true)]
+        [String]
+        # Name of the Splunk instance to get the settings for (Default is ( get-splunkconnectionobject ).ComputerName.)
+		`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
-        [int]`$Port            = ( get-splunkconnectionobject ).Port,
+        [int]
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port.)
+		`$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
         [ValidateSet("http", "https")]
-        [STRING]`$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        [STRING]
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol.)
+		`$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
-        [int]`$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        [int]
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout.)	
+		`$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]`$Credential = ( get-splunkconnectionobject ).Credential        
+        [System.Management.Automation.PSCredential]
+        # Credential object with the user name and password used to access the REST API.	
+		`$Credential = ( get-splunkconnectionobject ).Credential        
     )
 	Begin 
 	{
 	}
 	Process 
 	{
-		Get-SplunkInput @PSBoundParameters -InputType $inputType -OutputFields @{
+		Get-InputProxy @PSBoundParameters -InputType $inputType -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
@@ -2195,11 +2776,11 @@ $inputs | select -ExpandProperty keys | foreach {
 	{
 		{ $_.Name -eq 'Number' } { 
 			$integerFields = $_.group | select -ExpandProperty name; 
-			break; 
+			continue; 
 		}
 		{ $_.Name -eq 'Boolean' } { 
 			$booleanFields = $_.group | select -ExpandProperty name; 
-			break; 
+			continue; 
 		}
 		default {}
 	}		
@@ -2207,10 +2788,27 @@ $inputs | select -ExpandProperty keys | foreach {
 @"
 function Remove-SplunkInput$functionTag
 {
+	<#
+        .Synopsis 
+            Removes the specified Splunk input.
+            
+        .Description
+            Removes the specified Splunk input.
+            
+		.OUTPUTS
+            This function does not produce pipeline output.
+            
+        .Notes
+	        NAME:      Remove-SplunkInput$functionTag
+	        AUTHOR:    Splunk\bshell
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter(ValueFromPipelineByPropertyName=`$true,Mandatory=`$true)]
-		#Boolean predicate to filter results
+		# The name of the input to remove.
 		[string]`$Name,
 		
 		[Parameter()]
@@ -2218,27 +2816,38 @@ function Remove-SplunkInput$functionTag
 		[switch]`$Force,
 		
         [Parameter(ValueFromPipelineByPropertyName=`$true,ValueFromPipeline=`$true)]
-        [String]`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+        [String]
+        # Name of the Splunk instance to get the settings for (Default is ( get-splunkconnectionobject ).ComputerName.)
+		`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
-        [int]`$Port            = ( get-splunkconnectionobject ).Port,
+        [int]
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port.)
+		`$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
         [ValidateSet("http", "https")]
-        [STRING]`$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        [STRING]
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol.)
+		`$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
-        [int]`$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        [int]
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout.)	
+		`$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]`$Credential = ( get-splunkconnectionobject ).Credential        
+        [System.Management.Automation.PSCredential]
+        # Credential object with the user name and password used to access the REST API.	
+		`$Credential = ( get-splunkconnectionobject ).Credential        
+
     )
 	Begin 
 	{
 	}
 	Process 
 	{
-		Remove-SplunkInput @PSBoundParameters -InputType $inputType -OutputFields @{
+		Remove-InputProxy @PSBoundParameters -InputType $inputType -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
@@ -2256,7 +2865,8 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].setParameters } | fo
 	
 	$inputType = $_;
 	$functionTag = ( $inputType -split '[-/]' | foreach { $_[0].toString().ToUpper() + ($_[1..($_.length-1)] -join '') } ) -join '';
-	
+	$functionName = "Set-SplunkInput$functionTag"
+	$help = $inputs[$_].sethelp -replace '{{NAME}}',$functionName 
 	$newp = $inputs[$_].newParameters
 	$p = $newp | foreach { new-object psobject -prop $_ } | group type;
 	
@@ -2266,11 +2876,11 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].setParameters } | fo
 	{
 		{ $_.Name -eq 'Number' } { 
 			$integerFields = $_.group | select -ExpandProperty name; 
-			break; 
+			continue; 
 		}
 		{ $_.Name -eq 'Boolean' } { 
 			$booleanFields = $_.group | select -ExpandProperty name; 
-			break; 
+			continue; 
 		}
 		default {}
 	}		
@@ -2280,10 +2890,11 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].setParameters } | fo
 		$np = $newp | where {$_.name -eq $setParam.Name };
 		$pstype = $np.powerShellType
 		$psname = $np.powerShellName
-		"[Parameter()][$pstype] `$$psname"
+		$desc = $np.desc -replace "[`r`n]+",' ';
+		"[Parameter()]`n[$pstype]`n#$desc`n`$$psname"
 	}
 	
-	$setParameterDeclarations = $setParameterDeclarations -join ', ';
+	$setParameterDeclarations = $setParameterDeclarations -join ",`n";
 	
 	$setParameterDeclarations | Write-Debug
 	
@@ -2291,37 +2902,50 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].setParameters } | fo
 		$setParam = $_;
 		$np = $newp | where {$_.name -eq $setParam.Name };
 		$pstype = $np.powerShellType
-		$psname = $np.powerShellName
+		$psname = $np.powerShellName		
 		"$psname = `$PSBoundParameters['$psname'];"
 	}
 	
 	$setParameters | Write-Debug;
 
 @"
-	function Set-SplunkInput$functionTag
+	function $functionName
 	{
+	$help
 	[CmdletBinding(SupportsShouldProcess=`$true)]
     Param(
 		$setParameterDeclarations,
 		
 		[Parameter(ValueFromPipelineByPropertyName=`$true,Mandatory=`$true)]
-        [String]`$Name,
+        [String]
+		# The name of the input to update.
+		`$Name,
 		
         [Parameter(ValueFromPipelineByPropertyName=`$true,ValueFromPipeline=`$true)]
-        [String]`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+        [String]
+        # Name of the Splunk instance to get the settings for (Default is ( get-splunkconnectionobject ).ComputerName.)
+		`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
-        [int]`$Port            = ( get-splunkconnectionobject ).Port,
+        [int]
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port.)
+		`$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
         [ValidateSet("http", "https")]
-        [STRING]`$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        [STRING]
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol.)
+		`$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
-        [int]`$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        [int]
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout.)	
+		`$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]`$Credential = ( get-splunkconnectionobject ).Credential        
+        [System.Management.Automation.PSCredential]
+        # Credential object with the user name and password used to access the REST API.	
+		`$Credential = ( get-splunkconnectionobject ).Credential        		
     )
 	Begin 
 	{
@@ -2361,7 +2985,7 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].setParameters } | fo
 		write-debug "Integer fields: $integerFields"
 		write-debug "Boolean fields: $booleanFields"
 		
-		Set-SplunkInput @PSBoundParameters -InputType $inputType -SetParameters `$setParameters -OutputFields @{
+		Set-InputProxy @PSBoundParameters -InputType $inputType -SetParameters `$setParameters -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
@@ -2379,21 +3003,21 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].newParameters } | fo
 	
 	$inputType = $_;
 	$functionTag = ( $inputType -split '[-/]' | foreach { $_[0].toString().ToUpper() + ($_[1..($_.length-1)] -join '') } ) -join '';
-	
+	$functionName = "New-SplunkInput$functionTag"
 	$newp = $inputs[$_].newParameters
 	$p = $newp | foreach { new-object psobject -prop $_ } | group type;
-	
+	$help = $inputs[$_].newhelp -replace '{{NAME}}',$functionName;
 	$integerFields = @();
 	$booleanFields = @();
 	switch ($p)
 	{
 		{ $_.Name -eq 'Number' } { 
 			$integerFields = $_.group | select -ExpandProperty name; 
-			break; 
+			continue; 
 		}
 		{ $_.Name -eq 'Boolean' } { 
 			$booleanFields = $_.group | select -ExpandProperty name; 
-			break; 
+			continue; 
 		}
 		default {}
 	}		
@@ -2402,11 +3026,12 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].newParameters } | fo
 		$pstype = $_.powerShellType
 		$psname = $_.powerShellName
 		$mandatory = $_.required;
-		#"[Parameter(Mandatory=`$$mandatory)][$pstype] `$$psname"
-		"[Parameter()][$pstype] `$$psname"
+		$desc = $_.desc -replace "[`r`n]+",' ';
+		"[Parameter(Mandatory=`$$mandatory)]`n[$pstype]`n#$desc`n`$$psname"
+		#"[Parameter()][$pstype] `$$psname"
 	}
 	
-	$newParameterDeclarations = $newParameterDeclarations -join ', ';
+	$newParameterDeclarations = $newParameterDeclarations -join ",`n";
 	
 	$newParameterDeclarations | Write-Debug
 	
@@ -2419,27 +3044,38 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].newParameters } | fo
 	$newParameters | Write-Debug;
 
 @"
-	function New-SplunkInput$functionTag
+	function $functionName
 	{
+	$help
 	[CmdletBinding(SupportsShouldProcess=`$true)]
     Param(
 		$newParameterDeclarations,
 		
         [Parameter(ValueFromPipelineByPropertyName=`$true,ValueFromPipeline=`$true)]
-        [String]`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+        [String]
+        # Name of the Splunk instance to get the settings for (Default is ( get-splunkconnectionobject ).ComputerName.)
+		`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
-        [int]`$Port            = ( get-splunkconnectionobject ).Port,
+        [int]
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port.)
+		`$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
         [ValidateSet("http", "https")]
-        [STRING]`$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        [STRING]
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol.)
+		`$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
-        [int]`$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        [int]
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout.)	
+		`$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]`$Credential = ( get-splunkconnectionobject ).Credential        
+        [System.Management.Automation.PSCredential]
+        # Credential object with the user name and password used to access the REST API.	
+		`$Credential = ( get-splunkconnectionobject ).Credential        
     )
 	Begin 
 	{
@@ -2465,7 +3101,7 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].newParameters } | fo
 		
 		write-debug "Integer fields: $integerFields"
 		write-debug "Boolean fields: $booleanFields"
-		New-SplunkInput @PSBoundParameters -InputType $inputType -NewParameters `$newParameters -OutputFields @{
+		New-InputProxy @PSBoundParameters -InputType $inputType -NewParameters `$newParameters -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
@@ -2478,7 +3114,8 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].newParameters } | fo
 } | %{ $_ | write-debug; $_ | Invoke-Expression };
 #endregion generative news
 
-
 #$inputs = $null;
 
 #endregion Inputs
+
+Export-ModuleMember -Function *splunk*;
