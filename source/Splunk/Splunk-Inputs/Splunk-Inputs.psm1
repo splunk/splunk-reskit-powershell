@@ -575,7 +575,8 @@ function New-InputProxy
 		}
 		
 		Write-Verbose " [$CurrentFunctionName] ::  - Endpoint = $Endpoint"
-		        
+
+		$Name = $newParameters.Name;
 		if( -not $pscmdlet.ShouldProcess( $ComputerName, "Creating new Splunk application named $Name" ) )
 		{
 			return;
