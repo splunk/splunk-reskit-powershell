@@ -288,7 +288,7 @@ function Remove-InputProxy
 		$Arguments = @{};
 		
 		$PSBoundParameters.Keys | foreach{
-			Write-Verbose " [$CurrentFunctionName] ::  - $_ = $PSBoundParameters[$_]"		
+			Write-Verbose " [$CurrentFunctionName] ::  - $_ = $($PSBoundParameters[$_])"		
 			if( $nc -notcontains $_ )
 			{
 				$arguments.Add( $_, $PSBoundParameters[$_] );
@@ -420,7 +420,7 @@ function Set-InputProxy
         
         if(-not $ExistingInput)
         {
-            Write-Host " [$CurrentFunctionName] :: Input [$Name] of type [$inputType] does not exist and cannot be updated"
+            Write-Host " [$CurrentFunctionName] :: Input [$Name] of type [$inputType] does not exist on [$ComputerName] and cannot be updated"
             Return
         }
 
@@ -574,9 +574,13 @@ function New-InputProxy
 			}
 		}
 		
+		$newParameters | foreach{
+			Write-Verbose " [$CurrentFunctionName] :: (new parameter) $($_.Name) = $($_.Value)"		
+		}
+		
 		Write-Verbose " [$CurrentFunctionName] ::  - Endpoint = $Endpoint"
 
-		$Name = $newParameters.Name;
+		$Name = $newParameters | where { $_.Name -eq 'Name' } | %{ $_.Value };
 		if( -not $pscmdlet.ShouldProcess( $ComputerName, "Creating new Splunk application named $Name" ) )
 		{
 			return;
@@ -2848,6 +2852,10 @@ function Remove-SplunkInput$functionTag
 	}
 	Process 
 	{
+		`$PSBoundParameters.Keys | foreach{
+			Write-Verbose " [Remove-SplunkInput`$functionTag] ::  - `$_ = `$(`$PSBoundParameters[`$_])"		
+		}
+
 		Remove-InputProxy @PSBoundParameters -InputType $inputType -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
@@ -2954,6 +2962,8 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].setParameters } | fo
 	Process 
 	{
 		write-debug "Tag: $functionTag; InputType: $inputType";
+		`$psb = @{};
+		`$PSBoundParameters.Keys | foreach{ `$psb[`$_] = `$PSBoundParameters[`$_] };
 		`$setParameters = `$inputs['$inputType'].setParameters;
 		`$newParameters = `$inputs['$inputType'].newParameters;
 		`$setParameters | foreach { 
@@ -2978,7 +2988,7 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].setParameters } | fo
 				`$_.value = `$_.value -join ',';
 			}
 			
-			`$PSBoundParameters.Remove(`$key) | out-null;
+			`$psb.Remove(`$key) | out-null;
 			
 			write-debug "set parameter key [`$key] value [`$(`$_.value)]";
 		}
@@ -2986,7 +2996,7 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].setParameters } | fo
 		write-debug "Integer fields: $integerFields"
 		write-debug "Boolean fields: $booleanFields"
 		
-		Set-InputProxy @PSBoundParameters -InputType $inputType -SetParameters `$setParameters -OutputFields @{
+		Set-InputProxy @psb -InputType $inputType -SetParameters `$setParameters -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
@@ -3084,6 +3094,8 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].newParameters } | fo
 	Process 
 	{
 		write-debug "Tag: $functionTag; InputType: $inputType";
+		`$psb = @{};
+		`$PSBoundParameters.Keys | foreach{ `$psb[`$_] = `$PSBoundParameters[`$_] };
 		`$newParameters = `$inputs['$inputType'].newParameters;
 		`$newParameters | foreach { 
 			`$key = `$_.powershellname;
@@ -3095,14 +3107,14 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].newParameters } | fo
 				`$_.value = `$_.value -join ',';
 			}
 
-			`$PSBoundParameters.Remove(`$key) | out-null;
+			`$psb.Remove(`$key) | out-null;
 			
 			write-debug "new parameter key [`$key] value [`$(`$_.value)]";
 		}
 		
 		write-debug "Integer fields: $integerFields"
 		write-debug "Boolean fields: $booleanFields"
-		New-InputProxy @PSBoundParameters -InputType $inputType -NewParameters `$newParameters -OutputFields @{
+		New-InputProxy @psb -InputType $inputType -NewParameters `$newParameters -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
