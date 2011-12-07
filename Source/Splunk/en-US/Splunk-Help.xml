@@ -610,14 +610,7 @@ Disables SSL certificate validation for the current AppDomain.</maml:para>
       <command:syntaxItem>
         <command:name>Disable-SplunkServerClass</command:name>
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-          <maml:name>Filter</maml:name>
-          <maml:description>
-            <maml:para>A regular expression used to match the name of the server classes.  Any server class with a name matching the filter will be disabled.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-        </command:parameter>
-        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-          <maml:name>Name</maml:name>
+          <maml:name>ServerClass</maml:name>
           <maml:description>
             <maml:para>The name of the server class to disable.</maml:para>
           </maml:description>
@@ -689,20 +682,7 @@ Disables SSL certificate validation for the current AppDomain.</maml:para>
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-        <maml:name>Filter</maml:name>
-        <maml:description>
-          <maml:para>A regular expression used to match the name of the server classes.  Any server class with a name matching the filter will be disabled.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-        <dev:type>
-          <maml:name>
-          </maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue />
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-        <maml:name>Name</maml:name>
+        <maml:name>ServerClass</maml:name>
         <maml:description>
           <maml:para>The name of the server class to disable.</maml:para>
         </maml:description>
@@ -1034,14 +1014,7 @@ Enables SSL certificate validation for the current AppDomain.</maml:para>
       <command:syntaxItem>
         <command:name>Enable-SplunkServerClass</command:name>
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-          <maml:name>Filter</maml:name>
-          <maml:description>
-            <maml:para>A regular expression used to match the name of the server classes.  Any server class with a name matching the filter will be enabled.</maml:para>
-          </maml:description>
-          <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
-        </command:parameter>
-        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-          <maml:name>Name</maml:name>
+          <maml:name>ServerClass</maml:name>
           <maml:description>
             <maml:para>The name of the server class to disable.</maml:para>
           </maml:description>
@@ -1113,20 +1086,7 @@ Enables SSL certificate validation for the current AppDomain.</maml:para>
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-        <maml:name>Filter</maml:name>
-        <maml:description>
-          <maml:para>A regular expression used to match the name of the server classes.  Any server class with a name matching the filter will be enabled.</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-        <dev:type>
-          <maml:name>
-          </maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue />
-      </command:parameter>
-      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-        <maml:name>Name</maml:name>
+        <maml:name>ServerClass</maml:name>
         <maml:description>
           <maml:para>The name of the server class to disable.</maml:para>
         </maml:description>
@@ -4312,7 +4272,7 @@ Gets any license messages for MySplunkInstance connecting on port 8089 with a 5 
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-          <maml:name>Name</maml:name>
+          <maml:name>PoolName</maml:name>
           <maml:description>
             <maml:para>The name of the license pool to retrieve.</maml:para>
           </maml:description>
@@ -4370,7 +4330,7 @@ Gets any license messages for MySplunkInstance connecting on port 8089 with a 5 
         <dev:defaultValue />
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-        <maml:name>Name</maml:name>
+        <maml:name>PoolName</maml:name>
         <maml:description>
           <maml:para>The name of the license pool to retrieve.</maml:para>
         </maml:description>
@@ -5104,7 +5064,7 @@ Retrieves all logins from the current default Splunk instance.</maml:para>
           <command:parameterValue required="false" variableLength="false">String</command:parameterValue>
         </command:parameter>
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-          <maml:name>Name</maml:name>
+          <maml:name>ServerClass</maml:name>
           <maml:description>
             <maml:para>Name of the server class to retrieve.</maml:para>
           </maml:description>
@@ -5162,7 +5122,7 @@ Retrieves all logins from the current default Splunk instance.</maml:para>
         <dev:defaultValue />
       </command:parameter>
       <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
-        <maml:name>Name</maml:name>
+        <maml:name>ServerClass</maml:name>
         <maml:description>
           <maml:para>Name of the server class to retrieve.</maml:para>
         </maml:description>
@@ -10061,7 +10021,7 @@ Adds the license located in the licenses\enterprise.license file to the Splunk s
       <command:syntaxItem>
         <command:name>Add-SplunkLicensePool</command:name>
         <command:parameter require="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
-          <maml:name>Name</maml:name>
+          <maml:name>PoolName</maml:name>
           <maml:description>
             <maml:para>The name of the license pool to create on the Splunk server.</maml:para>
           </maml:description>
@@ -10130,11 +10090,17 @@ Adds the license located in the licenses\enterprise.license file to the Splunk s
           </maml:description>
           <command:parameterValue required="false" variableLength="false">PSCredential</command:parameterValue>
         </command:parameter>
+		<command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Specify to bypass standard PowerShell confirmation processes.</maml:para>
+          </maml:description>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
-        <maml:name>Name</maml:name>
+        <maml:name>PoolName</maml:name>
         <maml:description>
           <maml:para>The name of the license pool to create on the Splunk server.</maml:para>
         </maml:description>
@@ -10263,6 +10229,19 @@ Adds the license located in the licenses\enterprise.license file to the Splunk s
         </dev:type>
         <dev:defaultValue />
       </command:parameter>
+	  <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Specify to bypass standard PowerShell confirmation processes.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>
+          </maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
     </command:parameters>
     <command:inputTypes>
       <command:inputType>
@@ -10350,7 +10329,7 @@ Creates a new license pool on the Enterprise license stack with a 500mb data quo
       <command:syntaxItem>
         <command:name>Remove-SplunkLicensePool</command:name>
         <command:parameter require="true" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
-          <maml:name>Name</maml:name>
+          <maml:name>PoolName</maml:name>
           <maml:description>
             <maml:para>Name of the license pool to remove.</maml:para>
           </maml:description>
@@ -10415,7 +10394,7 @@ Creates a new license pool on the Enterprise license stack with a 500mb data quo
     </command:syntax>
     <command:parameters>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
-        <maml:name>Name</maml:name>
+        <maml:name>PoolName</maml:name>
         <maml:description>
           <maml:para>Name of the license pool to remove.</maml:para>
         </maml:description>

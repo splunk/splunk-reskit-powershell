@@ -741,8 +741,6 @@ newhelp = @'
     .Description
         Creates new or modifies existing performance monitoring settings.
         
-    .Example
-
     .Inputs
         This function does not accept pipeline input.
         

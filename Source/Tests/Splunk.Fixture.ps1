@@ -14,7 +14,7 @@
 
 $local:fixture = @{
 	# the name or IP of the splunk server
-	splunkServer = 'indexer';
+	splunkServer = 'talon-xp';
 	
 	# the splunk user name
 	splunkUser = 'admin';
@@ -23,11 +23,14 @@ $local:fixture = @{
 	splunkPassword = 'password';
 	
 	# splunk management port
-	splunkPort = 8089
+	splunkPort = 8089;
 	
-	#test license file
-	licenseFilePath = $MyInvocation.MyCommand.Path | split-path -parent | Join-Path -ChildPath 'splunk.license';
+	# path to test license file
+	licenseFilePath = "C:\Users\beefarino\Documents\Project\splunk-reskit-powershell\_local\Splunk.license";
 	
+	# path to tar.gz app bundle
+	appTarPath = "C:\Temp\maps.tar.gz";
+
 	#------- you do not need to edit below this line ----------
 	
 	defaultConfigPath = get-module splunk | split-path | join-path -ChildPath "SplunkConnectionObject.xml";
