@@ -26,9 +26,13 @@ $local:fixture = @{
 	splunkPort = 8089;
 	
 	# path to test license file
+	# this file must exist on the local machine (the machine actually running the tests) and contain valid splunk
+	#	license data
 	licenseFilePath = "C:\Users\beefarino\Documents\Project\splunk-reskit-powershell\_local\Splunk.license";
 	
 	# path to tar.gz app bundle
+	# this file must exist at the path on the server identified by the splunkServer and contain a valid 
+	#	splunk application tarball
 	appTarPath = "C:\Temp\maps.tar.gz";
 
 	#------- you do not need to edit below this line ----------

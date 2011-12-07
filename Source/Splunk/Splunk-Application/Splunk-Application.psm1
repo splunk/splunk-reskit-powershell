@@ -227,7 +227,7 @@ function Get-SplunkApplication
 		[Parameter()]
 		[int]
 		#Indicates the maximum number of entries to return. To return all entries, specify 0. 
-		$Count = 30,
+		$Count = 0,
 		
 		[Parameter()]
 		[int]
@@ -704,17 +704,18 @@ function Remove-SplunkApplication
 	Begin
 	{
 		Write-Verbose " [Remove-SplunkApplication] :: Starting..."
-        $Endpoint = "/services/apps/local/$Name";
+        
 	}
 	Process
 	{          
 		Write-Verbose " [Remove-SplunkApplication] :: Parameters"
         Write-Verbose " [Remove-SplunkApplication] ::  - ParameterSet = $ParamSetName"
+		$Endpoint = "/services/apps/local/$Name";
 		$Arguments = @{};
 		$nc = 'ComputerName','Port','Protocol','Timeout','Credential';
 		
 		$PSBoundParameters.Keys | foreach{
-			Write-Verbose " [Remove-SplunkApplication] ::  - $_ = $PSBoundParameters[$_]"		
+			Write-Verbose " [Remove-SplunkApplication] ::  - $_ = $($PSBoundParameters[$_])"		
 			if( $nc -notcontains $_ )
 			{
 				$arguments.Add( $_, $PSBoundParameters[$_] );

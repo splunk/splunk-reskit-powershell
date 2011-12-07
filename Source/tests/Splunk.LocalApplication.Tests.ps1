@@ -14,6 +14,44 @@
 
 param( $fixture )
 
+Describe "install-SplunkApplication" {
+
+	
+	It "can install application from local tarball" {
+		$p = $script:fixture.appTarPath;
+		
+		if( get-splunkapplication maps )
+		{
+			Write-verbose 'removing'
+			remove-splunkApplication maps -force;
+			Write-verbose 'removed'
+		}
+		if( get-splunkmessage | where {$_.message -match 'restart'} )
+		{
+			Write-verbose 'restarting'
+			restart-splunkService -wait -force | out-null;
+			Write-verbose 'restarted'
+		}
+		
+		Write-verbose 'installing'
+		$result = install-splunkApplication -name $p;
+		Write-verbose 'installed'
+		$result -and ( $result.status -eq 'installed' )
+	}
+
+	It "can update application from local tarball" {
+		$p = $script:fixture.appTarPath;
+		
+		if( -not ( get-splunkApplication -filter map ) )
+		{
+			install-splunkApplication -name $p;
+		}
+
+		$result = install-splunkApplication -name $p -update;
+		$result -and ( $result.status -eq 'upgraded' )
+	}	
+	
+}
 
 Describe "new-SplunkApplication" {
 
@@ -67,23 +105,23 @@ Describe "get-SplunkApplication" {
 	
 	It "fetches expected fields" {
 		Write-Verbose "local fields: $script:fields"
-		get-SplunkApplication -search 'gettingstarted' | select -First 1 | verify-results -fields $script:fields | verify-all;
+		get-SplunkApplication -search 'search' | select -First 1 | verify-results -fields $script:fields | verify-all;
 	}
 	
 	It "fetches nothing for empty search" {
-		$result = get-SplunkApplication -search 'kuurggblafflarg6';
+		$result = get-SplunkApplication -search 'kuurggblafflarg6'
 		
 		[bool]-not($result) | verify-all;
 	}
 
 	It "fetches application by name" {
-		$result = get-SplunkApplication -name 'gettingstarted';
+		$result = get-SplunkApplication -name 'search';
 		
 		[bool]$result | verify-all;
 	}
 
 	It "fetches all applications for search" {
-		$result = get-SplunkApplication -search 'gettingstarted';
+		$result = get-SplunkApplication -search 'search';
 		
 		[bool]$result | verify-all;
 	}
