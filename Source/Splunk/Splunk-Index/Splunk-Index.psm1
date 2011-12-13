@@ -179,7 +179,7 @@ function Get-SplunkIndex
 	                    # Creating Splunk.SDK.ServiceStatus
 	                    $obj = New-Object PSObject -Property $MyObj
 	                    $obj.PSTypeNames.Clear()
-	                    $obj.PSTypeNames.Add('Splunk.SDK.Data.Index')
+	                    $obj.PSTypeNames.Add('Splunk.SDK.Index')
 	                    $obj | Where $WhereFilter;
 	                }
 	            }

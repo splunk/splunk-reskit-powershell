@@ -30,9 +30,9 @@ Describe "new-SplunkInputWinPerfmon" {
 
 	It "creates input" {
 		$name = new-guid;
-		enable-verbose
+		
 		$result = new-SplunkInputWinPerfMon -name $name -interval 30 -object 'process' -counters 'elapsed time' -instances *
-		disable-verbose
+		
 		Write-Verbose "Result: $result"
 		[bool]$result | verify-all;
 	}

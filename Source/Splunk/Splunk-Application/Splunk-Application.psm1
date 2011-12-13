@@ -160,10 +160,10 @@ function Install-SplunkApplication
 	                        Default                                     { $Myobj.Add($_.Name,$_.'#text'); continue }
 	                    }
 	                    
-	                    # Creating Splunk.SDK.Splunk.SDK.AppInstallResult
+	                    # Creating Splunk.SDK.AppInstallResult
 	                    $obj = New-Object PSObject -Property $MyObj
 	                    $obj.PSTypeNames.Clear()
-	                    $obj.PSTypeNames.Add('Splunk.SDK.ApplicationInstallResult')
+	                    $obj.PSTypeNames.Add('Splunk.SDK.AppInstallResult')
 	                    $obj;
 	                }
 	            }
@@ -365,7 +365,7 @@ function Get-SplunkApplication
 	        {
 	            if($Results -and ($Results -is [System.Xml.XmlDocument] -and ($Results.feed.entry)))
 	            {
-	                Write-Verbose " [Get-SplunkApplication] :: Creating Hash Table to be used to create Splunk.SDK.Index"
+	                Write-Verbose " [Get-SplunkApplication] :: Creating Hash Table to be used to create Splunk.SDK.LocalApplication"
 	                
 	                foreach($Entry in $Results.feed.entry)
 	                {
@@ -387,10 +387,9 @@ function Get-SplunkApplication
 	                        Default                                     { $Myobj.Add($_.Name,$_.'#text'); continue }
 	                    }
 	                    
-	                    # Creating Splunk.SDK.ServiceStatus
 	                    $obj = New-Object PSObject -Property $MyObj
 	                    $obj.PSTypeNames.Clear()
-	                    $obj.PSTypeNames.Add('Splunk.SDK.Data.LocalApplication')
+	                    $obj.PSTypeNames.Add('Splunk.SDK.LocalApplication')
 	                    $obj | Where $WhereFilter;
 	                }
 	            }

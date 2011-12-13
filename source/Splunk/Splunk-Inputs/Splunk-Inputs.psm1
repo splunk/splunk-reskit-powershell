@@ -2752,7 +2752,7 @@ $inputs | select -ExpandProperty keys | foreach {
 	}
 	Process 
 	{
-		Get-InputProxy @PSBoundParameters -InputType $inputType -OutputFields @{
+		Get-InputProxy @PSBoundParameters -InputType $functionTag -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
@@ -2854,7 +2854,7 @@ function Remove-SplunkInput$functionTag
 			Write-Verbose " [Remove-SplunkInput`$functionTag] ::  - `$_ = `$(`$PSBoundParameters[`$_])"		
 		}
 
-		Remove-InputProxy @PSBoundParameters -InputType $inputType -OutputFields @{
+		Remove-InputProxy @PSBoundParameters -InputType $functionTag -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
@@ -2994,7 +2994,7 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].setParameters } | fo
 		write-debug "Integer fields: $integerFields"
 		write-debug "Boolean fields: $booleanFields"
 		
-		Set-InputProxy @psb -InputType $inputType -SetParameters `$setParameters -OutputFields @{
+		Set-InputProxy @psb -InputType $functionTag -SetParameters `$setParameters -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
@@ -3112,7 +3112,7 @@ $inputs | select -ExpandProperty keys | where { $inputs[$_].newParameters } | fo
 		
 		write-debug "Integer fields: $integerFields"
 		write-debug "Boolean fields: $booleanFields"
-		New-InputProxy @psb -InputType $inputType -NewParameters `$newParameters -OutputFields @{
+		New-InputProxy @psb -InputType $functionTag -NewParameters `$newParameters -OutputFields @{
 			integer = @('$($integerFields -join "', '" )');
 			boolean = @('$($booleanFields -join "', '" )');
 		}
