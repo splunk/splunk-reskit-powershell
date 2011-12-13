@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Configuration>
+  <ViewDefinitions>
+  
+	<View>
+      <Name>Splunk.SDK.Input.Ad</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.Ad</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>TargetDC</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>StartingNode</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.Monitor</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.Monitor</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Host</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>FileCount</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>SourceType</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.OneShot</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.OneShot</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Bytes Indexed</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Offset</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Sources Indexes</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Spool Time</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.Registry</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.Registry</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Hive</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Proc</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Type</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.Script</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.Script</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />		  
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Host</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Interval</PropertyName>
+              </TableColumnItem>			  
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.TCPCooked</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.TCPCooked</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />		  
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Host</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Group</PropertyName>
+              </TableColumnItem>			  
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.TCPRaw</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.TCPRaw</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />		  
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Host</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Group</PropertyName>
+              </TableColumnItem>			  
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.UDP</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.UDP</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />		  
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Host</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Group</PropertyName>
+              </TableColumnItem>			  
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.WinEventLogCollections</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.WinEventLogCollections</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />		  
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Hosts</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Logs</PropertyName>
+              </TableColumnItem>			  
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.WinPerfmon</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.WinPerfmon</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />		  
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Object</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Instances</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Interval</PropertyName>
+              </TableColumnItem>			  
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Input.WinWmiCollections</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Input.WinWmiCollections</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />		  
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Index</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Class</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Instances</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Fields</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Interval</PropertyName>
+              </TableColumnItem>			  
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+  </ViewDefinitions>
+</Configuration>

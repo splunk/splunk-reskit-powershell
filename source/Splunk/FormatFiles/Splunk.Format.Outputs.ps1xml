@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<Configuration>
+  <ViewDefinitions>
+  
+	<View>
+      <Name>Splunk.SDK.Output.Group</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Output.Group</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Method</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Servers</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Output.Default</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.OutputDefault</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>DefaultGroup</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>MaxQueueSize</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Output.Server</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Output.Server</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+		  <TableColumnHeader />
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>DestHost</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>DestPort</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>SourcePort</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Status</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+	<View>
+      <Name>Splunk.SDK.Output.Syslog</Name>
+      <ViewSelectedBy>
+        <TypeName>Splunk.SDK.Output.Syslog</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader />
+          <TableColumnHeader />
+          <TableColumnHeader />
+		  <TableColumnHeader />
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>ComputerName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Server</PropertyName>
+              </TableColumnItem>
+			  <TableColumnItem>
+                <PropertyName>Type</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+  </ViewDefinitions>
+</Configuration>
