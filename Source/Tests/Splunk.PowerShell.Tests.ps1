@@ -41,8 +41,14 @@ Get-Command -Module splunk | foreach {
 			$local:help -match 'NAME' -and
 				$local:help -match 'SYNOPSIS' -and
 				$local:help -match 'SYNTAX' -and
-				$local:help -match 'DESCRIPTION' -and
-				$local:help -match 'EXAMPLE';
+				$local:help -match 'DESCRIPTION';
+		}
+		
+		It "has examples" {
+			$script:this | Write-Debug;
+			$local:help = ( $script:this | Get-Help -full ) | Out-String;
+			
+			$local:help -match 'EXAMPLE'
 		}
 			
 		$commonParameterNames = @"
@@ -59,7 +65,7 @@ Get-Command -Module splunk | foreach {
 			Whatif
 "@ -split '\s+'; 
 
-		$script:this | get-help -full | select -exp parameters | select -exp parameter | select -exp Name | where {
+		$script:this | get-help -full | where{ $_.parameters.length } | select -exp parameters | select -exp parameter | select -exp Name | where {
 			$commonParameterNames -notcontains $_
 		} | foreach {	
 			It "has documented parameter $_" {

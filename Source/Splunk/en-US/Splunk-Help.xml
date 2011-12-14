@@ -47,7 +47,7 @@
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         </command:parameter>
         <command:parameter require="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
-          <maml:name>Credentials</maml:name>
+          <maml:name>Credential</maml:name>
           <maml:description>
             <maml:para>
             </maml:para>
@@ -124,7 +124,7 @@
         <dev:defaultValue />
       </command:parameter>
       <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="named">
-        <maml:name>Credentials</maml:name>
+        <maml:name>Credential</maml:name>
         <maml:description>
           <maml:para>
           </maml:para>
@@ -5945,6 +5945,12 @@ Gets the values set for MySplunkInstance connecting on port 8089 with a 5 second
           </maml:description>
           <command:parameterValue required="false" variableLength="false">PSCredential</command:parameterValue>
         </command:parameter>
+		<command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>Specify to bypass standard PowerShell confirmation processes.</maml:para>
+          </maml:description>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -6006,6 +6012,19 @@ Gets the values set for MySplunkInstance connecting on port 8089 with a 5 second
           <maml:para>Credential object with the user name and password used to access the REST API (Default is $SplunkDefaultConnectionObject.Credential.)</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+        <dev:type>
+          <maml:name>
+          </maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>Specify to bypass standard PowerShell confirmation processes.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
           <maml:name>
           </maml:name>
