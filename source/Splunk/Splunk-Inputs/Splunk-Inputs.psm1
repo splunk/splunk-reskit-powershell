@@ -754,6 +754,31 @@ newhelp = @'
 	    #Requires -Version 2.0
 #>
 '@
+	getExamples = @'
+.Example
+	Get-SplunkInputAd -ComputerName splunk9.server.com	
+	
+	Retrieves a list of all Windows Active Directory monitoring inputs from the server splunk9.server.com.	
+
+.Example
+	Get-SplunkInputAd -Count 5 -ComputerName splunk9.server.com -Protocol https	
+	
+	Retrieves information on the first 5 defined Active Directory inputs on the server splunk9.server.com. Uses the HTTPS protocol to connect to the Splunk instance.	
+'@
+	
+	
+	setExamples = @(
+	
+	)
+	
+	newExamples = @(
+	
+	)
+	
+	removeExamples = @(
+	
+	)
+	
 	setParameters = @(
 		@{
 			powerShellName='monitorSubtree';
@@ -899,6 +924,19 @@ sethelp = @'
 	    #Requires -Version 2.0
 #>
 '@
+
+	getExamples = @'
+.Example
+	Get-SplunkInputWinEventLogCollections	
+	
+	Retrieves a list of all Windows event log data inputs on the local machine.	
+	
+.Example	
+	Get-SplunkInputWinEventLogCollections -computername splunk005 -search security	
+	
+	Retrieves information on all Windows event log inputs from the server "splunk005" which contain the word "security" anywhere in the results.
+'@
+	
 	newParameters = @(
 		@{
 			powerShellName='lookuphost';
@@ -1027,6 +1065,17 @@ sethelp = @'
 	    Website:   www.splunk.com
 	    #Requires -Version 2.0
 #>
+'@
+	getExamples = @'
+.Example
+	Get-SplunkInputMonitor -Computername splunk6.server.com -Credential $credential	
+	
+	Retrieves a list of all file monitoring inputs on the server splunk6.server.com, using credentials cached in the $credential variable.	
+	
+.Example
+	Get-SplunkInputMonitor -Computername 192.168.100.5 -Count 10 -Offset 2 -Search 'stats'	
+	
+	Retrieves information on up to 10 file monitoring inputs on the computer 192.168.100.5, beginning with the second input, whose names contain the string 'stats'.	
 '@
 	newParameters = @(
 		@{
@@ -1312,6 +1361,17 @@ This endpoint can handle any single file: plain, compressed or archive. The file
 #>
 '@
 
+	getExamples= @'
+.Example
+	Get-SplunkInputOneShot	
+	
+	Retrieves a list of all in-progress one-shot data inputs on the local machine.	
+	
+.Example
+	Get-SplunkInputOneShot -Computername splunk5.server.com -Count 5 -SortMode desc	
+	
+	Retrieves information on the first 5 in-progress one-shot data inputs on the server splunk5.server.com, and sorts them in descending order.	
+'@
 	newParameters = @(
 		@{
 			powerShellName='name';
@@ -1425,6 +1485,17 @@ sethelp = @'
 	    Website:   www.splunk.com
 	    #Requires -Version 2.0
 #>
+'@
+	getExamples=@'
+.Example
+	Get-SplunkInputWinPerfmon	
+	
+	Retrieves a list of all Windows Performance Monitor inputs on the local machine.	
+	
+.Example
+	Get-SplunkInputWinPerfmon -computername splunk21.server.com -filter disk	
+	
+	Retrieves information on all Windows performance monitoring inputs from server splunk21.server.com whose names contain the word "disk".	
 '@
 	newParameters = @(
 		@{
@@ -1588,7 +1659,17 @@ sethelp = @'
 	    #Requires -Version 2.0
 #>
 '@
-
+	getExamples=@'
+.Example
+	Get-SplunkInputRegistry	
+	
+	Retrieves a list of all Windows Registry inputs on the local machine.	
+	
+.Example
+	Get-SplunkInputRegistry -Computername 192.168.31.205,192.168.31.206 -Filter "User"	
+	
+	Retrieves information on all Windows Registry inputs from the servers 192.168.31.205 and 192.168.31.206 which contain "User" in their names.	
+'@
 	newParameters = @(
 		@{
 			powerShellName='baseline';
@@ -1767,6 +1848,17 @@ sethelp = @'
 	    #Requires -Version 2.0
 #>
 '@
+	getExamples=@'
+.Example
+	Get-SplunkInputScript	
+	
+	Retrieves a list of all scripted inputs on the default Splunk instance.	
+	
+.Example	
+	Get-SplunkInputScript -Computername $servers -Count 5	
+	
+	Retrieves information on the first 5 scripted inputs from the servers listed in the $servers variable.	
+'@
 	newParameters = @(
 		@{
 			powerShellName='interval';
@@ -1944,7 +2036,17 @@ sethelp = @'
 	    #Requires -Version 2.0
 #>
 '@
-
+	getExamples=@'
+.Example
+	Get-SplunkInputTCPCooked	
+	
+	Retrieves a list of all "cooked" TCP inputs from the default Splunk connection.	
+	
+.Example
+	Get-SplunkInputTCPCooked -computername splunk6.server.com -name 27081	
+	
+	Retrieves information on the cooked TCP data input named "27081" on the server splunk6.server.com.	
+'@
 	newParameters = @(
 		@{
 			powerShellName='name';
@@ -2091,7 +2193,17 @@ sethelp = @'
 	    #Requires -Version 2.0
 #>
 '@
-
+	getExamples = @'
+.Example
+	Get-SplunkInputTCPRaw	
+	
+	Retrieves a list of all "raw" TCP inputs from the default Splunk connection.	
+	
+.Example
+	Get-SplunkInputTCPRaw -computername splunk6.server.com -Filter 1	
+	
+	Retrieves information on all raw TCP data inputs whose names begin with "1".	
+'@
 	newParameters = @(
 		@{
 			powerShellName='name';
@@ -2302,6 +2414,17 @@ sethelp = @'
 	    Website:   www.splunk.com
 	    #Requires -Version 2.0
 #>
+'@
+	getExamples=@'
+.Example
+	Get-SplunkInputUDP	
+	
+	Retrieves a list of all UDP data inputs from the default Splunk connection.	
+	
+.Example
+	Get-SplunkInputUDP -ComputerName $gameserver -Count 10 -filter 100	
+	
+	Retrieves information on the first 10 UDP data inputs that contain or begin with "100" on servers listed in the $gameserver variable.	
 '@
 	newParameters = @(
 		@{
@@ -2648,7 +2771,8 @@ sethelp = @'
 $inputs | select -ExpandProperty keys | foreach {
 	$inputType = $_;
 	$functionTag = ( $inputType -split '[-/]' | foreach { $_[0].toString().ToUpper() + ($_[1..($_.length-1)] -join '') } ) -join '';
-	
+	$examples = $inputs[$_].getExamples;
+
 	$newp = $inputs[$_].newParameters
 	$p = $newp | foreach { new-object psobject -prop $_ } | group type;
 	$integerFields = @();
@@ -2676,12 +2800,17 @@ $inputs | select -ExpandProperty keys | foreach {
         .Description
             Obtains the specified Splunk input.
             
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
             This function does not produce pipeline output.
-            
+        
+		$examples
+			
         .Notes
 	        NAME:      Get-SplunkInput$functionTag
-	        AUTHOR:    Splunk\bshell
+	        AUTHOR:    Splunk\jchristopher
 	        Website:   www.splunk.com
 	        #Requires -Version 2.0
     #>
