@@ -214,9 +214,15 @@ function Get-SplunkApplication
         Get-SplunkApplication -name maps
 		
 		This example returns the 'maps' application from the default Splunk connection.
-        
+  
+	.Example
+		Get-SplunkApplication -filter "splunk*" -ComputerName splunk10.server.com -SortMode alpha_case	
+		
+		Retrieves a list of all Splunk applications on the computer 
+		splunk10.server.com that begin with "splunk", sorted alphabetically 
+		(case sensitive).	
+	
     .Notes
-        NAME:      Get-SplunkApplication
         AUTHOR:    Splunk\jchristopher
         Website:   www.Splunk.com
         #Requires -Version 2.0
@@ -434,10 +440,20 @@ function New-SplunkApplication
     .Example
         New-SplunkApplication -Name 'My Application'
 		
-		This example creates a new application named "My Application" on the default Splunk instance.
+		This example creates a new application named "My Application" on the default
+		Splunk instance.
                 
+	.Example
+		New-SplunkApplication -name MySplunkApp -author "Malcolm Moore" `
+		  -description "This is a new app developed by Malcolm Moore." `
+		  -label mysplunkapp -template AppTemplates `
+		  -ComputerName splunk-eu-25.server.com -manageable
+		
+		Creates a new application on computer splunk-eu-25.server.com named 
+		"MySplunkApp" by author Malcolm Moore, with description "This is a
+		new app developed by Malcolm Moore." The new app uses the 
+		"AppTemplates" app template and is manageable within Splunk Web.
     .Notes
-        NAME:      New-SplunkApplication
         AUTHOR:    Splunk\jchristopher
         Website:   www.Splunk.com
         #Requires -Version 2.0

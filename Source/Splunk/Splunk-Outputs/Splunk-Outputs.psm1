@@ -708,17 +708,30 @@ function Get-SplunkOutputDefault
 {
 	<#
         .Synopsis 
-            Obtains global Splunk TCP output properties.
+            Gets information on default Splunk forwarding settings on a Splunk instance.		
             
         .Description
-            Obtains global Splunk TCP output properties.
+            Gets information on default Splunk forwarding settings on a Splunk instance.		
             
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
             This function does not produce pipeline output.
             
+		.Example				
+			Get-SplunkOutputDefault	
+			
+			Displays the default forwarding setup on the local machine.	
+			
+		.Example
+			Get-SplunkOutputDefault -filter tcp -ComputerName $serverlist	
+			
+			Retrieves information on all forwarding defaults whose names begin with 
+			"tcp" from the servers defined in the $serverlist variable.
+		
         .Notes
-	        NAME:      Get-SplunkOutputGlobal
-	        AUTHOR:    Splunk\bshell
+	        AUTHOR:    Splunk\jchristopher
 	        Website:   www.splunk.com
 	        #Requires -Version 2.0
     #>
@@ -760,29 +773,29 @@ function Get-SplunkOutputDefault
 		
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]
-        # Name of the Splunk instance to get the settings for (Default is ( get-splunkconnectionobject ).ComputerName.)
+        # Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName).
 		$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
         [int]
-		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port.)
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port).
 		$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
         [ValidateSet("http", "https")]
         [STRING]
-        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol.)
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol).
 		$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
         [int]
-        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout.)	
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout).
 		$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         # Credential object with the user name and password used to access the REST API.	
-		$Credential = ( get-splunkconnectionobject ).Credential        
+		$Credential = ( get-splunkconnectionobject ).Credential
     )
 	Begin 
 	{
@@ -808,20 +821,38 @@ function Disable-SplunkOutputDefault()
 {
 	<#
         .Synopsis 
-            Disables default Splunk forwarding settings.
+            Disable Splunk forwarding settings.		
             
         .Description
-            Disables default Splunk forwarding settings.
+            Disable Splunk forwarding settings.		
             
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
             This function does not produce pipeline output.
             
+		.Example				
+			Disable-SplunkOutputDefault -ComputerName server1	
+			
+			Disables all forwarding on the Splunk instance on the computer server1.	
+			
+		.Example
+			Disable-SplunkOutputDefault -ComputerName server9.splunklogs.com -Port 8087 -Protocol https	
+			
+			Connects to the Splunk instance on server9.splunklogs.com, port 8087 
+			over HTTPS. Disables all forwarding on this instance.
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
     #>
 	[CmdletBinding(SupportsShouldProcess=$true)]
     Param(	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]
-        # Name of the Splunk instance to get the settings for (Default is ( get-splunkconnectionobject ).ComputerName.)
+        # Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName.)
 		$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
@@ -873,13 +904,32 @@ function Enable-SplunkOutputDefault()
 {
 	<#
         .Synopsis 
-            Enables default Splunk forwarding settings.
+            Enables Splunk forwarding settings.		
             
         .Description
-            Enables default Splunk forwarding settings.
+            Enables Splunk forwarding settings.		
             
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
             This function does not produce pipeline output.
+            
+		.Example				
+			Enable-SplunkOutputDefault 	
+			
+			Enables default forwarder settings on the local Splunk instance.	
+			
+		.Example
+			Enable-SplunkOutputDefault -Computername 192.168.54.111 -Port 8087 -Protocol https	
+			
+			Connects to the Splunk instance on server 192.168.54.111, port 
+			8087 over HTTPS. Enables forwarding using default forwarding settings. 
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
     #>
 	[CmdletBinding(SupportsShouldProcess=$true)]
     Param(	
@@ -1087,13 +1137,32 @@ function Get-SplunkOutputGroup
 {
 	<#
         .Synopsis 
-            Obtains configuration for data forwarding destinations.
+            Gets information on data forwarding destinations on a Splunk instance.
             
         .Description
-            Obtains configuration for data forwarding destinations.
+            Gets information on data forwarding destinations on a Splunk instance.
             
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
-            This function outputs the forwarding group configuration to the pipeline.
+            This function does not produce pipeline output.
+            
+		.Example				
+			Get-SplunkOutputGroup	
+			
+			Displays information on configured output targets on the local machine.	
+			
+		.Example
+			Get-SplunkOutputGroup -filter 199 -ComputerName splunk8.server.com -sortDirection desc	
+			
+			Retrieves information on all forwarding destinations from the server 
+			splunk8.server.com whose names contain "199", sorted in descending order.
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
     #>
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
@@ -1181,14 +1250,34 @@ function New-SplunkOutputGroup
 {
 	<#
         .Synopsis 
-            Creates a new data forwarding destination group.
+            Creates a new forwarding group on a Splunk instance.
             
         .Description
-            Creates a new data forwarding destination group.
+            Creates a new forwarding group on a Splunk instance.
             
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
-            This function outputs the new forwarding group configuration to the pipeline.
-    #>
+            This function does not produce pipeline output.
+            
+		.Example				
+			New-SplunkOutputGroup	
+			
+			Prompts for the parameters of a new Splunk forwarding target group on the local Splunk instance.	
+			
+		.Example
+			New-SplunkOutputGroup -name SOG_1 -servers 192.168.31.214:9995	
+			
+			Creates a new Splunk forwarding target group on the local Splunk 
+			instance with the name "SOG_1" and assigns the server 
+			192.168.31.214, port 9995 to it.
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>	
 	[CmdletBinding(SupportsShouldProcess=$true)]
     Param(	
 		[Parameter(Mandatory=$true)]
@@ -1608,14 +1697,33 @@ function Get-SplunkOutputServer
 {
 	<#
         .Synopsis 
-            Obtains configuration for data forwarding destinations.
+            Gets a list of all forwarding destinations on a Splunk instance based on parameters provided.
             
         .Description
-            Obtains configuration for data forwarding destinations.
+            Gets a list of all forwarding destinations on a Splunk instance based on parameters provided.
             
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
-            This function outputs the forwarding configuration to the pipeline.
-    #>
+            This function does not produce pipeline output.
+            
+		.Example				
+			Get-SplunkOutputServer	
+			
+			Displays information on defined forwarding servers on the local machine.	
+			
+		.Example
+			Get-SplunkOutputServer -filter 192.168.31.20* -Computername splunk3.server.com -sortDirection desc	
+			
+			Retrieves information on all forwarding servers from the server 
+			splunk3.server.com whose names contain "192.168.31.20", sorted in descending order.
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>	
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter()]
@@ -2139,14 +2247,33 @@ function Get-SplunkOutputSyslog
 {
 	<#
         .Synopsis 
-            Obtains configuration for data forwarded server configured to provide data in standard syslog format.
+            Gets information on a specific Syslog-enabled forwarder destination.
             
         .Description
-            Obtains configuration for data forwarded server configured to provide data in standard syslog format.
+            Gets information on a specific Syslog-enabled forwarder destination.
             
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
-            This function outputs the forwarding configuration to the pipeline.
-    #>
+            This function does not produce pipeline output.
+            
+		.Example				
+			Get-SplunkOutputSyslog	
+			
+			Displays information on syslog-enabled forwarding configurations on the local machine.	
+			
+		.Example
+			Get-SplunkOutputSyslog -name aNewSplunkOutputSyslog -Computername splunk6.server.com	
+			
+			Gets information on the syslog-enabled forwarding server named 
+			"aNewSplunkOutputSyslog" on the server splunk6.server.com.
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>	
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter()]

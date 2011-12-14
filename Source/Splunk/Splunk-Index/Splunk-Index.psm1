@@ -17,63 +17,116 @@
 #region Get-SplunkIndex
 function Get-SplunkIndex
 {
+	<#
+        .Synopsis 
+            Gets a list of all indexes configured on a Splunk instance.		
+            
+        .Description
+            Gets a list of all indexes configured on a Splunk instance.		
+            
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
+		.OUTPUTS
+            This function does not produce pipeline output.
+            
+		.Example				
+			Get-SplunkIndex | Format-Table Name,  homePath, coldPath, Disabled	
+			
+			Gets a list of all available indexes on the Splunk instance on the
+			local Splunk instance and formats the output in a table that 
+			contains the name, the main and cold paths to the index, and 
+			whether or not it is disabled.	
+			
+		.Example
+			Get-SplunkIndex -Filter "_*" -SortDirection desc -ComputerName splunk7.server.com -Credential $credentials	
+			
+			Retrieves a list of all Splunk indexes on the computer 
+			splunk7.server.com that begin with "_", using credentials cached 
+			in the $credentials variable.
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 
 		[Parameter()]
-		#Indicates the maximum number of entries to return. To return all entries, specify 0. 
-		[int]$Count = 30,
+		[int]
+#Indicates the maximum number of entries to return. To return all entries, specify 0. 
+$Count = 30,
 		
 		[Parameter()]
-		#Index for first item to return. 
-		[int]$Offset = 0,
+		[int]
+#Index for first item to return. 
+$Offset = 0,
 		
 		[Parameter()]
-		#Boolean predicate to filter results
-		[string]$Search,
+		[string]
+#Boolean predicate to filter results
+$Search,
 		
 		[Parameter(Position=0,ParameterSetName='byFilter')]
-		#Regular expression used to match index name
-		[string]$Filter = '.*',
+		[string]
+#Regular expression used to match index name
+$Filter = '.*',
 		
 		[Parameter(Position=0,ParameterSetName='byName',Mandatory=$true)]
-		#Boolean predicate to filter results
-		[string]$Name,
+		[string]
+#Boolean predicate to filter results
+$Name,
 		
 		[Parameter()]
 		[ValidateSet("asc","desc")]
-		#Indicates whether to sort the entries returned in ascending or descending order. Valid values: (asc | desc).  Defaults to asc.
-		[string]$SortDirection = "asc",
+		[string]
+#Indicates whether to sort the entries returned in ascending or descending order. Valid values: (asc | desc).  Defaults to asc.
+$SortDirection = "asc",
 		
 		[Parameter()]
 		[ValidateSet("auto","alpha","alpha_case","num")]
-		#Indicates the collating sequence for sorting the returned entries. Valid values: (auto | alpha | alpha_case | num).  Defaults to auto.
-		[string]$SortMode = "auto",
+		[string]
+#Indicates the collating sequence for sorting the returned entries. Valid values: (auto | alpha | alpha_case | num).  Defaults to auto.
+$SortMode = "auto",
 		
 		[Parameter()]
-		# Field to sort by.
-		[string]$SortKey,
+		[string]
+# Field to sort by.
+$SortKey,
 		
 		[Parameter()]
 		[Alias( "Summary", "Short", "Fast" )]
-		# If true, leaves out certain index details in order to provide a faster response. 
-		[switch]$Summarize,
+		[switch]
+# If true, leaves out certain index details in order to provide a faster response. 
+$Summarize,
        
-        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+		[Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]
+        # Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName).
+		$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
-        [int]$Port            = ( get-splunkconnectionobject ).Port,
+        [int]
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port).
+		$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
         [ValidateSet("http", "https")]
-        [STRING]$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        [STRING]
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol).
+		$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
-        [int]$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        [int]
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout).
+		$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = ( get-splunkconnectionobject ).Credential
+        [System.Management.Automation.PSCredential]
+        [XML]
+# Credential object with the user name and password used to access the REST API.	
+		$Credential = ( get-splunkconnectionobject ).Credential
         
     )
 	Begin 
@@ -139,7 +192,7 @@ function Get-SplunkIndex
 	        Write-Verbose " [Get-SplunkIndex] :: Calling Invoke-SplunkAPIRequest @InvokeAPIParams"
 	        try
 	        {
-	            [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -Arguments $restArgs;
+$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -Arguments $restArgs;
 	        }
 	        catch
 	        {
@@ -208,27 +261,74 @@ function Get-SplunkIndex
 
 function New-SplunkIndex
 {
+	<#
+        .Synopsis 
+            Creates new indexes on a Splunk instance.		
+            
+        .Description
+            Creates new indexes on a Splunk instance.		
+            
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
+		.OUTPUTS
+            This function does not produce pipeline output.
+            
+		.Example				
+			New-SplunkIndex	
+			
+			Prompts for the name of a new Splunk index on the local machine, 
+			using all default index settings.	
+			
+		.Example
+			New-SplunkIndex -name aNewSplunkIndex `
+			  -homePath "%SPLUNK_HOME%\var\lib\splunk\NEW_INDEX_1\db" `
+			  -coldPath "%SPLUNK_HOME%\var\lib\splunk\NEW_INDEX_1\colddb" `
+			  -thawedPath "%SPLUNK_HOME%\var\lib\splunk\NEW_INDEX_1\thaweddb" `
+			  -maxHotBuckets 30 -maxDataSize 2GB `
+			  -Computername splunk4.server.com	
+			
+			Creates a new index called 'aNewSplunkIndex' on server 
+			splunk4.server.com. Sets the main database path for the index to 
+			"%SPLUNK_HOME%\var\lib\splunk\NEW_INDEX_1\db", the cold database 
+			path to "%SPLUNK_HOME\var\lib\splunk\NEW_INDEX_1\colddb", and the 
+			thawed database path to 
+			"%SPLUNK_HOME%\var\lib\splunk\NEW_INDEX_1\thaweddb". Configures 
+			the maximum data size to 2 gigabytes and the maximum number of hot
+			database buckets to 30 (from the default of 10).
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 	[Cmdletbinding(SupportsShouldProcess=$true)]
     Param(
 	
 		[Parameter(Mandatory=$true)]
 		[Alias("Index","IndexName")]
-		[string] $name,
+		[string] 
+		# The name of the new index
+		$name,
 		
 		[Parameter()]
-		# Verifies that all data retreived from the index is proper UTF8.  Will degrade indexing performance when enabled (set to true).
-		[switch] $assureUTF8, 	
+		[switch]
+# Verifies that all data retreived from the index is proper UTF8.  Will degrade indexing performance when enabled (set to true).
+$assureUTF8, 	
 
 		[Parameter()]
-		# Controls how many events make up a block for block signatures.  If this is set to 0, block signing is disabled for this index. A recommended value is 100.
-		[int] $blockSignSize,
+		[int]
+# Controls how many events make up a block for block signatures.  If this is set to 0, block signing is disabled for this index. A recommended value is 100.
+$blockSignSize,
 
 		[Parameter()]
-		# An absolute path that contains the colddbs for the index. The path must be readable and writable. Cold databases are opened as needed when searching. May be defined in terms of a volume definition.  Splunk will not start if an index lacks a valid coldPath.
-		[string] $coldPath, 	
+		[string]
+# An absolute path that contains the colddbs for the index. The path must be readable and writable. Cold databases are opened as needed when searching. May be defined in terms of a volume definition.  Splunk will not start if an index lacks a valid coldPath.
+$coldPath, 	
 		
 		[Parameter()]
-		# Destination path for the frozen archive. Use as an alternative to a coldToFrozenScript. Splunk automatically puts frozen buckets in this directory.
+		[string]
+# Destination path for the frozen archive. Use as an alternative to a coldToFrozenScript. Splunk automatically puts frozen buckets in this directory.
 		#		
 		#Bucket freezing policy is as follows:
 		#
@@ -241,7 +341,7 @@ function New-SplunkIndex
 		#To thaw, gunzip the zipped files and move the bucket into the thawed directory 
 		#
 		#If both coldToFrozenDir and coldToFrozenScript are specified, coldToFrozenDir takes precedence
-		[string] $coldToFrozenDir,
+$coldToFrozenDir,
 
 		[Parameter()]
 		# Path to the archiving script.  If your script requires a program to run it (for example, python), specify the program followed by the path. The script must be in $SPLUNK_HOME/bin or one of its subdirectories.  Splunk ships with an example archiving script in $SPLUNK_HOME/bin called coldToFrozenExample.py. Splunk DOES NOT recommend using this example script directly. It uses a default path, and if modified in place any changes will be overwritten on upgrade.  Splunk recommends copying the example script to a new file in bin and modifying it for your system. Most importantly, change the default archive path to an existing directory that fits your needs.  If your new script in bin/ is named myColdToFrozen.py, set this key to the following: "$SPLUNK_HOME/bin/python" "$SPLUNK_HOME/bin/myColdToFrozen.py".  By default, the example script has two possible behaviors when archiving:  For buckets created from version 4.2 and on, it removes all files except for rawdata. To thaw: cd to the frozen bucket and type splunk rebuild ., then copy the bucket to thawed for that index. We recommend using the coldToFrozenDir parameter unless you need to perform a more advanced operation upon freezing buckets.  For older-style buckets, we simply gzip all the .tsidx files. To thaw: cd to the frozen bucket and unzip the tsidx files, then copy the bucket to thawed for that index 
@@ -249,117 +349,150 @@ function New-SplunkIndex
 
 
 		[Parameter()]
-		# This parameter is ignored. The splunkd process always compresses raw data.
-		[switch] $compressRawdata,
+		[switch]
+# This parameter is ignored. The splunkd process always compresses raw data.
+$compressRawdata,
 
 		[Parameter()]
-		# Number of seconds after which indexed data rolls to frozen. Defaults to 188697600 (6 years).  Freezing data means it is removed from the index. If you need to archive your data, refer to coldToFrozenDir and coldToFrozenScript parameter documentation.
-		[int] $frozenTimePeriodInSecs,
+		[int]
+# Number of seconds after which indexed data rolls to frozen. Defaults to 188697600 (6 years).  Freezing data means it is removed from the index. If you need to archive your data, refer to coldToFrozenDir and coldToFrozenScript parameter documentation.
+$frozenTimePeriodInSecs,
 
 		[Parameter()]
-		# An absolute path that contains the hot and warm buckets for the index.  Required. Splunk will not start if an index lacks a valid homePath.  CAUTION: Path MUST be readable and writable.
-		[string] $homePath,
+		[string]
+# An absolute path that contains the hot and warm buckets for the index.  Required. Splunk will not start if an index lacks a valid homePath.  CAUTION: Path MUST be readable and writable.
+$homePath,
 
 		[Parameter()]
-		# The number of concurrent optimize processes that can run against a hot bucket.  This number should be increased if instructed by Splunk Support. Typically the default value should suffice.
-		[int] $maxConcurrentOptimizes,
+		[int]
+# The number of concurrent optimize processes that can run against a hot bucket.  This number should be increased if instructed by Splunk Support. Typically the default value should suffice.
+$maxConcurrentOptimizes,
 
 		[Parameter()]
-		# The maximum size in MB for a hot DB to reach before a roll to warm is triggered. Specifying "auto" or "auto_high_volume" causes Splunk to autotune this parameter (recommended).Use "auto_high_volume" for high volume indexes (such as the main index); otherwise, use "auto". A "high volume index" would typically be considered one that gets over 10GB of data per day.  "auto" sets the size to 750MB.  "auto_high_volume" sets the size to 10GB on 64-bit, and 1GB on 32-bit systems.  Although the maximum value you can set this is 1048576 MB, which corresponds to 1 TB, a reasonable number ranges anywhere from 100 - 50000. Any number outside this range should be approved by Splunk Support before proceeding.  If you specify an invalid number or string, maxDataSize will be auto tuned.  NOTE: The precise size of your warm buckets may vary from maxDataSize, due to post-processing and timing issues with the rolling policy.
-		[string] $maxDataSize,
+		[string]
+# The maximum size in MB for a hot DB to reach before a roll to warm is triggered. Specifying "auto" or "auto_high_volume" causes Splunk to autotune this parameter (recommended).Use "auto_high_volume" for high volume indexes (such as the main index); otherwise, use "auto". A "high volume index" would typically be considered one that gets over 10GB of data per day.  "auto" sets the size to 750MB.  "auto_high_volume" sets the size to 10GB on 64-bit, and 1GB on 32-bit systems.  Although the maximum value you can set this is 1048576 MB, which corresponds to 1 TB, a reasonable number ranges anywhere from 100 - 50000. Any number outside this range should be approved by Splunk Support before proceeding.  If you specify an invalid number or string, maxDataSize will be auto tuned.  NOTE: The precise size of your warm buckets may vary from maxDataSize, due to post-processing and timing issues with the rolling policy.
+$maxDataSize,
 
 		[Parameter()]
-		# Maximum hot buckets that can exist per index. Defaults to 3.  When maxHotBuckets is exceeded, Splunk rolls the least recently used (LRU) hot bucket to warm. Both normal hot buckets and quarantined hot buckets count towards this total. This setting operates independently of maxHotIdleSecs, which can also cause hot buckets to roll.
-		[int] $maxHotBuckets, 	
+		[int]
+# Maximum hot buckets that can exist per index. Defaults to 3.  When maxHotBuckets is exceeded, Splunk rolls the least recently used (LRU) hot bucket to warm. Both normal hot buckets and quarantined hot buckets count towards this total. This setting operates independently of maxHotIdleSecs, which can also cause hot buckets to roll.
+$maxHotBuckets, 	
 
 		[Parameter()]
-		# Maximum life, in seconds, of a hot bucket. Defaults to 0.  If a hot bucket exceeds maxHotIdleSecs, Splunk rolls it to warm. This setting operates independently of maxHotBuckets, which can also cause hot buckets to roll. A value of 0 turns off the idle check (equivalent to INFINITE idle time).
-		[int] $maxHotIdleSecs, 	
+		[int]
+# Maximum life, in seconds, of a hot bucket. Defaults to 0.  If a hot bucket exceeds maxHotIdleSecs, Splunk rolls it to warm. This setting operates independently of maxHotBuckets, which can also cause hot buckets to roll. A value of 0 turns off the idle check (equivalent to INFINITE idle time).
+$maxHotIdleSecs, 	
 
 		[Parameter()]
-		# Upper bound of target maximum timespan of hot/warm buckets in seconds. Defaults to 7776000 seconds (90 days).  NOTE: if you set this too small, you can get an explosion of hot/warm buckets in the filesystem. The system sets a lower bound implicitly for this parameter at 3600, but this is an advanced parameter that should be set with care and understanding of the characteristics of your data.
-		[int] $maxHotSpanSecs,
+		[int]
+# Upper bound of target maximum timespan of hot/warm buckets in seconds. Defaults to 7776000 seconds (90 days).  NOTE: if you set this too small, you can get an explosion of hot/warm buckets in the filesystem. The system sets a lower bound implicitly for this parameter at 3600, but this is an advanced parameter that should be set with care and understanding of the characteristics of your data.
+$maxHotSpanSecs,
 
 		[Parameter()]
-		# The amount of memory, expressed in MB, to allocate for buffering a single tsidx file into memory before flushing to disk. Defaults to 5. The default is recommended for all environments.  IMPORTANT: Calculate this number carefully. Setting this number incorrectly may have adverse effects on your systems memory and/or splunkd stability/performance.
-		[int] $maxMemMB, 	
+		[int]
+# The amount of memory, expressed in MB, to allocate for buffering a single tsidx file into memory before flushing to disk. Defaults to 5. The default is recommended for all environments.  IMPORTANT: Calculate this number carefully. Setting this number incorrectly may have adverse effects on your systems memory and/or splunkd stability/performance.
+$maxMemMB, 	
 
 		[Parameter()]
 		# Sets the maximum number of unique lines in .data files in a bucket, which may help to reduce memory consumption. If set to 0, this setting is ignored (it is treated as infinite).  If exceeded, a hot bucket is rolled to prevent further increase. If your buckets are rolling due to Strings.data hitting this limit, the culprit may be the punct field in your data. If you don't use punct, it may be best to simply disable this (see props.conf.spec in $SPLUNK_HOME/etc/system/README).  There is a small time delta between when maximum is exceeded and bucket is rolled. This means a bucket may end up with epsilon more lines than specified, but this is not a major concern unless excess is significant.
 		[int] $maxMetaEntries, 	
 		
 		[Parameter()]
-		# The indexer fires off helper processes like splunk-optimize, recover-metadata, and others. This parameter controls how many processes the indexer fires off at any given time. CAUTION: This is an advanced parameter, do NOT set this unless instructed by Splunk Support.
-		[int]$maxRunningProcessGroups, 	
+		[int]
+# The indexer fires off helper processes like splunk-optimize, recover-metadata, and others. This parameter controls how many processes the indexer fires off at any given time. CAUTION: This is an advanced parameter, do NOT set this unless instructed by Splunk Support.
+$maxRunningProcessGroups, 	
 
 		[Parameter()]
-		# The maximum size of an index (in MB). If an index grows larger than the maximum size, the oldest data is frozen.
-		[int] $maxTotalDataSizeMB, 	
+		[int]
+# The maximum size of an index (in MB). If an index grows larger than the maximum size, the oldest data is frozen.
+$maxTotalDataSizeMB, 	
 		
 		[Parameter()]
-		# The maximum number of warm buckets. If this number is exceeded, the warm bucket/s with the lowest value for their latest times will be moved to cold.
-		[int] $maxWarmDBCount, 	
+		[int]
+# The maximum number of warm buckets. If this number is exceeded, the warm bucket/s with the lowest value for their latest times will be moved to cold.
+$maxWarmDBCount, 	
 
 		[Parameter()]
-		# Specify an integer (or "disable") for this parameter.  This parameter sets how frequently splunkd forces a filesystem sync while compressing journal slices. During this interval, uncompressed slices are left on disk even after they are compressed. Then splunkd forces a filesystem sync of the compressed journal and removes the accumulated uncompressed files. If 0 is specified, splunkd forces a filesystem sync after every slice completes compressing. Specifying "disable" disables syncing entirely: uncompressed slices are removed as soon as compression is complete. NOTE: Some filesystems are very inefficient at performing sync operations, so only enable this if you are sure it is needed.
-		[string] $minRawFileSyncSecs,
+		[string]
+# Specify an integer (or "disable") for this parameter.  This parameter sets how frequently splunkd forces a filesystem sync while compressing journal slices. During this interval, uncompressed slices are left on disk even after they are compressed. Then splunkd forces a filesystem sync of the compressed journal and removes the accumulated uncompressed files. If 0 is specified, splunkd forces a filesystem sync after every slice completes compressing. Specifying "disable" disables syncing entirely: uncompressed slices are removed as soon as compression is complete. NOTE: Some filesystems are very inefficient at performing sync operations, so only enable this if you are sure it is needed.
+$minRawFileSyncSecs,
 
 		[Parameter()]
-		# Related to serviceMetaPeriod. If set, it enables metadata sync every <integer> seconds, but only for records where the sync can be done efficiently in-place, without requiring a full re-write of the metadata file. Records that require full re-write are be sync'ed at serviceMetaPeriod.  specifies, in seconds, how frequently it should sync. Zero means that this feature is turned off and serviceMetaPeriod is the only time when metadata sync happens.  If the value of partialServiceMetaPeriod is greater than serviceMetaPeriod, this setting has no effect.  By default it is turned off (zero).
-		[int] $partialServiceMetaPeriod,
+		[int]
+# Related to serviceMetaPeriod. If set, it enables metadata sync every <integer> seconds, but only for records where the sync can be done efficiently in-place, without requiring a full re-write of the metadata file. Records that require full re-write are be sync'ed at serviceMetaPeriod.  specifies, in seconds, how frequently it should sync. Zero means that this feature is turned off and serviceMetaPeriod is the only time when metadata sync happens.  If the value of partialServiceMetaPeriod is greater than serviceMetaPeriod, this setting has no effect.  By default it is turned off (zero).
+$partialServiceMetaPeriod,
 
 		[Parameter()]
-		# Events with timestamp of quarantineFutureSecs newer than "now" are dropped into quarantine bucket. Defaults to 2592000 (30 days).  This is a mechanism to prevent main hot buckets from being polluted with fringe events.
-		[int] $quarantineFutureSecs,
+		[int]
+# Events with timestamp of quarantineFutureSecs newer than "now" are dropped into quarantine bucket. Defaults to 2592000 (30 days).  This is a mechanism to prevent main hot buckets from being polluted with fringe events.
+$quarantineFutureSecs,
 
 		[Parameter()]
-		# Events with timestamp of quarantinePastSecs older than "now" are dropped into quarantine bucket. Defaults to 77760000 (900 days).  This is a mechanism to prevent the main hot buckets from being polluted with fringe events.
-		[int] $quarantinePastSecs, 	
+		[int]
+# Events with timestamp of quarantinePastSecs older than "now" are dropped into quarantine bucket. Defaults to 77760000 (900 days).  This is a mechanism to prevent the main hot buckets from being polluted with fringe events.
+$quarantinePastSecs, 	
 
 		[Parameter()]
-		# Target uncompressed size in bytes for individual raw slice in the rawdata journal of the index. Defaults to 131072 (128KB). 0 is not a valid value. If 0 is specified, rawChunkSizeBytes is set to the default value.  NOTE: rawChunkSizeBytes only specifies a target chunk size. The actual chunk size may be slightly larger by an amount proportional to an individual event size.  WARNING: This is an advanced parameter. Only change it if you are instructed to do so by Splunk Support.
-		[int] $rawChunkSizeBytes,
+		[int]
+# Target uncompressed size in bytes for individual raw slice in the rawdata journal of the index. Defaults to 131072 (128KB). 0 is not a valid value. If 0 is specified, rawChunkSizeBytes is set to the default value.  NOTE: rawChunkSizeBytes only specifies a target chunk size. The actual chunk size may be slightly larger by an amount proportional to an individual event size.  WARNING: This is an advanced parameter. Only change it if you are instructed to do so by Splunk Support.
+$rawChunkSizeBytes,
 		
 		[Parameter()]
-		# How frequently (in seconds) to check if a new hot bucket needs to be created. Also, how frequently to check if there are any warm/cold buckets that should be rolled/frozen.
-		[int] $rotatePeriodInSecs,
+		[int]
+# How frequently (in seconds) to check if a new hot bucket needs to be created. Also, how frequently to check if there are any warm/cold buckets that should be rolled/frozen.
+$rotatePeriodInSecs,
 
 		[Parameter()]
-		#Defines how frequently metadata is synced to disk, in seconds. Defaults to 25 (seconds). You may want to set this to a higher value if the sum of your metadata file sizes is larger than many tens of megabytes, to avoid the hit on I/O in the indexing fast path.
-		[int] $serviceMetaPeriod,
+		[int]
+#Defines how frequently metadata is synced to disk, in seconds. Defaults to 25 (seconds). You may want to set this to a higher value if the sum of your metadata file sizes is larger than many tens of megabytes, to avoid the hit on I/O in the indexing fast path.
+$serviceMetaPeriod,
 		
 		[Parameter()]
-		# Specify a comma-separated list of indexes. This parameter suppresses index missing warning banner messages for the specified indexes. Defaults to empty.
-		[string[]] $suppressBannerList, 	
+		[string[]]
+# Specify a comma-separated list of indexes. This parameter suppresses index missing warning banner messages for the specified indexes. Defaults to empty.
+$suppressBannerList, 	
 
 		[Parameter()]
-		# When true, a sync operation is called before file descriptor is closed on metadata file updates. This functionality improves integrity of metadata files, especially in regards to operating system crashes/machine failures.  Do not change this parameter without the input of a Splunk Support.
-		[switch] $syncMeta = $true, 
+		[switch]
+# When true, a sync operation is called before file descriptor is closed on metadata file updates. This functionality improves integrity of metadata files, especially in regards to operating system crashes/machine failures.  Do not change this parameter without the input of a Splunk Support.
+$syncMeta = $true, 
 
 		[Parameter()]
-		# An absolute path that contains the thawed (resurrected) databases for the index.  Cannot be defined in terms of a volume definition.  Splunk will not start if an index lacks a valid thawedPath
-		[string] $thawedPath, 	
+		[string]
+# An absolute path that contains the thawed (resurrected) databases for the index.  Cannot be defined in terms of a volume definition.  Splunk will not start if an index lacks a valid thawedPath
+$thawedPath, 	
 
 
 		[Parameter()]
-		#  	Defines how frequently Splunk checks for index throttling condition, in seconds. Defaults to 15 (seconds).  Do not change this parameter without the input of a Splunk Support. 	    
-		[int] $throttleCheckPeriod,
+		[int]
+#  	Defines how frequently Splunk checks for index throttling condition, in seconds. Defaults to 15 (seconds).  Do not change this parameter without the input of a Splunk Support. 	    
+$throttleCheckPeriod,
        
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+        [String]
+        # Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName).
+		$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
-        [int]$Port            = ( get-splunkconnectionobject ).Port,
+        [int]
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port).
+		$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
-		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        [ValidateSet("http", "https")]
+        [STRING]
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol).
+		$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
-        [int]$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        [int]
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout).
+		$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = ( get-splunkconnectionobject ).Credential        
+        [System.Management.Automation.PSCredential]
+        # Credential object with the user name and password used to access the REST API.	
+		$Credential = ( get-splunkconnectionobject ).Credential
     )
 	
 	Begin
@@ -466,6 +599,30 @@ function New-SplunkIndex
 
 function Set-SplunkIndex
 {
+	<#
+        .Synopsis 
+            Sets the configuration of an existing index on a Splunk instance.		
+            
+        .Description
+            Sets the configuration of an existing index on a Splunk instance.		
+            
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
+		.OUTPUTS
+            This function does not produce pipeline output.
+            
+		.Example				
+			Set-SplunkIndex -Name main -maxHotBuckets 15	
+			
+			Sets the maximum number of hot buckets in the "main" index on the 
+			local machine's Splunk instance to 15.
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 	[Cmdletbinding(SupportsShouldProcess=$true)]
     Param(
 	
@@ -474,15 +631,18 @@ function Set-SplunkIndex
 		[string] $name,
 		
 		[Parameter()]
-		# Verifies that all data retreived from the index is proper UTF8.  Will degrade indexing performance when enabled (set to true).
-		[switch] $assureUTF8, 	
+		[switch]
+# Verifies that all data retreived from the index is proper UTF8.  Will degrade indexing performance when enabled (set to true).
+$assureUTF8, 	
 
 		[Parameter()]
-		# Controls how many events make up a block for block signatures.  If this is set to 0, block signing is disabled for this index. A recommended value is 100.
-		[int] $blockSignSize,
+		[int]
+# Controls how many events make up a block for block signatures.  If this is set to 0, block signing is disabled for this index. A recommended value is 100.
+$blockSignSize,
 
 		[Parameter()]
-		# Destination path for the frozen archive. Use as an alternative to a coldToFrozenScript. Splunk automatically puts frozen buckets in this directory.
+		[string]
+# Destination path for the frozen archive. Use as an alternative to a coldToFrozenScript. Splunk automatically puts frozen buckets in this directory.
 		#		
 		#Bucket freezing policy is as follows:
 		#
@@ -495,7 +655,7 @@ function Set-SplunkIndex
 		#To thaw, gunzip the zipped files and move the bucket into the thawed directory 
 		#
 		#If both coldToFrozenDir and coldToFrozenScript are specified, coldToFrozenDir takes precedence
-		[string] $coldToFrozenDir,
+$coldToFrozenDir,
 
 		[Parameter()]
 		# Path to the archiving script.  If your script requires a program to run it (for example, python), specify the program followed by the path. The script must be in $SPLUNK_HOME/bin or one of its subdirectories.  Splunk ships with an example archiving script in $SPLUNK_HOME/bin called coldToFrozenExample.py. Splunk DOES NOT recommend using this example script directly. It uses a default path, and if modified in place any changes will be overwritten on upgrade.  Splunk recommends copying the example script to a new file in bin and modifying it for your system. Most importantly, change the default archive path to an existing directory that fits your needs.  If your new script in bin/ is named myColdToFrozen.py, set this key to the following: "$SPLUNK_HOME/bin/python" "$SPLUNK_HOME/bin/myColdToFrozen.py".  By default, the example script has two possible behaviors when archiving:  For buckets created from version 4.2 and on, it removes all files except for rawdata. To thaw: cd to the frozen bucket and type splunk rebuild ., then copy the bucket to thawed for that index. We recommend using the coldToFrozenDir parameter unless you need to perform a more advanced operation upon freezing buckets.  For older-style buckets, we simply gzip all the .tsidx files. To thaw: cd to the frozen bucket and unzip the tsidx files, then copy the bucket to thawed for that index 
@@ -503,112 +663,138 @@ function Set-SplunkIndex
 
 
 		[Parameter()]
-		# This parameter is ignored. The splunkd process always compresses raw data.
-		[switch] $compressRawdata,
+		[switch]
+# This parameter is ignored. The splunkd process always compresses raw data.
+$compressRawdata,
 
 		[Parameter()]
-		# Number of seconds after which indexed data rolls to frozen. Defaults to 188697600 (6 years).  Freezing data means it is removed from the index. If you need to archive your data, refer to coldToFrozenDir and coldToFrozenScript parameter documentation.
-		[int] $frozenTimePeriodInSecs,
+		[int]
+# Number of seconds after which indexed data rolls to frozen. Defaults to 188697600 (6 years).  Freezing data means it is removed from the index. If you need to archive your data, refer to coldToFrozenDir and coldToFrozenScript parameter documentation.
+$frozenTimePeriodInSecs,
 
 		[Parameter()]
-		# An absolute path that contains the hot and warm buckets for the index.  Required. Splunk will not start if an index lacks a valid homePath.  CAUTION: Path MUST be readable and writable.
-		[string] $homePath,
+		[string]
+# An absolute path that contains the hot and warm buckets for the index.  Required. Splunk will not start if an index lacks a valid homePath.  CAUTION: Path MUST be readable and writable.
+$homePath,
 
 		[Parameter()]
-		# The number of concurrent optimize processes that can run against a hot bucket.  This number should be increased if instructed by Splunk Support. Typically the default value should suffice.
-		[int] $maxConcurrentOptimizes,
+		[int]
+# The number of concurrent optimize processes that can run against a hot bucket.  This number should be increased if instructed by Splunk Support. Typically the default value should suffice.
+$maxConcurrentOptimizes,
 
 		[Parameter()]
-		# The maximum size in MB for a hot DB to reach before a roll to warm is triggered. Specifying "auto" or "auto_high_volume" causes Splunk to autotune this parameter (recommended).Use "auto_high_volume" for high volume indexes (such as the main index); otherwise, use "auto". A "high volume index" would typically be considered one that gets over 10GB of data per day.  "auto" sets the size to 750MB.  "auto_high_volume" sets the size to 10GB on 64-bit, and 1GB on 32-bit systems.  Although the maximum value you can set this is 1048576 MB, which corresponds to 1 TB, a reasonable number ranges anywhere from 100 - 50000. Any number outside this range should be approved by Splunk Support before proceeding.  If you specify an invalid number or string, maxDataSize will be auto tuned.  NOTE: The precise size of your warm buckets may vary from maxDataSize, due to post-processing and timing issues with the rolling policy.
-		[string] $maxDataSize,
+		[string]
+# The maximum size in MB for a hot DB to reach before a roll to warm is triggered. Specifying "auto" or "auto_high_volume" causes Splunk to autotune this parameter (recommended).Use "auto_high_volume" for high volume indexes (such as the main index); otherwise, use "auto". A "high volume index" would typically be considered one that gets over 10GB of data per day.  "auto" sets the size to 750MB.  "auto_high_volume" sets the size to 10GB on 64-bit, and 1GB on 32-bit systems.  Although the maximum value you can set this is 1048576 MB, which corresponds to 1 TB, a reasonable number ranges anywhere from 100 - 50000. Any number outside this range should be approved by Splunk Support before proceeding.  If you specify an invalid number or string, maxDataSize will be auto tuned.  NOTE: The precise size of your warm buckets may vary from maxDataSize, due to post-processing and timing issues with the rolling policy.
+$maxDataSize,
 
 		[Parameter()]
-		# Maximum hot buckets that can exist per index. Defaults to 3.  When maxHotBuckets is exceeded, Splunk rolls the least recently used (LRU) hot bucket to warm. Both normal hot buckets and quarantined hot buckets count towards this total. This setting operates independently of maxHotIdleSecs, which can also cause hot buckets to roll.
-		[int] $maxHotBuckets, 	
+		[int]
+# Maximum hot buckets that can exist per index. Defaults to 3.  When maxHotBuckets is exceeded, Splunk rolls the least recently used (LRU) hot bucket to warm. Both normal hot buckets and quarantined hot buckets count towards this total. This setting operates independently of maxHotIdleSecs, which can also cause hot buckets to roll.
+$maxHotBuckets, 	
 
 		[Parameter()]
-		# Maximum life, in seconds, of a hot bucket. Defaults to 0.  If a hot bucket exceeds maxHotIdleSecs, Splunk rolls it to warm. This setting operates independently of maxHotBuckets, which can also cause hot buckets to roll. A value of 0 turns off the idle check (equivalent to INFINITE idle time).
-		[int] $maxHotIdleSecs, 	
+		[int]
+# Maximum life, in seconds, of a hot bucket. Defaults to 0.  If a hot bucket exceeds maxHotIdleSecs, Splunk rolls it to warm. This setting operates independently of maxHotBuckets, which can also cause hot buckets to roll. A value of 0 turns off the idle check (equivalent to INFINITE idle time).
+$maxHotIdleSecs, 	
 
 		[Parameter()]
-		# Upper bound of target maximum timespan of hot/warm buckets in seconds. Defaults to 7776000 seconds (90 days).  NOTE: if you set this too small, you can get an explosion of hot/warm buckets in the filesystem. The system sets a lower bound implicitly for this parameter at 3600, but this is an advanced parameter that should be set with care and understanding of the characteristics of your data.
-		[int] $maxHotSpanSecs,
+		[int]
+# Upper bound of target maximum timespan of hot/warm buckets in seconds. Defaults to 7776000 seconds (90 days).  NOTE: if you set this too small, you can get an explosion of hot/warm buckets in the filesystem. The system sets a lower bound implicitly for this parameter at 3600, but this is an advanced parameter that should be set with care and understanding of the characteristics of your data.
+$maxHotSpanSecs,
 
 		[Parameter()]
-		# The amount of memory, expressed in MB, to allocate for buffering a single tsidx file into memory before flushing to disk. Defaults to 5. The default is recommended for all environments.  IMPORTANT: Calculate this number carefully. Setting this number incorrectly may have adverse effects on your systems memory and/or splunkd stability/performance.
-		[int] $maxMemMB, 	
+		[int]
+# The amount of memory, expressed in MB, to allocate for buffering a single tsidx file into memory before flushing to disk. Defaults to 5. The default is recommended for all environments.  IMPORTANT: Calculate this number carefully. Setting this number incorrectly may have adverse effects on your systems memory and/or splunkd stability/performance.
+$maxMemMB, 	
 
 		[Parameter()]
 		# Sets the maximum number of unique lines in .data files in a bucket, which may help to reduce memory consumption. If set to 0, this setting is ignored (it is treated as infinite).  If exceeded, a hot bucket is rolled to prevent further increase. If your buckets are rolling due to Strings.data hitting this limit, the culprit may be the punct field in your data. If you don't use punct, it may be best to simply disable this (see props.conf.spec in $SPLUNK_HOME/etc/system/README).  There is a small time delta between when maximum is exceeded and bucket is rolled. This means a bucket may end up with epsilon more lines than specified, but this is not a major concern unless excess is significant.
 		[int] $maxMetaEntries, 	
 		
 		[Parameter()]
-		# The indexer fires off helper processes like splunk-optimize, recover-metadata, and others. This parameter controls how many processes the indexer fires off at any given time. CAUTION: This is an advanced parameter, do NOT set this unless instructed by Splunk Support.
-		[int]$maxRunningProcessGroups, 	
+		[int]
+# The indexer fires off helper processes like splunk-optimize, recover-metadata, and others. This parameter controls how many processes the indexer fires off at any given time. CAUTION: This is an advanced parameter, do NOT set this unless instructed by Splunk Support.
+$maxRunningProcessGroups, 	
 
 		[Parameter()]
-		# The maximum size of an index (in MB). If an index grows larger than the maximum size, the oldest data is frozen.
-		[int] $maxTotalDataSizeMB, 	
+		[int]
+# The maximum size of an index (in MB). If an index grows larger than the maximum size, the oldest data is frozen.
+$maxTotalDataSizeMB, 	
 		
 		[Parameter()]
-		# The maximum number of warm buckets. If this number is exceeded, the warm bucket/s with the lowest value for their latest times will be moved to cold.
-		[int] $maxWarmDBCount, 	
+		[int]
+# The maximum number of warm buckets. If this number is exceeded, the warm bucket/s with the lowest value for their latest times will be moved to cold.
+$maxWarmDBCount, 	
 
 		[Parameter()]
-		# Specify an integer (or "disable") for this parameter.  This parameter sets how frequently splunkd forces a filesystem sync while compressing journal slices. During this interval, uncompressed slices are left on disk even after they are compressed. Then splunkd forces a filesystem sync of the compressed journal and removes the accumulated uncompressed files. If 0 is specified, splunkd forces a filesystem sync after every slice completes compressing. Specifying "disable" disables syncing entirely: uncompressed slices are removed as soon as compression is complete. NOTE: Some filesystems are very inefficient at performing sync operations, so only enable this if you are sure it is needed.
-		[string] $minRawFileSyncSecs,
+		[string]
+# Specify an integer (or "disable") for this parameter.  This parameter sets how frequently splunkd forces a filesystem sync while compressing journal slices. During this interval, uncompressed slices are left on disk even after they are compressed. Then splunkd forces a filesystem sync of the compressed journal and removes the accumulated uncompressed files. If 0 is specified, splunkd forces a filesystem sync after every slice completes compressing. Specifying "disable" disables syncing entirely: uncompressed slices are removed as soon as compression is complete. NOTE: Some filesystems are very inefficient at performing sync operations, so only enable this if you are sure it is needed.
+$minRawFileSyncSecs,
 
 		[Parameter()]
-		# Related to serviceMetaPeriod. If set, it enables metadata sync every <integer> seconds, but only for records where the sync can be done efficiently in-place, without requiring a full re-write of the metadata file. Records that require full re-write are be sync'ed at serviceMetaPeriod.  specifies, in seconds, how frequently it should sync. Zero means that this feature is turned off and serviceMetaPeriod is the only time when metadata sync happens.  If the value of partialServiceMetaPeriod is greater than serviceMetaPeriod, this setting has no effect.  By default it is turned off (zero).
-		[int] $partialServiceMetaPeriod,
+		[int]
+# Related to serviceMetaPeriod. If set, it enables metadata sync every <integer> seconds, but only for records where the sync can be done efficiently in-place, without requiring a full re-write of the metadata file. Records that require full re-write are be sync'ed at serviceMetaPeriod.  specifies, in seconds, how frequently it should sync. Zero means that this feature is turned off and serviceMetaPeriod is the only time when metadata sync happens.  If the value of partialServiceMetaPeriod is greater than serviceMetaPeriod, this setting has no effect.  By default it is turned off (zero).
+$partialServiceMetaPeriod,
 
 		[Parameter()]
-		# Events with timestamp of quarantineFutureSecs newer than "now" are dropped into quarantine bucket. Defaults to 2592000 (30 days).  This is a mechanism to prevent main hot buckets from being polluted with fringe events.
-		[int] $quarantineFutureSecs,
+		[int]
+# Events with timestamp of quarantineFutureSecs newer than "now" are dropped into quarantine bucket. Defaults to 2592000 (30 days).  This is a mechanism to prevent main hot buckets from being polluted with fringe events.
+$quarantineFutureSecs,
 
 		[Parameter()]
-		# Events with timestamp of quarantinePastSecs older than "now" are dropped into quarantine bucket. Defaults to 77760000 (900 days).  This is a mechanism to prevent the main hot buckets from being polluted with fringe events.
-		[int] $quarantinePastSecs, 	
+		[int]
+# Events with timestamp of quarantinePastSecs older than "now" are dropped into quarantine bucket. Defaults to 77760000 (900 days).  This is a mechanism to prevent the main hot buckets from being polluted with fringe events.
+$quarantinePastSecs, 	
 
 		[Parameter()]
-		# Target uncompressed size in bytes for individual raw slice in the rawdata journal of the index. Defaults to 131072 (128KB). 0 is not a valid value. If 0 is specified, rawChunkSizeBytes is set to the default value.  NOTE: rawChunkSizeBytes only specifies a target chunk size. The actual chunk size may be slightly larger by an amount proportional to an individual event size.  WARNING: This is an advanced parameter. Only change it if you are instructed to do so by Splunk Support.
-		[int] $rawChunkSizeBytes,
+		[int]
+# Target uncompressed size in bytes for individual raw slice in the rawdata journal of the index. Defaults to 131072 (128KB). 0 is not a valid value. If 0 is specified, rawChunkSizeBytes is set to the default value.  NOTE: rawChunkSizeBytes only specifies a target chunk size. The actual chunk size may be slightly larger by an amount proportional to an individual event size.  WARNING: This is an advanced parameter. Only change it if you are instructed to do so by Splunk Support.
+$rawChunkSizeBytes,
 		
 		[Parameter()]
-		# How frequently (in seconds) to check if a new hot bucket needs to be created. Also, how frequently to check if there are any warm/cold buckets that should be rolled/frozen.
-		[int] $rotatePeriodInSecs,
+		[int]
+# How frequently (in seconds) to check if a new hot bucket needs to be created. Also, how frequently to check if there are any warm/cold buckets that should be rolled/frozen.
+$rotatePeriodInSecs,
 
 		[Parameter()]
-		#Defines how frequently metadata is synced to disk, in seconds. Defaults to 25 (seconds). You may want to set this to a higher value if the sum of your metadata file sizes is larger than many tens of megabytes, to avoid the hit on I/O in the indexing fast path.
-		[int] $serviceMetaPeriod,
+		[int]
+#Defines how frequently metadata is synced to disk, in seconds. Defaults to 25 (seconds). You may want to set this to a higher value if the sum of your metadata file sizes is larger than many tens of megabytes, to avoid the hit on I/O in the indexing fast path.
+$serviceMetaPeriod,
 		
 		[Parameter()]
-		# Specify a comma-separated list of indexes. This parameter suppresses index missing warning banner messages for the specified indexes. Defaults to empty.
-		[string[]] $suppressBannerList, 	
+		[string[]]
+# Specify a comma-separated list of indexes. This parameter suppresses index missing warning banner messages for the specified indexes. Defaults to empty.
+$suppressBannerList, 	
 
 		[Parameter()]
-		# When true, a sync operation is called before file descriptor is closed on metadata file updates. This functionality improves integrity of metadata files, especially in regards to operating system crashes/machine failures.  Do not change this parameter without the input of a Splunk Support.
-		[switch] $syncMeta = $true, 
+		[switch]
+# When true, a sync operation is called before file descriptor is closed on metadata file updates. This functionality improves integrity of metadata files, especially in regards to operating system crashes/machine failures.  Do not change this parameter without the input of a Splunk Support.
+$syncMeta = $true, 
 
 		[Parameter()]
-		#  	Defines how frequently Splunk checks for index throttling condition, in seconds. Defaults to 15 (seconds).  Do not change this parameter without the input of a Splunk Support. 	    
-		[int] $throttleCheckPeriod,
+		[int]
+#  	Defines how frequently Splunk checks for index throttling condition, in seconds. Defaults to 15 (seconds).  Do not change this parameter without the input of a Splunk Support. 	    
+$throttleCheckPeriod,
        
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
-        [int]$Port            = ( get-splunkconnectionobject ).Port,
+        [int]
+$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
 		[ValidateSet("http", "https")]
-        [STRING]$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        [STRING]
+$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
-        [int]$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        [int]
+$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = ( get-splunkconnectionobject ).Credential        
+        [System.Management.Automation.PSCredential]
+$Credential = ( get-splunkconnectionobject ).Credential        
     )
 	
 	Begin
@@ -767,35 +953,78 @@ function Set-SplunkIndex
 
 function Disable-SplunkIndex
 {
+	<#
+        .Synopsis 
+            Disables a Splunk index.
+            
+        .Description
+            Disables a Splunk index.
+            
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
+		.OUTPUTS
+            This function does not produce pipeline output.
+            
+		.Example
+			Disable-SplunkIndex -name summary
+			
+			Disables the "summary" index on the local machine.
+			
+		.Example
+			Disable-SplunkIndex -name anewindex -Computername $all_ad_servers	
+			
+			Disables the index "anewindex" on all servers in the $all_ad_servers variable.
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
+
 	[CmdletBinding(DefaultParameterSetName='byFilter', SupportsShouldProcess=$true)]
     Param(
 
 		[Parameter(Position=0,ParameterSetName='byFilter')]
-		#Regular expression used to match index name
-		[string]$Filter = '.*',
+		[string]
+#Regular expression used to match index name
+$Filter = '.*',
 		
 		[Parameter(Position=0,ParameterSetName='byName',Mandatory=$true)]
-		#Boolean predicate to filter results
-		[string]$Name,
+		[string]
+#Boolean predicate to filter results
+$Name,
 		
-        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+		[Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]
+        # Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName).
+		$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
-        [int]$Port            = ( get-splunkconnectionobject ).Port,
+        [int]
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port).
+		$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
         [ValidateSet("http", "https")]
-        [STRING]$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        [STRING]
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol).
+		$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
-        [int]$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        [int]
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout).
+		$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = ( get-splunkconnectionobject ).Credential,
+        [System.Management.Automation.PSCredential]
+        # Credential object with the user name and password used to access the REST API.	
+		$Credential = ( get-splunkconnectionobject ).Credential,		
 		
 		[Parameter()]
-		[Switch] $Force
+		[Switch] 
+		# Specify to bypass standard PowerShell confirmation processes
+		$Force
         
     )
 	Begin 
@@ -862,35 +1091,77 @@ function Disable-SplunkIndex
 
 function Enable-SplunkIndex
 {
+	<#
+        .Synopsis 
+            Enables specified Splunk indexes.
+            
+        .Description
+            Enables specified Splunk indexes.
+            
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
+		.OUTPUTS
+            This function does not produce pipeline output.
+            
+		.Example
+			Enable-SplunkIndex -Name main -ComputerName splunk5.server.com -Credential $Credential
+			
+			Enables the 'main' index on the Splunk nistance on server splunk5.server.com using credentials cached in the "$credential" variable.
+			
+		.Example
+			Enable-SplunkIndex -Filter splunk* -port 8094	
+			
+			Connects to the Splunk instance on the local machine on port 8094 and enables all indexes that begin with "splunk."
+		
+        .Notes
+	        AUTHOR:    Splunk\jchristopher
+	        Website:   www.splunk.com
+	        #Requires -Version 2.0
+    #>
 	[CmdletBinding(DefaultParameterSetName='byFilter', SupportsShouldProcess=$true)]
     Param(
 
 		[Parameter(Position=0,ParameterSetName='byFilter')]
-		#Regular expression used to match index name
-		[string]$Filter = '.*',
+		[string]
+#Regular expression used to match index name
+$Filter = '.*',
 		
 		[Parameter(Position=0,ParameterSetName='byName',Mandatory=$true)]
-		#Boolean predicate to filter results
-		[string]$Name,
+		[string]
+#Boolean predicate to filter results
+$Name,
 		
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+        [String]
+        # Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName).
+		$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
-        [int]$Port            = ( get-splunkconnectionobject ).Port,
+        [int]
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port).
+		$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
         [ValidateSet("http", "https")]
-        [STRING]$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        [STRING]
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol).
+		$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
-        [int]$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        [int]
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout).
+		$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]$Credential = ( get-splunkconnectionobject ).Credential,
+        [System.Management.Automation.PSCredential]
+        # Credential object with the user name and password used to access the REST API.	
+		$Credential = ( get-splunkconnectionobject ).Credential,
 		
 		[Parameter()]
-		[Switch] $Force
+		[Switch] 
+		# Specify to bypass standard PowerShell confirmation processes
+		$Force
         
     )
 	Begin 
