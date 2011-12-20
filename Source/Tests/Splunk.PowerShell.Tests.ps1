@@ -86,7 +86,8 @@ Get-Command -Module splunk | foreach {
 					Get-Help -full | `
 					select -exp parameters | `
 					select -exp parameter | `
-					select -exp name;
+					where { $_.description } |
+					select -ExpandProperty name;
 					
 				$paramNames -contains $_;
 				

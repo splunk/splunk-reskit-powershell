@@ -123,9 +123,8 @@ $Summarize,
 		$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        [XML]
-# Credential object with the user name and password used to access the REST API.	
+        [System.Management.Automation.PSCredential]        
+		# Credential object with the user name and password used to access the REST API.	
 		$Credential = ( get-splunkconnectionobject ).Credential
         
     )
@@ -344,14 +343,15 @@ $coldPath,
 $coldToFrozenDir,
 
 		[Parameter()]
+		[string] 
 		# Path to the archiving script.  If your script requires a program to run it (for example, python), specify the program followed by the path. The script must be in $SPLUNK_HOME/bin or one of its subdirectories.  Splunk ships with an example archiving script in $SPLUNK_HOME/bin called coldToFrozenExample.py. Splunk DOES NOT recommend using this example script directly. It uses a default path, and if modified in place any changes will be overwritten on upgrade.  Splunk recommends copying the example script to a new file in bin and modifying it for your system. Most importantly, change the default archive path to an existing directory that fits your needs.  If your new script in bin/ is named myColdToFrozen.py, set this key to the following: "$SPLUNK_HOME/bin/python" "$SPLUNK_HOME/bin/myColdToFrozen.py".  By default, the example script has two possible behaviors when archiving:  For buckets created from version 4.2 and on, it removes all files except for rawdata. To thaw: cd to the frozen bucket and type splunk rebuild ., then copy the bucket to thawed for that index. We recommend using the coldToFrozenDir parameter unless you need to perform a more advanced operation upon freezing buckets.  For older-style buckets, we simply gzip all the .tsidx files. To thaw: cd to the frozen bucket and unzip the tsidx files, then copy the bucket to thawed for that index 
-		[string] $coldToFrozenScript,
+		$coldToFrozenScript,
 
 
 		[Parameter()]
 		[switch]
-# This parameter is ignored. The splunkd process always compresses raw data.
-$compressRawdata,
+		# This parameter is ignored. The splunkd process always compresses raw data.
+		$compressRawdata,
 
 		[Parameter()]
 		[int]
@@ -394,8 +394,9 @@ $maxHotSpanSecs,
 $maxMemMB, 	
 
 		[Parameter()]
+		[int] 
 		# Sets the maximum number of unique lines in .data files in a bucket, which may help to reduce memory consumption. If set to 0, this setting is ignored (it is treated as infinite).  If exceeded, a hot bucket is rolled to prevent further increase. If your buckets are rolling due to Strings.data hitting this limit, the culprit may be the punct field in your data. If you don't use punct, it may be best to simply disable this (see props.conf.spec in $SPLUNK_HOME/etc/system/README).  There is a small time delta between when maximum is exceeded and bucket is rolled. This means a bucket may end up with epsilon more lines than specified, but this is not a major concern unless excess is significant.
-		[int] $maxMetaEntries, 	
+		$maxMetaEntries, 	
 		
 		[Parameter()]
 		[int]
@@ -628,7 +629,9 @@ function Set-SplunkIndex
 	
 		[Parameter(Mandatory=$true)]
 		[Alias("Index","IndexName")]
-		[string] $name,
+		[string] 
+		# The name of the index to update.
+		$name,
 		
 		[Parameter()]
 		[switch]
@@ -657,9 +660,10 @@ $blockSignSize,
 		#If both coldToFrozenDir and coldToFrozenScript are specified, coldToFrozenDir takes precedence
 $coldToFrozenDir,
 
-		[Parameter()]
+		[Parameter()]		
+		[string] 
 		# Path to the archiving script.  If your script requires a program to run it (for example, python), specify the program followed by the path. The script must be in $SPLUNK_HOME/bin or one of its subdirectories.  Splunk ships with an example archiving script in $SPLUNK_HOME/bin called coldToFrozenExample.py. Splunk DOES NOT recommend using this example script directly. It uses a default path, and if modified in place any changes will be overwritten on upgrade.  Splunk recommends copying the example script to a new file in bin and modifying it for your system. Most importantly, change the default archive path to an existing directory that fits your needs.  If your new script in bin/ is named myColdToFrozen.py, set this key to the following: "$SPLUNK_HOME/bin/python" "$SPLUNK_HOME/bin/myColdToFrozen.py".  By default, the example script has two possible behaviors when archiving:  For buckets created from version 4.2 and on, it removes all files except for rawdata. To thaw: cd to the frozen bucket and type splunk rebuild ., then copy the bucket to thawed for that index. We recommend using the coldToFrozenDir parameter unless you need to perform a more advanced operation upon freezing buckets.  For older-style buckets, we simply gzip all the .tsidx files. To thaw: cd to the frozen bucket and unzip the tsidx files, then copy the bucket to thawed for that index 
-		[string] $coldToFrozenScript,
+		$coldToFrozenScript,
 
 
 		[Parameter()]
@@ -708,8 +712,9 @@ $maxHotSpanSecs,
 $maxMemMB, 	
 
 		[Parameter()]
+		[int] 
 		# Sets the maximum number of unique lines in .data files in a bucket, which may help to reduce memory consumption. If set to 0, this setting is ignored (it is treated as infinite).  If exceeded, a hot bucket is rolled to prevent further increase. If your buckets are rolling due to Strings.data hitting this limit, the culprit may be the punct field in your data. If you don't use punct, it may be best to simply disable this (see props.conf.spec in $SPLUNK_HOME/etc/system/README).  There is a small time delta between when maximum is exceeded and bucket is rolled. This means a bucket may end up with epsilon more lines than specified, but this is not a major concern unless excess is significant.
-		[int] $maxMetaEntries, 	
+		$maxMetaEntries, 	
 		
 		[Parameter()]
 		[int]
@@ -776,25 +781,31 @@ $syncMeta = $true,
 #  	Defines how frequently Splunk checks for index throttling condition, in seconds. Defaults to 15 (seconds).  Do not change this parameter without the input of a Splunk Support. 	    
 $throttleCheckPeriod,
        
-        [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
-        [String]$ComputerName = ( get-splunkconnectionobject ).ComputerName,
+		[Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
+        [String]
+        # Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName).
+		$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
         [int]
-$Port            = ( get-splunkconnectionobject ).Port,
+		# Port of the REST Instance (i.e. 8089) (Default is ( get-splunkconnectionobject ).Port).
+		$Port            = ( get-splunkconnectionobject ).Port,
         
         [Parameter()]
-		[ValidateSet("http", "https")]
+        [ValidateSet("http", "https")]
         [STRING]
-$Protocol     = ( get-splunkconnectionobject ).Protocol,
+        # Protocol to use to access the REST API must be 'http' or 'https' (Default is ( get-splunkconnectionobject ).Protocol).
+		$Protocol     = ( get-splunkconnectionobject ).Protocol,
         
         [Parameter()]
         [int]
-$Timeout         = ( get-splunkconnectionobject ).Timeout,
+        # How long to wait for the REST API to respond (Default is ( get-splunkconnectionobject ).Timeout).
+		$Timeout         = ( get-splunkconnectionobject ).Timeout,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-$Credential = ( get-splunkconnectionobject ).Credential        
+        [System.Management.Automation.PSCredential]        
+		# Credential object with the user name and password used to access the REST API.	
+		$Credential = ( get-splunkconnectionobject ).Credential
     )
 	
 	Begin

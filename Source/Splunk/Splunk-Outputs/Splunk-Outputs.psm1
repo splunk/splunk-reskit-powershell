@@ -738,38 +738,46 @@ function Get-SplunkOutputDefault
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter()]
+		[int]
 		#Indicates the maximum number of entries to return. To return all entries, specify 0. 
-		[int]$Count = 30,
+		$Count = 30,
 		
 		[Parameter()]
+		[int]
 		#Index for first item to return. 
-		[int]$Offset = 0,
+		$Offset = 0,
 		
 		[Parameter()]
+		[string]
 		#Boolean predicate to filter results
-		[string]$Search,
+		$Search,
 		
 		[Parameter(Position=0,ParameterSetName='byFilter')]
+		[string]
 		#Regular expression used to match index name
-		[string]$Filter = '.*',
+		$Filter = '.*',
 		
 		[Parameter(Position=0,ParameterSetName='byName',Mandatory=$true)]
+		[string]
 		#The name of the input to retrieve
-		[string]$Name,
+		$Name,
 		
 		[Parameter()]
 		[ValidateSet("asc","desc")]
+		[string]
 		#Indicates whether to sort the entries returned in ascending or descending order. Valid values: (asc | desc).  Defaults to asc.
-		[string]$SortDirection = "asc",
+		$SortDirection = "asc",
 		
 		[Parameter()]
 		[ValidateSet("auto","alpha","alpha_case","num")]
+		[string]
 		#Indicates the collating sequence for sorting the returned entries. Valid values: (auto | alpha | alpha_case | num).  Defaults to auto.
-		[string]$SortMode = "auto",
+		$SortMode = "auto",
 		
 		[Parameter()]
+		[string]
 		# Field to sort by.
-		[string]$SortKey,
+		$SortKey,
 		
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]
@@ -1167,38 +1175,46 @@ function Get-SplunkOutputGroup
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter()]
+		[int]
 		#Indicates the maximum number of entries to return. To return all entries, specify 0. 
-		[int]$Count = 30,
+		$Count = 30,
 		
 		[Parameter()]
+		[int]
 		#Index for first item to return. 
-		[int]$Offset = 0,
+		$Offset = 0,
 		
 		[Parameter()]
+		[string]
 		#Boolean predicate to filter results
-		[string]$Search,
+		$Search,
 		
 		[Parameter(Position=0,ParameterSetName='byFilter')]
+		[string]
 		#Regular expression used to match index name
-		[string]$Filter = '.*',
+		$Filter = '.*',
 		
 		[Parameter(Position=0,ParameterSetName='byName',Mandatory=$true)]
+		[string]
 		#The name of the input to retrieve
-		[string]$Name,
+		$Name,
 		
 		[Parameter()]
 		[ValidateSet("asc","desc")]
+		[string]
 		#Indicates whether to sort the entries returned in ascending or descending order. Valid values: (asc | desc).  Defaults to asc.
-		[string]$SortDirection = "asc",
+		$SortDirection = "asc",
 		
 		[Parameter()]
 		[ValidateSet("auto","alpha","alpha_case","num")]
+		[string]
 		#Indicates the collating sequence for sorting the returned entries. Valid values: (auto | alpha | alpha_case | num).  Defaults to auto.
-		[string]$SortMode = "auto",
+		$SortMode = "auto",
 		
 		[Parameter()]
+		[string]
 		# Field to sort by.
-		[string]$SortKey,
+		$SortKey,
 		
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]
@@ -1727,38 +1743,46 @@ function Get-SplunkOutputServer
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter()]
+		[int]
 		#Indicates the maximum number of entries to return. To return all entries, specify 0. 
-		[int]$Count = 30,
+		$Count = 30,
 		
 		[Parameter()]
+		[int]
 		#Index for first item to return. 
-		[int]$Offset = 0,
+		$Offset = 0,
 		
 		[Parameter()]
+		[string]
 		#Boolean predicate to filter results
-		[string]$Search,
+		$Search,
 		
 		[Parameter(Position=0,ParameterSetName='byFilter')]
+		[string]
 		#Regular expression used to match index name
-		[string]$Filter = '.*',
+		$Filter = '.*',
 		
 		[Parameter(Position=0,ParameterSetName='byName',Mandatory=$true)]
+		[string]
 		#The name of the input to retrieve
-		[string]$Name,
+		$Name,
 		
 		[Parameter()]
 		[ValidateSet("asc","desc")]
+		[string]
 		#Indicates whether to sort the entries returned in ascending or descending order. Valid values: (asc | desc).  Defaults to asc.
-		[string]$SortDirection = "asc",
+		$SortDirection = "asc",
 		
 		[Parameter()]
 		[ValidateSet("auto","alpha","alpha_case","num")]
+		[string]
 		#Indicates the collating sequence for sorting the returned entries. Valid values: (auto | alpha | alpha_case | num).  Defaults to auto.
-		[string]$SortMode = "auto",
+		$SortMode = "auto",
 		
 		[Parameter()]
+		[string]
 		# Field to sort by.
-		[string]$SortKey,
+		$SortKey,
 		
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]
@@ -2277,38 +2301,45 @@ function Get-SplunkOutputSyslog
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter()]
+		[int]
 		#Indicates the maximum number of entries to return. To return all entries, specify 0. 
-		[int]$Count = 30,
+		$Count = 30,
 		
 		[Parameter()]
+		[int]
 		#Index for first item to return. 
-		[int]$Offset = 0,
+		$Offset = 0,
 		
 		[Parameter()]
+		[string]
 		#Boolean predicate to filter results
-		[string]$Search,
+		$Search,
 		
 		[Parameter(Position=0,ParameterSetName='byFilter')]
-		#Regular expression used to match index name
-		[string]$Filter = '.*',
+		[string]#Regular expression used to match index name
+		$Filter = '.*',
 		
 		[Parameter(Position=0,ParameterSetName='byName',Mandatory=$true)]
+		[string]
 		#The name of the input to retrieve
-		[string]$Name,
+		$Name,
 		
 		[Parameter()]
 		[ValidateSet("asc","desc")]
+		[string]
 		#Indicates whether to sort the entries returned in ascending or descending order. Valid values: (asc | desc).  Defaults to asc.
-		[string]$SortDirection = "asc",
+		$SortDirection = "asc",
 		
 		[Parameter()]
 		[ValidateSet("auto","alpha","alpha_case","num")]
+		[string]
 		#Indicates the collating sequence for sorting the returned entries. Valid values: (auto | alpha | alpha_case | num).  Defaults to auto.
-		[string]$SortMode = "auto",
+		$SortMode = "auto",
 		
 		[Parameter()]
+		[string]
 		# Field to sort by.
-		[string]$SortKey,
+		$SortKey,
 		
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]
@@ -2374,32 +2405,7 @@ function New-SplunkOutputSyslog
 		[string] 
 		# 	The name of the forwarder to send data in standard syslog format.
 		$name,
-
-		#[Parameter()]
-		#[switch]
-		# If true, disables the forwarder.
-		#$disabled,
-		
-		#[Parameter()]
-		#[int]
-		# The syslog priority value.
-		#$priority,
-		
-		#[Parameter()]
-		#[string]
-		# host:port of the server where syslog data should be sent.
-		#$server,
-		
-		#[Parameter()]
-		#[string]
-		# Format of the timestamp to add at the start of events to be forwarded.
-		#$timestampFormat,
-		
-		#[Parameter()]
-		#[string]
-		# udp )
-		#$type,
-		
+	
         [Parameter(ValueFromPipelineByPropertyName=$true,ValueFromPipeline=$true)]
         [String]
         # Name of the Splunk instance to get the settings for (Default is ( get-splunkconnectionobject ).ComputerName.)

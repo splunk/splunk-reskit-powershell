@@ -2817,40 +2817,48 @@ $inputs | select -ExpandProperty keys | foreach {
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter()]
+		[int]
 		#Indicates the maximum number of entries to return. To return all entries, specify 0. 
-		[int]`$Count = 30,
+		`$Count = 30,
 		
 		[Parameter()]
+		[int]
 		#Index for first item to return. 
-		[int]`$Offset = 0,
+		`$Offset = 0,
 		
 		[Parameter()]
+		[string]
 		#Boolean predicate to filter results
-		[string]`$Search,
+		`$Search,
 		
 		[Parameter(Position=0,ParameterSetName='byFilter')]
+		[string]
 		#Regular expression used to match index name
-		[string]`$Filter = '.*',
+		`$Filter = '.*',
 		
 		[Parameter(Position=0,ParameterSetName='byName',Mandatory=`$true)]
+		[string]
 		#The name of the input to retrieve
-		[string]`$Name,
+		`$Name,
 		
 		[Parameter()]
 		[ValidateSet("asc","desc")]
+		[string]
 		#Indicates whether to sort the entries returned in ascending or descending order. Valid values: (asc | desc).  Defaults to asc.
-		[string]`$SortDirection = "asc",
+		`$SortDirection = "asc",
 		
 		[Parameter()]
 		[ValidateSet("auto","alpha","alpha_case","num")]
+		[string]
 		#Indicates the collating sequence for sorting the returned entries. Valid values: (auto | alpha | alpha_case | num).  Defaults to auto.
-		[string]`$SortMode = "auto",
+		`$SortMode = "auto",
 		
 		[Parameter()]
+		[string]
 		# Field to sort by.
-		[string]`$SortKey,
+		`$SortKey,
 		
-                [Parameter(ValueFromPipelineByPropertyName=`$true,ValueFromPipeline=`$true)]
+        [Parameter(ValueFromPipelineByPropertyName=`$true,ValueFromPipeline=`$true)]
         [String]
         # Name of the Splunk instance to get the settings for (Default is ( get-splunkconnectionobject ).ComputerName.)
 		`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
@@ -2940,16 +2948,18 @@ function Remove-SplunkInput$functionTag
 	[CmdletBinding(DefaultParameterSetName='byFilter')]
     Param(
 		[Parameter(ValueFromPipelineByPropertyName=`$true,Mandatory=`$true)]
+		[string]
 		# The name of the input to remove.
-		[string]`$Name,
+		`$Name,
 		
 		[Parameter()]
+		[switch]
 		# Specify to bypass standard PowerShell confirmation
-		[switch]`$Force,
+		`$Force,
 		
         [Parameter(ValueFromPipelineByPropertyName=`$true,ValueFromPipeline=`$true)]
         [String]
-        # Name of the Splunk instance to get the settings for (Default is ( get-splunkconnectionobject ).ComputerName.)
+        # Name of the Splunk instance (Default is ( get-splunkconnectionobject ).ComputerName.)
 		`$ComputerName = ( get-splunkconnectionobject ).ComputerName,
         
         [Parameter()]
