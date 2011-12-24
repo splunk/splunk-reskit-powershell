@@ -722,7 +722,7 @@ function Get-SplunkOutputDefault
 		.Example				
 			Get-SplunkOutputDefault	
 			
-			Displays the default forwarding setup on the local machine.	
+			Displays the default forwarding setup on the default Splunk instance.	
 			
 		.Example
 			Get-SplunkOutputDefault -filter tcp -ComputerName $serverlist	
@@ -1159,7 +1159,7 @@ function Get-SplunkOutputGroup
 		.Example				
 			Get-SplunkOutputGroup	
 			
-			Displays information on configured output targets on the local machine.	
+			Displays information on configured output targets on the default Splunk instance.	
 			
 		.Example
 			Get-SplunkOutputGroup -filter 199 -ComputerName splunk8.server.com -sortDirection desc	
@@ -1462,7 +1462,20 @@ function Set-SplunkOutputGroup
             
         .Description
             Updates a data forwarding destination group configuration.
-            
+
+		.Example
+			Set-SplunkOutputGroup -name aNewOutputGroup -servers 192.168.31.210:9993,192.168.31.211:9995	
+			
+			Configures the server set for the output group "aNewOutputGroup" to 192.168.31.210:9993 and 192.168.31.211:9995 for the default Splunk instance.	
+			
+		.Example
+			Set-SplunkOutputGroup -name ADForwarders -servers "splunk2.server.com,splunk3.server.com,splunk4.server.com" -blockonQueueFull -compressed -ComputerName splunk2.server.com -port 8087	
+			
+			Configures the ADForwarders forwarding group on server splunk2.server.com, port 8087. In this group, all forwarded data is compressed, and the forwarding group will pause forwarding if its queue gets full.
+			
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
             This function outputs the updated forwarding group configuration to the pipeline.
     #>
@@ -1635,7 +1648,25 @@ function Remove-SplunkOutputGroup()
             
         .Description
             Removes the specified target group.
-            
+        
+		.Example
+			Remove-SplunkOutputGroup	
+			
+			Prompts for the removal of an existing forwarding target group on the local machine.	
+			
+		.Example
+			Remove-SplunkOutputGroup -name 192.168.31.211_9995 -force -ComputerName 192.168.31.211	
+			
+			Forcibly removes the "192.168.31.211_9995" forwarding destination group from the server 192.168.31.211.
+
+		.Example
+			Get-SplunkOutputGroup | Remove-SplunkOutputGroup
+			
+			Prompts for the removal of all existing forwarding target groups on the default Splunk instance.
+			
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+
 		.OUTPUTS
             This function does not produce pipeline output.
             
@@ -1727,7 +1758,7 @@ function Get-SplunkOutputServer
 		.Example				
 			Get-SplunkOutputServer	
 			
-			Displays information on defined forwarding servers on the local machine.	
+			Displays information on defined forwarding servers on the default Splunk instance.	
 			
 		.Example
 			Get-SplunkOutputServer -filter 192.168.31.20* -Computername splunk3.server.com -sortDirection desc	
@@ -1839,6 +1870,19 @@ function New-SplunkOutputServer
         .Description
             Creates a new data forwarder output.
             
+		.Example
+			New-SplunkOutputServer	
+			
+			Prompts for the parameters of a new Splunk forwarding server on the default Splunk instance.	
+			
+		.Example
+			New-SplunkOutputServer -name ADForwarder -backoffatStartup 10 -initialBackoff 15 -maxBackoff 120 -maxNumberofRetriesatHighestBackoff 3 -ComputerName splunk24.server.com,splunk25.server.com	
+			
+			Creates a new forwarder on servers splunk24.server.com and splunk25.server.com. Both forwarders will initially wait 15 seconds to retry if there is an error when connecting; subsequent retries will occur every 15 seconds until 120 seconds have elapsed. Then, the server will attempt to reconnect every 120 seconds for 3 more times before giving up.
+
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
             This function outputs the new forwarding output configuration to the pipeline.
     #>
@@ -2017,6 +2061,19 @@ function Set-SplunkOutputServer
         .Description
             Updates a data forwarding configuration.
             
+		.Example
+			Set-SplunkOutputServer -name 192.168.31.210:9995 -maxBackoff 25	
+			
+			Sets the maximum backoff on the forwarding server named "192.168.31.210:9995" on the default Splunk instance to 25 seconds	
+			
+		.Example
+			Set-SplunkOutputServer -name ADForwarder -initialBackoff 30 -maxBackoff 180	
+			
+			Configures the ADForwarder forwarding destination on the local Splunk instance to initially wait 30 seconds after a connection error, up to a maximum of 180 sconds.
+
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
             This function outputs the updated forwarding configuration to the pipeline.
     #>
@@ -2194,7 +2251,26 @@ function Remove-SplunkOutputServer()
             
         .Description
             Removes the specified target group.
+			
+		.Example
+			Remove-SplunkOutputServer	
+			
+			Prompts for the removal of an existing forwarding server on the default Splunk instance.	
+			
+		.Example
+			Get-SplunkOutputServer | Remove-SplunkOutputServer	
+			
+			Prompts for the removal of all existing forwarding server configurations on the default Splunk instance.	
+			
+		.Example
+			Remove-SplunkOutputServer -name 192.168.31.205:9997 -force	
+			
+			Forcibly removes the forwarder named 192.168.31.205:9997 from the local Splunk instance.
+
             
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
             This function does not produce pipeline output.
             
@@ -2285,7 +2361,7 @@ function Get-SplunkOutputSyslog
 		.Example				
 			Get-SplunkOutputSyslog	
 			
-			Displays information on syslog-enabled forwarding configurations on the local machine.	
+			Displays information on syslog-enabled forwarding configurations on the default Splunk instance.	
 			
 		.Example
 			Get-SplunkOutputSyslog -name aNewSplunkOutputSyslog -Computername splunk6.server.com	
@@ -2396,6 +2472,19 @@ function New-SplunkOutputSyslog
         .Description
             Creates a new forwarder that sends data in standard syslog format.
             
+		.Example
+			New-SplunkOutputSyslog	
+			
+			Prompts for the parameters of a new syslog-enabled forwarding server on the local machine.	
+			
+		.Example
+			New-SplunkOutputSyslog -name FwdSysLog -Computername splunk23.server.com -port 8093	
+			
+			Creates a new Syslog-based forwarder on the Splunk instance running on port 8093 of server splunk23.server.com.
+
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+			
 		.OUTPUTS
             This function outputs the new forwarding output configuration to the pipeline.
     #>
@@ -2514,6 +2603,19 @@ function Set-SplunkOutputSyslog
         .Description
             Updates an existing forwarder that sends data in standard syslog format.
             
+		.Example
+			Set-SplunkOutputSyslog -name SyslogOutput1 -priority 6 -timestampformat YYYY-MM-DD	
+			
+			Configures the priority level and the time stamp format for the "SyslogOutput1" forwarder destination on the local Splunk instance. Sets the timestamp to "YYYY-MM-DD" and the syslog priority level to "info" (6).	
+			
+		.Example
+			Set-SplunkOutputSyslog -name aNewSplunkOutputSyslog -server 192.168.35.224:7003 -priority 7 -ComputerName splunk6.server.com	
+			
+			Configures the "aNewSplunkOutputSyslog" syslog-enabled forwarder on server splunk6.server.com to send syslog data to server 192.168.35.224, port 7003 with a priority of "debug" (7).
+
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+
 		.OUTPUTS
             This function outputs the modified forwarding output configuration to the pipeline.
     #>
@@ -2649,7 +2751,20 @@ function Remove-SplunkOutputSyslog()
             
         .Description
             Removes the specified forwarder configuration.
-            
+        
+		.Example
+			Remove-SplunkOutputSyslog	
+			
+			Prompts for the removal of an existing syslog-enabled forwarding output on the local machine.	
+			
+		.Example
+			Remove-SplunkOutputSyslog -name SyslogFwd -force -ComputerName splunk6.server.com	
+			
+			Forcibly removes the Syslog-format forwarder "SyslogFwd" from the Splunk instance on server splunk6.server.com.
+
+		.INPUTS
+			String.  You can pipe the name of the Splunk host instance to this cmdlet.
+
 		.OUTPUTS
             This function does not produce pipeline output.
             

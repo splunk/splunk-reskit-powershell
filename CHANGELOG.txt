@@ -1,0 +1,203 @@
+﻿# Splunk PowerShell Resource Kit Changelog
+
+This file documents changes between versions of the Resource Kit at the level of features and fixes.
+
+## Version 0.2
+
+### Fixes
+
+* 	Addressed data typing issue in Splunk.Core translating integer parameters for use in REST API.
+*	Fixed parameter set usage in deployment client cmdlets.
+*	Added verbose logging abilities to Splunk.Core.
+*	Addressed resource kit data types missing explicit formatting data.
+*	Addressed resource kit cmdlets missing inline documentation.
+*	Fixed resource kit cmdlets parameter documentation in various locations.
+*	Addressed resource kit cmdlets missing inline examples.
+*	Renamed Credentials parameter of Connect-Splunk cmdlet to Credential to be consistent with the other cmdlets in the resource kit.
+
+### Features
+
+* 	Support for Index operations: 
+**    Disable-SplunkIndex                                                                                              
+**    Enable-SplunkIndex                                                                                               
+**    Get-SplunkIndex                                                                                                  
+**    New-SplunkIndex                                                                                                  
+**    Set-SplunkIndex                                                                                                  
+*	Support for Input operations: 
+**    Get-SplunkInputAd                                                                                                
+**    Get-SplunkInputMonitor                                                                                           
+**    Get-SplunkInputOneShot                                                                                           
+**    Get-SplunkInputRegistry                                                                                          
+**    Get-SplunkInputScript                                                                                            
+**    Get-SplunkInputTCPCooked                                                                                         
+**    Get-SplunkInputTCPRaw                                                                                            
+**    Get-SplunkInputUDP                                                                                               
+**    Get-SplunkInputWinEventLogCollections                                                                            
+**    Get-SplunkInputWinPerfmon                                                                                        
+**    Get-SplunkInputWinWmiCollections                                                                                 
+**    New-SplunkInputAd                                                                                                
+**    New-SplunkInputMonitor                                                                                           
+**    New-SplunkInputOneShot                                                                                           
+**    New-SplunkInputRegistry                                                                                          
+**    New-SplunkInputScript                                                                                            
+**    New-SplunkInputTCPCooked                                                                                         
+**    New-SplunkInputTCPRaw                                                                                            
+**    New-SplunkInputUDP                                                                                               
+**    New-SplunkInputWinEventLogCollections                                                                            
+**    New-SplunkInputWinPerfmon                                                                                        
+**    New-SplunkInputWinWmiCollections                                                                                 
+**    Remove-SplunkInputAd                                                                                             
+**    Remove-SplunkInputMonitor                                                                                        
+**    Remove-SplunkInputOneShot                                                                                        
+**    Remove-SplunkInputRegistry                                                                                       
+**    Remove-SplunkInputScript                                                                                         
+**    Remove-SplunkInputTCPCooked                                                                                      
+**    Remove-SplunkInputTCPRaw                                                                                         
+**    Remove-SplunkInputUDP                                                                                            
+**    Remove-SplunkInputWinEventLogCollections                                                                         
+**    Remove-SplunkInputWinPerfmon                                                                                     
+**    Remove-SplunkInputWinWmiCollections                                                                              
+**    Set-SplunkInputAd                                                                                                
+**    Set-SplunkInputMonitor                                                                                           
+**    Set-SplunkInputRegistry                                                                                          
+**    Set-SplunkInputScript                                                                                            
+**    Set-SplunkInputTCPCooked                                                                                         
+**    Set-SplunkInputTCPRaw                                                                                            
+**    Set-SplunkInputUDP                                                                                               
+**    Set-SplunkInputWinEventLogCollections                                                                            
+**    Set-SplunkInputWinPerfmon                                                                                        
+**    Set-SplunkInputWinWmiCollections                                                                                 
+*	Support for Output operations: 
+**	Disable-SplunkOutputDefault                                                                                            
+**	Enable-SplunkOutputDefault                                                                                             
+**	Get-SplunkOutputDefault                                                                                                
+**	Get-SplunkOutputGroup                                                                                                  
+**	Get-SplunkOutputServer                                                                                                 
+**	Get-SplunkOutputSyslog                                                                                                 
+**	New-SplunkOutputGroup                                                                                                  
+**	New-SplunkOutputServer                                                                                                 
+**	New-SplunkOutputSyslog                                                                                                 
+**	Remove-SplunkOutputGroup                                                                                               
+**	Remove-SplunkOutputServer                                                                                              
+**	Remove-SplunkOutputSyslog                                                                                              
+**	Set-SplunkOutputDefault                                                                                                
+**	Set-SplunkOutputGroup                                                                                                  
+**	Set-SplunkOutputServer                                                                                                 
+**	Set-SplunkOutputSyslog                                                                                                 
+* Support for Splunk applications:
+** Install-SplunkApplication
+** Get-SplunkApplication                                                                                                  
+** Install-SplunkApplication                                                                                              
+** New-SplunkApplication                                                                                                  
+** Remove-SplunkApplication                                                                                               
+** Set-SplunkApplication                                                                                                  
+*	Expanded cookbook recipes for new features of v0.2.0:
+**	Apply an Input Configuration to Multiple Forwarders across all Hosts in an AD Site.	
+**	Apply an Output Configuration to Multiple Forwarders across all Hosts in an AD Site.	
+**	Apply an Application Configuration to Multiple Forwarders across all Hosts in an AD Site.	
+**	Install a Splunk Application to Multiple Forwarders across all Hosts in an AD site.	
+**	Apply an Input Configuration to Multiple Forwarders across all Hosts in an AD OU.	
+**	Apply an Output Configuration to Multiple Forwarders across all Hosts in an AD OU.	
+**	Apply an Application Configuration to Multiple Forwarders across all Hosts in an AD OU.	
+**	Install a Splunk Application to Multiple Forwarders across all Hosts in an AD OU.	
+**	Apply an Input Configuration to Multiple Forwarders across all Hosts Active in the Domain.	
+**	Apply an Output Configuration to Multiple Forwarders across all Hosts Active in the Domain.	
+**	Apply an Application Configuration to Multiple Forwarders across all Hosts Active in the Domain.	
+**	Install a Splunk Application to Multiple Forwarders across all Hosts Active in the Domain.	
+**	Run Tasks that Impact Multiple Hosts in Parallel.	
+**	Forward Splunk alerts to SCOM.	
+**	Forward SCOM alerts to Splunk.	
+
+## Version 0.1
+
+### Features
+* Authentication and Connection operations:
+**    Connect-Splunk 
+**    Disable-CertificateValidation                                                                                    
+**    Enable-CertificateValidation                                                                                     
+**    Export-SplunkConnectionObject                                                                                    
+**    Get-SplunkAuthToken                                                                                              
+**    Get-SplunkConnectionObject                                                                                       
+**    Get-SplunkdUser                                                                                                  
+**    Get-SplunkLogin                                                                                                  
+**    New-SplunkCredential                                                                                             
+**    New-SplunkdUser                                                                                                  
+**    Remove-SplunkConnectionObject                                                                                    
+**    Remove-SplunkdUser                                                                                               
+**    Set-SplunkConnectionObject                                                                                       
+**    Set-SplunkdPassword                                                                                              
+**    Set-SplunkdUser                                                                                                  
+* License operations:
+**    Add-SplunkLicenseFile                                                                                            
+**    Add-SplunkLicensePool                                                                                            
+**    Get-SplunkLicenseFile                                                                                            
+**    Get-SplunkLicenseGroup                                                                                           
+**    Get-SplunkLicenseMaster                                                                                          
+**    Get-SplunkLicenseMessage                                                                                         
+**    Get-SplunkLicensePool                                                                                            
+**    Get-SplunkLicenseSlave                                                                                           
+**    Get-SplunkLicenseStack                                                                                           
+**    Remove-SplunkLicenseFile                                                                                         
+**    Remove-SplunkLicensePool                                                                                         
+**    Set-SplunkLicenseGroup                                                                                           
+**    Set-SplunkLicenseMaster                                                                                          
+**    Set-SplunkLicensePool                                                                                            
+* Core API and Utility operations:                                                                                                
+**    ConvertFrom-SplunkTime                                                                                           
+**    ConvertFrom-UnixTime                                                                                             
+**    Get-Splunk                                                                                                       
+**    Invoke-SplunkAPIRequest                                                                                          
+**    Test-Splunkd                                                                                                     
+**    Write-SplunkMessage                                                                                              
+* Deployment Client operations:
+**    Get-SplunkDeploymentClient                                                                                       
+**    Invoke-SplunkDeploymentServerReload                                                                              
+* Server Class operations:
+**    Disable-SplunkServerClass                                                                                        
+**    Enable-SplunkServerClass                                                                                         
+**    Get-SplunkServerClass                                                                                            
+**    New-SplunkServerClass                                                                                            
+**    Set-SplunkServerClass                                                                                            
+* Server Status operations:
+**    Get-Splunkd                                                                                                      
+**    Get-SplunkdLogging                                                                                               
+**    Get-SplunkdVersion                                                                                               
+**    Get-SplunkMessage                                                                                                
+**    Restart-SplunkService                                                                                            
+**    Set-Splunkd                                                                                                      
+**    Set-SplunkdLogging                                                                                               
+* Search operations:
+**    Search-Splunk               
+* Cookbook documentation for v0.1.0 Resource Kit features:
+**	Getting Started with the Splunk PowerShell Resource Kit	
+**	Verify the Splunk PowerShell Resource Kit Installation	
+**	Import the Splunk Module	
+**	Query the Splunk Module Features	
+**	Get Help for a Splunk Module Cmdlet	
+**	Disable SSL Certificate Validation	
+**	Create a Default Splunk Connection	
+**	Check and Manage Splunk Services	
+**	Test Active Directory Objects for Splunk Services	
+**	Query the Status of Splunk Services on a Set of Hosts	
+**	Manage Splunk Services on a Set of Hosts	
+**	Restart Splunk	
+**	Search Splunk	
+**	View Raw Event Data	
+**	View Event Data in a Table	
+**	Specify Alternate Credentials for a Splunk Search	
+**	Manage Splunk Server Classes	
+**	Retrieve a List of Server Classes	
+**	Retrieve a List of Deployment Clients	
+**	Create a New Server Class	
+**	Remove a Server Class	
+**	Add Hosts from Active Directory to Server Class White List	
+**	Add Hosts from an Active Directory Organizational Unit to Server Class White List	
+**	Add Hosts from an Active Directory Group to Server Class White List	
+**	Add List of Hosts from Splunk Search to Server Class White List	
+**	Add a List of VM Host Names from HyperV to a Server Class White List	
+
+
+
+
+
+

@@ -36,13 +36,12 @@ Get-Command -Module splunk | foreach {
 
 		It "has custom help" {
 			$script:this | Write-Debug;
-			$local:help = ( $script:this | Get-Help -full ) | Out-String;
+			$local:help = ( $script:this | Get-Help -full ) |Out-String;
 			
-			$local:help -match 'NAME' -and
-				$local:help -match 'SYNOPSIS' -and
-				$local:help -match 'SYNTAX' -and
-				$local:help -match 'DESCRIPTION';
+			$local:help -match 'NAME\s*\S[\S\s]+SYNOPSIS\s*\S[\S\s]+SYNTAX\s*\S[\S\s]+DESCRIPTION\s*\S[\S\s]+';
+
 		}
+		
 		
 		It "has examples" {
 			$script:this | Write-Debug;
