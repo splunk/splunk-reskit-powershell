@@ -18,6 +18,23 @@ Here are a few of the tasks enabled by the Resource Kit:
 *	Issue a Splunk search and format the retrieved events as a table, a list, 
 	or in a windowed grid view. 
 
+## Installation
+
+1. Download and extract (or simply clone) the source code repository.
+2. Open the folder to which you extracted the source code.
+3. Run install.bat.  This will copy the Splunk PowerShell module into your module path.
+
+To verify the Splunk module is available, open PowerShell and type:
+
+    get-module Splunk
+    
+You should see output similar to the following:
+
+
+    ModuleType Name                      ExportedCommands                                                           
+    ---------- ----                      ----------------                                                           
+    Script     splunk                    { ... 
+
 ## Documentation
 
 Most of the documentation leaves in the "Splunk PowerShell Resource Kit 
