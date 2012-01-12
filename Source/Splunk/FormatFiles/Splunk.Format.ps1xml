@@ -331,26 +331,18 @@
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
-          <TableColumnHeader></TableColumnHeader>
-          <TableColumnHeader></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
               <TableColumnItem>
-                <PropertyName>Name</PropertyName>
+                <PropertyName>TargetURI</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>ComputerName</PropertyName>
+                <PropertyName>ServerClasses</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>IP</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>MgmtPort</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>LastUpdate</PropertyName>
+                <PropertyName>Disabled</PropertyName>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
