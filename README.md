@@ -20,8 +20,8 @@ Here are a few of the tasks enabled by the Resource Kit:
 
 ## Installation
 
-1. Download and extract (or simply clone) the source code repository.
-2. Open the folder to which you extracted the source code.
+1. Download the source code repository.  Unblock the ZIP archive and extract it to a folder.  (You can alternatively clone the GitHub repository)
+2. Open the folder to which you extracted or cloned the source code.
 3. Run install.bat.  This will copy the Splunk PowerShell module into your module path.
 
 To verify the Splunk module is available, open PowerShell and type:
@@ -33,7 +33,7 @@ You should see output similar to the following:
 
     ModuleType Name                      ExportedCommands                                                           
     ---------- ----                      ----------------                                                           
-    Script     splunk                    { ... 
+    Script     splunk                    {... 
 
 ## Documentation
 

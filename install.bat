@@ -1,1 +1,3 @@
-powershell.exe ./install.ps1 -force
+powershell.exe -executionpolicy Unrestricted ./install.ps1  -force
+pause
+
