@@ -331,18 +331,26 @@
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
           <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
+          <TableColumnHeader></TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
             <TableColumnItems>
               <TableColumnItem>
-                <PropertyName>TargetURI</PropertyName>
+                <PropertyName>Hostname</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>ServerClasses</PropertyName>
+                <PropertyName>Name</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
-                <PropertyName>Disabled</PropertyName>
+                <PropertyName>UTSName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>IP</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>PhoneHomeTime</PropertyName>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>
