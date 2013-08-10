@@ -305,6 +305,41 @@ function Out-Splunk {
             $InputText = ""
         }
         $Results = $null
+        
+        # Create a non-exported helper function that will reuse the bit of code where data is sent and received
+        function SendReceiveFunction {
+            Write-Verbose " [Out-Splunk] :: Message: $InputText"
+            try {
+                [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -PostMessage $InputText -URLParam $MyParam -RequestType SIMPLEPOST
+            }
+            catch {
+            	Write-Verbose " [Write-SplunkMessage] :: Invoke-SplunkAPIRequest threw an exception: $_"
+                Write-Error $_
+    		            }
+            try {
+                Write-Verbose " [Out-Splunk] :: Checking return results from the server"    
+                if($Results -and ($Results -is [System.Xml.XmlDocument])) {
+                    $Myobj = @{}
+                    foreach($key in $Results.response.results.result.field) {
+                        $data = $key.Value.Text
+                        switch -exact ($Key.k)
+                        {
+                            "_index"       {$Myobj.Add("Index",$data);continue}
+                            "host"         {$Myobj.Add("Host",$data);continue}
+                            "source"       {$Myobj.Add("Source",$data);continue} 
+                            "sourcetype"   {$Myobj.Add("Sourcetype",$data);continue}
+                        }
+                    }                    
+                    $obj = New-Object PSObject -Property $myobj
+                    $obj
+    	        }
+            }
+    		catch
+    		{
+    			Write-Verbose " [Out-Splunk] :: Get-Splunkd threw an exception: $_"
+                Write-Error $_
+    		}
+        }
     }
     PROCESS {
         if ($pscmdlet.parametersetname -eq 'Object') {
@@ -327,39 +362,8 @@ function Out-Splunk {
                 $InputText += "`r`n"
                 if ($currentobject -eq $WriteCount) {
                     # Hit the writecount limit - send all of the messages to splunk as a single message
-                    #TODO: I'm performing the following when writing 3 different times in code, need to put in function and clean up the code - also need to check if Write-splunkmessage technique is identical (more room to clean up)               
                     Write-Verbose " [Out-Splunk] :: WriteCount limit reached of $writecount - Preparing to send message"
-                    Write-Verbose " [Out-Splunk] :: Message: $InputText"
-                    try {
-                        [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -PostMessage $InputText -URLParam $MyParam -RequestType SIMPLEPOST
-                    }
-                    catch {
-                    	Write-Verbose " [Write-SplunkMessage] :: Invoke-SplunkAPIRequest threw an exception: $_"
-                        Write-Error $_
-		            }
-                    try {
-                        Write-Verbose " [Out-Splunk] :: Checking return results from the server"    
-                        if($Results -and ($Results -is [System.Xml.XmlDocument])) {
-                            $Myobj = @{}
-                            foreach($key in $Results.response.results.result.field) {
-                                $data = $key.Value.Text
-                                switch -exact ($Key.k)
-                                {
-                                    "_index"       {$Myobj.Add("Index",$data);continue}
-                                    "host"         {$Myobj.Add("Host",$data);continue}
-                                    "source"       {$Myobj.Add("Source",$data);continue} 
-                                    "sourcetype"   {$Myobj.Add("Sourcetype",$data);continue}
-                                }
-                            }                    
-                            $obj = New-Object PSObject -Property $myobj
-                            $obj
-            	        }
-                    }
-            		catch
-            		{
-            			Write-Verbose " [Out-Splunk] :: Get-Splunkd threw an exception: $_"
-                        Write-Error $_
-            		}
+                    SendReceiveFunction
                     $InputText = ""
                     $currentobject = 1
                 }
@@ -369,82 +373,14 @@ function Out-Splunk {
             }            
         } else {
             # This is not an object, just send up what is in $InputText
-            Write-Verbose " [Out-Splunk] :: Message: $InputText"
-            try {
-                [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -PostMessage $InputText -URLParam $MyParam -RequestType SIMPLEPOST
-            }
-            catch {
-            	Write-Verbose " [Out-Splunk] :: Invoke-SplunkAPIRequest threw an exception: $_"
-                Write-Error $_
-		            }
-            try {
-                Write-Verbose " [Out-Splunk] :: Checking return results from the server"    
-                if($Results -and ($Results -is [System.Xml.XmlDocument])) {
-                    $Myobj = @{}
-                    foreach($key in $Results.response.results.result.field) {
-                        $data = $key.Value.Text
-                        switch -exact ($Key.k)
-                        {
-                            "_index"       {$Myobj.Add("Index",$data);continue}
-                            "host"         {$Myobj.Add("Host",$data);continue}
-                            "source"       {$Myobj.Add("Source",$data);continue} 
-                            "sourcetype"   {$Myobj.Add("Sourcetype",$data);continue}
-                        }
-                    }                    
-                    $obj = New-Object PSObject -Property $myobj
-                    $obj
-    			}
-    			else
-    			{
-    				Write-Verbose " [Out-Splunk] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
-    			}
-    		}
-    		catch
-    		{
-    			Write-Verbose " [Out-Splunk] :: Get-Splunkd threw an exception: $_"
-                Write-Error $_
-    		}
+            SendReceiveFunction
         }
     }
     END {
         if ($pscmdlet.parametersetname -eq 'Object') {
             # One final message for the remainder of the data to be sent
             if (($currentobect -le $writecount) -and ($writecount -ne 1)) {
-                Write-Verbose " [Out-Splunk] :: Message: $InputText"
-                try {
-                    [XML]$Results = Invoke-SplunkAPIRequest @InvokeAPIParams -PostMessage $InputText -URLParam $MyParam -RequestType SIMPLEPOST
-                }
-                catch {
-                	Write-Verbose " [Out-Splunk] :: Invoke-SplunkAPIRequest threw an exception: $_"
-                    Write-Error $_
-    		            }
-                try {
-                    Write-Verbose " [Out-Splunk] :: Checking return results from the server"    
-                    if($Results -and ($Results -is [System.Xml.XmlDocument])) {
-                        $Myobj = @{}
-                        foreach($key in $Results.response.results.result.field) {
-                            $data = $key.Value.Text
-                            switch -exact ($Key.k)
-                            {
-                                "_index"       {$Myobj.Add("Index",$data);continue}
-                                "host"         {$Myobj.Add("Host",$data);continue}
-                                "source"       {$Myobj.Add("Source",$data);continue} 
-                                "sourcetype"   {$Myobj.Add("Sourcetype",$data);continue}
-                            }
-                        }                    
-                        $obj = New-Object PSObject -Property $myobj
-                        $obj
-        			}
-        			else
-        			{
-        				Write-Verbose " [Out-Splunk] :: No Response from REST API. Check for Errors from Invoke-SplunkAPIRequest"
-        			}
-        		}
-        		catch
-        		{
-        			Write-Verbose " [Out-Splunk] :: Get-Splunkd threw an exception: $_"
-                    Write-Error $_
-        		}
+                SendReceiveFunction
             }
         }
     }
