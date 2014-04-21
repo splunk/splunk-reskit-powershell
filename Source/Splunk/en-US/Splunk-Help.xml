@@ -1,4 +1,4 @@
-<helpItems schema="maml">
+﻿<helpItems schema="maml">
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
     <command:details>
       <command:name>Connect-Splunk</command:name>
