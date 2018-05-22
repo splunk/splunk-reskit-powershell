@@ -1,3 +1,9 @@
+# Notice of archival
+
+May 22nd, 2018: We had some fun, but this project has not been actively maintained for some time. Feel free to fork and prosper, but at this time, Splunk will not be making any future contributions to the project. 
+
+---
+
 # Splunk PowerShell Resource Kit
 
 The Splunk PowerShell Resource Kit enables IT administrators to manage their 
@@ -37,7 +43,7 @@ You should see output similar to the following:
 
 ## Documentation
 
-Most of the documentation leaves in the "Splunk PowerShell Resource Kit 
+Most of the documentation lives in the "Splunk PowerShell Resource Kit 
 Cookbook", which we highly recommend you read. You can find it here at
 [Docs/Splunk PowerShell Resource Kit.docx][1]
 
@@ -48,29 +54,20 @@ Cookbook", which we highly recommend you read. You can find it here at
 You can find anything having to do with developing on Splunk at the Splunk
 developer portal:
 
-*   **COMING SOON**
+*   http://dev.splunk.com
 
 You can also find full reference documentation of the REST API:
 
 *   http://docs.splunk.com/Documentation/Splunk/latest/RESTAPI
 
-For a gentle introduction to the Splunk product and some of its capabilities:
-
-*   **COMING SOON**
-
 ## Community
 
-* Email: Stay connected with other developers building on Splunk: devinfo@splunk.com
-* Issues: https://github.com/splunk/splunk-reskit-powershell/issues
+* Chat: Join us on the Splunk-Usergroups Slack team! Instructions to join: https://docs.splunk.com/Documentation/Community/1.0/community/Chat
+* Email: Contact the Splunk Dev Platform team: devinfo@splunk.com
 * Answers: Check out this tag on Splunk answers for:  
     http://splunk-base.splunk.com/tags/powershell/
 * Blog:  http://blogs.splunk.com/dev/
 * Twitter: [@splunkdev](http://twitter.com/splunkdev)
-
-### How to contribute
-
-We aren't ready to accept code contributions yet, but will be shortly.  Check 
-this README for more updates soon.
 
 ### Support
 
@@ -78,9 +75,6 @@ this README for more updates soon.
 Resource Kit an Open Beta we will provide more detail on support.  
 
 * Issues should be filed here: https://github.com/splunk/splunk-reskit-powershell/issues
-
-### Contact Us
-You can reach the Dev Platform team at devinfo@splunk.com
 
 ## License
 
